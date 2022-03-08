@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.maxleco.safe_notes">
    <application
-        android:label="safe_notes"
+        android:label="Safe Notes"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
