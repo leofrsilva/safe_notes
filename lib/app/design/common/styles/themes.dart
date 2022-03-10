@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Themes {
   static ThemeData lightTheme = ThemeData(
-    fontFamily: 'IBMPlexSans',
+    // fontFamily: 'IBMPlexSans',
     backgroundColor: ColorPalettes.lightBG,
     primaryColor: ColorPalettes.lightPrimary,
     textSelectionTheme: TextSelectionThemeData(
@@ -21,7 +21,7 @@ class Themes {
   );
 
   static ThemeData darkTheme = ThemeData(
-    fontFamily: 'IBMPlexSans',
+    // fontFamily: 'IBMPlexSans',
     brightness: Brightness.dark,
     backgroundColor: ColorPalettes.darkBG,
     primaryColor: ColorPalettes.darkPrimary,
