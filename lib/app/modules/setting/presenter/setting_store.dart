@@ -1,7 +1,8 @@
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../shared/error/failure.dart';
 
-class SettingStore extends StreamStore<Exception, bool> {
+class SettingStore extends StreamStore<Failure, bool> {
   static SettingStore? _instance;
 
   static SettingStore get getInstance => _instance ??= SettingStore._();
