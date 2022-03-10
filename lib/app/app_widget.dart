@@ -12,18 +12,19 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScopedBuilder<SettingStore, Failure, bool>.transition(
-        store: SettingStore(), // Instantiating Store
-        onLoading: (context) => const Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-        onState: (context, dark) {
-          return MaterialApp.router(
-            routeInformationParser: Modular.routeInformationParser,
-            routerDelegate: Modular.routerDelegate,
-            debugShowCheckedModeBanner: false,
-            title: 'Safe Notes',
-            theme: dark ? Themes.darkTheme : Themes.lightTheme,
-          );
-        });
+      store: SettingStore(), // Instantiating Store
+      onLoading: (context) => const Center(
+        child: CircularProgressIndicator.adaptive(),
+      ),
+      onState: (context, dark) {
+        return MaterialApp.router(
+          routeInformationParser: Modular.routeInformationParser,
+          routerDelegate: Modular.routerDelegate,
+          debugShowCheckedModeBanner: false,
+          title: 'Safe Notes',
+          theme: dark ? Themes.darkTheme : Themes.lightTheme,
+        );
+      },
+    );
   }
 }
