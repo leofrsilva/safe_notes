@@ -34,6 +34,9 @@ dependencies:
   # Others
   package_info_plus: ^1.4.0
 
+  # Core
+  shared_preferences: ^2.0.13
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
