@@ -7,8 +7,13 @@ class BaseEntity {
   @ColumnInfo(name: 'date_create')
   final String dateCreate;
 
+  @ColumnInfo(name: 'date_modification')
+  final String dateModification;
+
   BaseEntity(
     this.id, {
-    String? dateCreate,
-  }) : dateCreate = dateCreate ?? DateTime.now().toString();
+    DateTime? dateCreate,
+    DateTime? dateModification,
+  })  : dateModification = (dateModification ?? DateTime.now()).toString(),
+        dateCreate = (dateCreate ?? DateTime.now()).toString();
 }
