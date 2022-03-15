@@ -1,5 +1,7 @@
 extension StringExtension on String {
   int get toInt => codeUnitAt(0);
+
+  DateTime get toDateTime => DateTime.parse(this);
 }
 
 extension BoolExtension on bool {
@@ -23,9 +25,3 @@ extension IntExtension on int {
 
   String get toChar => String.fromCharCode(this);
 }
-
-// extension DateTimeExtension on DateTime {
-//   bool? get asString {
-
-//   };
-// }
