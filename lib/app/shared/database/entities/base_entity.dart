@@ -1,8 +1,8 @@
 import 'package:floor/floor.dart';
 
 class BaseEntity {
-  @primaryKey
-  final int id;
+  @PrimaryKey(autoGenerate: true)
+  final int? id;
 
   @ColumnInfo(name: 'date_create')
   final String dateCreate;
@@ -10,8 +10,8 @@ class BaseEntity {
   @ColumnInfo(name: 'date_modification')
   final String dateModification;
 
-  BaseEntity(
-    this.id, {
+  BaseEntity({
+    this.id,
     DateTime? dateCreate,
     DateTime? dateModification,
   })  : dateModification = (dateModification ?? DateTime.now()).toString(),
