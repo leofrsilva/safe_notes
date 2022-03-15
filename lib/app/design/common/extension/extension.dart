@@ -1,9 +1,9 @@
 extension StringExtension on String {
-  int get asInt => codeUnitAt(0);
+  int get toInt => codeUnitAt(0);
 }
 
 extension BoolExtension on bool {
-  int get asInt {
+  int get toInt {
     if (this) {
       return 1;
     }
@@ -12,7 +12,7 @@ extension BoolExtension on bool {
 }
 
 extension IntExtension on int {
-  bool? get asBool {
+  bool? get toBool {
     if (this == 0) {
       return false;
     } else if (this == 1) {
@@ -21,5 +21,11 @@ extension IntExtension on int {
     return null;
   }
 
-  String get asChar => String.fromCharCode(this);
+  String get toChar => String.fromCharCode(this);
 }
+
+// extension DateTimeExtension on DateTime {
+//   bool? get asString {
+
+//   };
+// }
