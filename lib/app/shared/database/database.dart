@@ -1,17 +1,16 @@
+// database.dart
+
+// required package imports
+import 'dart:async';
 import 'package:floor/floor.dart';
+import 'package:sqflite/sqflite.dart' as sqflite;
 
-@Entity(
-  tableName: 'person',
-  indices: [
-    Index(value: ['custom_name'], unique: true)
-  ],
-)
-class Person {
-  @primaryKey
-  final int id;
+import 'entities/usuario_entity.dart';
+import 'repositories/usuario_dao.dart';
 
-  @ColumnInfo()
-  final String name;
+part 'database.g.dart'; // the generated code will be there
 
-  Person(this.id, this.name);
+@Database(version: 1, entities: [UsuarioEntity])
+abstract class AppDatabase extends FloorDatabase {
+  UsuarioDAO get personDao;
 }

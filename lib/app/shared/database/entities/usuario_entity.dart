@@ -25,9 +25,9 @@ class UsuarioEntity extends BaseEntity {
   final int _logged;
 
   UsuarioEntity({
-    int? id,
-    DateTime? dateCreate,
-    DateTime? dateModification,
+    int? userId,
+    String? dateCreate,
+    String? dateModification,
     required this.email,
     required this.name,
     required String genre,
@@ -37,9 +37,9 @@ class UsuarioEntity extends BaseEntity {
         _dataBirth = dataBirth.toString(),
         _logged = logged.toInt,
         super(
-          id: id!,
-          dateCreate: dateCreate,
-          dateModification: dateModification,
+          id: userId,
+          dateCreate: dateCreate ?? DateTime.now().toString(),
+          dateModification: dateModification ?? DateTime.now().toString(),
         );
 
   String get genre => _genre.toChar;
@@ -49,9 +49,9 @@ class UsuarioEntity extends BaseEntity {
   bool get logged => _logged.toBool ?? false;
 
   UsuarioEntity copyWith({
-    int? id,
-    DateTime? dateCreate,
-    DateTime? dateModification,
+    int? userId,
+    String? dateCreate,
+    String? dateModification,
     String? email,
     String? name,
     String? genre,
@@ -59,14 +59,14 @@ class UsuarioEntity extends BaseEntity {
     bool? logged,
   }) {
     return UsuarioEntity(
-      id: id ?? this.id,
-      dateCreate: dateCreate ?? this.dateCreate.toDateTime,
-      dateModification: dateModification ?? this.dateModification.toDateTime,
+      userId: userId ?? id,
+      dateCreate: dateCreate ?? this.dateCreate.toString(),
+      dateModification: dateModification ?? this.dateModification.toString(),
       email: email ?? this.email,
       name: name ?? this.name,
-      genre: genre ?? this.genre,
-      dataBirth: dataBirth ?? this.dataBirth,
-      logged: logged ?? this.logged,
+      genre: genre ?? _genre.toChar,
+      dataBirth: dataBirth ?? _dataBirth.toDateTime,
+      logged: logged ?? _logged.toBool!,
     );
   }
 }
