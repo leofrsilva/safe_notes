@@ -137,8 +137,8 @@ class _$UsuarioDAO extends UsuarioDAO {
   }
 
   @override
-  Future<List<UsuarioEntity>> findUserLogged() async {
-    return _queryAdapter.queryList('SELECT * FROM Usuario WHERE logged = 1',
+  Future<UsuarioEntity?> findUserLogged() async {
+    return _queryAdapter.query('SELECT * FROM Usuario WHERE logged = 1',
         mapper: (Map<String, Object?> row) => UsuarioEntity(
             dateCreate: row['date_create'] as String?,
             dateModification: row['date_modification'] as String?,

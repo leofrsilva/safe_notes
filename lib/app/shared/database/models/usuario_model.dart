@@ -76,6 +76,10 @@ class UsuarioModel implements IUsuarioModel {
     );
   }
 
+  static List<UsuarioModel> fromListEntity(List<UsuarioEntity> entities) {
+    return entities.map((entity) => UsuarioModel(entity)).toList();
+  }
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'user_id': _entity.id,
