@@ -107,12 +107,12 @@ class _$UsuarioDAO extends UsuarioDAO {
             (UsuarioEntity item) => <String, Object?>{
                   'email': item.email,
                   'name': item.name,
-                  'genre': item._genre,
-                  'data_birth': item._dataBirth,
-                  'logged': item._logged,
+                  'genre': item.genre,
+                  'data_birth': item.dateBirth,
+                  'logged': item.logged,
                   'id': item.id,
-                  'date_create': item._dateCreate,
-                  'date_modification': item._dateModification
+                  'date_create': item.dateCreate,
+                  'date_modification': item.dateModification
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -127,7 +127,13 @@ class _$UsuarioDAO extends UsuarioDAO {
   Future<List<UsuarioEntity>> fetchUsers() async {
     return _queryAdapter.queryList('SELECT * FROM Usuario WHERE',
         mapper: (Map<String, Object?> row) => UsuarioEntity(
-            email: row['email'] as String, name: row['name'] as String));
+            dateCreate: row['date_create'] as String?,
+            dateModification: row['date_modification'] as String?,
+            dateBirth: row['data_birth'] as String,
+            email: row['email'] as String,
+            name: row['name'] as String,
+            genre: row['genre'] as int,
+            logged: row['logged'] as int));
   }
 
   @override
