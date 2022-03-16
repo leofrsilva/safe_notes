@@ -75,4 +75,16 @@ class UsuarioModel implements IUsuarioModel {
       logged: logged ?? this.logged,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'user_id': _entity.id,
+      'name': _entity.name,
+      'email': _entity.email,
+      'genre': genre,
+      'date_birth': dateBirth,
+      'date_create': dateCreate,
+      'date_modification': dateModification,
+    };
+  }
 }

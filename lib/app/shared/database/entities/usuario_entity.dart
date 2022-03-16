@@ -16,7 +16,7 @@ class UsuarioEntity extends BaseEntity {
   @ColumnInfo(name: 'genre')
   final int genre;
 
-  @ColumnInfo(name: 'data_birth')
+  @ColumnInfo(name: 'date_birth')
   final String dateBirth;
 
   @ColumnInfo(name: 'logged')

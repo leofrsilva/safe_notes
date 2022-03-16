@@ -32,9 +32,7 @@ void main() {
 
     test('Listar Usuarios', () async {
       final listUsers = await usuarioDAO.fetchUsers();
-      listUsers.forEach((entity) {
-        print(entity);
-      });
+      print(listUsers.length);
       expect(listUsers, isNotEmpty);
     });
   });

@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Usuario` (`email` TEXT NOT NULL, `name` TEXT NOT NULL, `genre` INTEGER NOT NULL, `data_birth` TEXT NOT NULL, `logged` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `Usuario` (`email` TEXT NOT NULL, `name` TEXT NOT NULL, `genre` INTEGER NOT NULL, `date_birth` TEXT NOT NULL, `logged` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_Usuario_email` ON `Usuario` (`email`)');
 
@@ -108,7 +108,7 @@ class _$UsuarioDAO extends UsuarioDAO {
                   'email': item.email,
                   'name': item.name,
                   'genre': item.genre,
-                  'data_birth': item.dateBirth,
+                  'date_birth': item.dateBirth,
                   'logged': item.logged,
                   'id': item.id,
                   'date_create': item.dateCreate,
@@ -125,11 +125,24 @@ class _$UsuarioDAO extends UsuarioDAO {
 
   @override
   Future<List<UsuarioEntity>> fetchUsers() async {
-    return _queryAdapter.queryList('SELECT * FROM Usuario WHERE',
+    return _queryAdapter.queryList('SELECT * FROM Usuario',
         mapper: (Map<String, Object?> row) => UsuarioEntity(
             dateCreate: row['date_create'] as String?,
             dateModification: row['date_modification'] as String?,
-            dateBirth: row['data_birth'] as String,
+            dateBirth: row['date_birth'] as String,
+            email: row['email'] as String,
+            name: row['name'] as String,
+            genre: row['genre'] as int,
+            logged: row['logged'] as int));
+  }
+
+  @override
+  Future<List<UsuarioEntity>> findUserLogged() async {
+    return _queryAdapter.queryList('SELECT * FROM Usuario WHERE logged = 1',
+        mapper: (Map<String, Object?> row) => UsuarioEntity(
+            dateCreate: row['date_create'] as String?,
+            dateModification: row['date_modification'] as String?,
+            dateBirth: row['date_birth'] as String,
             email: row['email'] as String,
             name: row['name'] as String,
             genre: row['genre'] as int,
