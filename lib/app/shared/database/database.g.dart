@@ -113,6 +113,20 @@ class _$UsuarioDAO extends UsuarioDAO {
                   'id': item.id,
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
+                }),
+        _usuarioEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'Usuario',
+            ['id'],
+            (UsuarioEntity item) => <String, Object?>{
+                  'email': item.email,
+                  'name': item.name,
+                  'genre': item.genre,
+                  'date_birth': item.dateBirth,
+                  'logged': item.logged,
+                  'id': item.id,
+                  'date_create': item.dateCreate,
+                  'date_modification': item.dateModification
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -122,6 +136,8 @@ class _$UsuarioDAO extends UsuarioDAO {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<UsuarioEntity> _usuarioEntityInsertionAdapter;
+
+  final DeletionAdapter<UsuarioEntity> _usuarioEntityDeletionAdapter;
 
   @override
   Future<List<UsuarioEntity>> fetchUsers() async {
@@ -137,8 +153,22 @@ class _$UsuarioDAO extends UsuarioDAO {
   }
 
   @override
-  Future<UsuarioEntity?> findUserLogged() async {
-    return _queryAdapter.query('SELECT * FROM Usuario WHERE logged = 1',
+  Future<UsuarioEntity?> findUser(int userId) async {
+    return _queryAdapter.query('SELECT * FROM Usuario WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => UsuarioEntity(
+            dateCreate: row['date_create'] as String?,
+            dateModification: row['date_modification'] as String?,
+            dateBirth: row['date_birth'] as String,
+            email: row['email'] as String,
+            name: row['name'] as String,
+            genre: row['genre'] as int,
+            logged: row['logged'] as int),
+        arguments: [userId]);
+  }
+
+  @override
+  Future<List<UsuarioEntity>> getUserLogged() async {
+    return _queryAdapter.queryList('SELECT * FROM Usuario WHERE logged = 1',
         mapper: (Map<String, Object?> row) => UsuarioEntity(
             dateCreate: row['date_create'] as String?,
             dateModification: row['date_modification'] as String?,
@@ -150,8 +180,42 @@ class _$UsuarioDAO extends UsuarioDAO {
   }
 
   @override
+  Future<UsuarioEntity?> checkEmailExist(String email) async {
+    return _queryAdapter.query('SELECT * FROM Usuario WHERE email = ?1',
+        mapper: (Map<String, Object?> row) => UsuarioEntity(
+            dateCreate: row['date_create'] as String?,
+            dateModification: row['date_modification'] as String?,
+            dateBirth: row['date_birth'] as String,
+            email: row['email'] as String,
+            name: row['name'] as String,
+            genre: row['genre'] as int,
+            logged: row['logged'] as int),
+        arguments: [email]);
+  }
+
+  @override
+  Future<void> login(int userLogged) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE Usuario SET logged = 1 WHERE id = ?1',
+        arguments: [userLogged]);
+  }
+
+  @override
+  Future<void> logoutOutherAccounts(int userLogged) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE Usuario SET logged = 0 WHERE id <> ?1',
+        arguments: [userLogged]);
+  }
+
+  @override
   Future<int> insertElement(UsuarioEntity recrord) {
     return _usuarioEntityInsertionAdapter.insertAndReturnId(
         recrord, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> deleteElement(List<UsuarioEntity> usuarios) {
+    return _usuarioEntityDeletionAdapter
+        .deleteListAndReturnChangedRows(usuarios);
   }
 }

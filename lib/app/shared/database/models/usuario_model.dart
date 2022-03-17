@@ -89,6 +89,7 @@ class UsuarioModel implements IUsuarioModel {
       'date_birth': dateBirth,
       'date_create': dateCreate,
       'date_modification': dateModification,
+      'logged': logged,
     };
   }
 }

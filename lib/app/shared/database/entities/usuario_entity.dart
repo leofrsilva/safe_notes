@@ -20,7 +20,7 @@ class UsuarioEntity extends BaseEntity {
   final String dateBirth;
 
   @ColumnInfo(name: 'logged')
-  final int logged;
+  late final int logged;
 
   UsuarioEntity({
     int? userId,
