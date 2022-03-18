@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -14,8 +15,11 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   Future<String> _getVersion() async {
-    final info = await PackageInfo.fromPlatform();
-    return info.version;
+    if (Platform.isAndroid || Platform.isIOS) {
+      final info = await PackageInfo.fromPlatform();
+      return info.version;
+    }
+    return '';
   }
 
   _startSplashPage() async {
@@ -42,11 +46,21 @@ class _SplashPageState extends State<SplashPage> {
         children: [
           Expanded(
             child: Center(
-              child: Image.asset(
-                ImagesAssets.imgSplah,
-                key: const ValueKey('img-splash'),
-                fit: BoxFit.cover,
-                width: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    ImagesAssets.imgSplah,
+                    key: const ValueKey('img-splash'),
+                    fit: BoxFit.cover,
+                    width: 128,
+                  ),
+                  SizedBox(height: Sizes.dp30(context)),
+                  CircularProgressIndicator(
+                    color: ColorPalettes.white,
+                  ),
+                ],
               ),
             ),
           ),
@@ -57,7 +71,9 @@ class _SplashPageState extends State<SplashPage> {
                 builder: (context, snapshot) {
                   var seeInfo = '';
                   if (snapshot.hasData) {
-                    seeInfo = 'v ${snapshot.data}';
+                    if (snapshot.data!.isNotEmpty) {
+                      seeInfo = 'v ${snapshot.data}';
+                    }
                   }
 
                   return Container(

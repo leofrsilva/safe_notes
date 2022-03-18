@@ -1,5 +1,5 @@
 class ImagesAssets {
-  static String imgSplah = 'assets/images/padlock-white-256x256.png';
+  static String imgSplah = 'assets/images/padlock-white-128x128.png';
   // static String profile = 'assets/images/rifa.jpeg';
   // static String instagram = 'assets/images/insta.png';
   // static String github = 'assets/images/github.png';
