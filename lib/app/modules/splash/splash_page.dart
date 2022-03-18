@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_notes/app/design/common/common.dart';
+import 'package:safe_notes/app/shared/database/entities/usuario_entity.dart';
 
-import '../../../app_module.dart';
+import '../../app_module.dart';
+import '../../shared/database/database.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -25,10 +27,16 @@ class _SplashPageState extends State<SplashPage> {
   _startSplashPage() async {
     await Future.wait([
       Modular.isModuleReady<AppModule>(),
-      Future.delayed(const Duration(seconds: 2)),
+      Future.delayed(const Duration(milliseconds: 500)),
     ]).then((value) async {
-      //...
-      // Modular.to.navigate('/dashboard/movie_module/');
+      final usuarioDAO = Modular.get<AppDatabase>().usuarioDao;
+      List<UsuarioEntity> listUsersLogged = await usuarioDAO.getUserLogged();
+
+      if (listUsersLogged.isNotEmpty) {
+        Modular.to.navigate('/dashboard');
+      } else {
+        Modular.to.navigate('/auth');
+      }
     });
   }
 
