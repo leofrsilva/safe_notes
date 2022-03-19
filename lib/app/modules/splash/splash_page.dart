@@ -35,7 +35,7 @@ class _SplashPageState extends State<SplashPage> {
       if (listUsersLogged.isNotEmpty) {
         Modular.to.navigate('/dashboard');
       } else {
-        Modular.to.navigate('/auth');
+        Modular.to.navigate('/auth/getin/');
       }
     });
   }
