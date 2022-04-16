@@ -6,16 +6,31 @@ class WaveLeft extends StatelessWidget {
   Color? color;
   final bool isGradient;
   final double fractionHeight;
+  final bool invertedColor;
+  late List<Color> gradient;
 
   WaveLeft({
     Key? key,
     this.color,
     this.isGradient = true,
+    this.invertedColor = false,
     required this.fractionHeight,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (invertedColor) {
+      gradient = <Color>[
+        ColorPalettes.secondy,
+        Theme.of(context).primaryColor,
+      ];
+    } else {
+      gradient = <Color>[
+        Theme.of(context).primaryColor,
+        ColorPalettes.secondy,
+      ];
+    }
+
     return ClipPath(
       clipper: ClipWaveLeft(fractionHeight: fractionHeight),
       child: Container(
@@ -23,10 +38,7 @@ class WaveLeft extends StatelessWidget {
           color: color ?? Theme.of(context).primaryColor,
           gradient: isGradient
               ? LinearGradient(
-                  colors: <Color>[
-                    Theme.of(context).primaryColor,
-                    ColorPalettes.secondy,
-                  ],
+                  colors: gradient,
                   begin: AlignmentDirectional.topStart,
                   end: AlignmentDirectional.bottomEnd,
                 )

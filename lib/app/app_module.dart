@@ -3,12 +3,15 @@ import 'modules/auth/auth_module.dart';
 import 'modules/dashboard/dashboard_module.dart';
 import 'modules/splash/splash_module.dart';
 import 'shared/database/database.dart';
+import 'app_core.dart';
 
 class AppModule extends Module {
   @override
   final List<Bind> binds = [
-    AsyncBind<AppDatabase>(
-        (i) => $FloorAppDatabase.databaseBuilder('app_database.db').build()),
+    // AsyncBind<AppDatabase>(
+    //   (i) => $FloorAppDatabase.databaseBuilder('app_database.db').build(),
+    // ),
+    Bind.lazySingleton<AppCore>((i) => AppCore()),
   ];
 
   @override

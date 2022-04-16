@@ -2,11 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/design/common/common.dart';
-import 'package:safe_notes/app/shared/database/entities/usuario_entity.dart';
 
-import '../../app_module.dart';
-import '../../shared/database/database.dart';
+import 'splash_module.dart';
+import 'splash_store.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends ModularState<SplashPage, SplashStore> {
   Future<String> _getVersion() async {
     if (Platform.isAndroid || Platform.isIOS) {
       final info = await PackageInfo.fromPlatform();
@@ -24,26 +24,20 @@ class _SplashPageState extends State<SplashPage> {
     return '';
   }
 
-  _startSplashPage() async {
+  _startSplashPage(BuildContext context) async {
     await Future.wait([
       Modular.isModuleReady<AppModule>(),
+      Modular.isModuleReady<SplashModule>(),
       Future.delayed(const Duration(milliseconds: 500)),
-    ]).then((value) async {
-      final usuarioDAO = Modular.get<AppDatabase>().usuarioDao;
-      List<UsuarioEntity> listUsersLogged = await usuarioDAO.getUserLogged();
-
-      if (listUsersLogged.isNotEmpty) {
-        Modular.to.navigate('/dashboard');
-      } else {
-        Modular.to.navigate('/auth/getin/');
-      }
+    ]).then((_) async {
+      store.checkLoggedInUser(context);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _startSplashPage();
+    _startSplashPage(context);
   }
 
   @override

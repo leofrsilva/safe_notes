@@ -16,6 +16,7 @@ class ColorPalettes {
   static Color greyBg = const Color(0xfff0f0f0);
   static Color greyDark = const Color(0xFF333333);
   static Color red = Colors.red;
+  static Color redLight = const Color(0xFFFF5E5E);
   static Color yellow = Colors.yellow;
   static Color green = Colors.green;
   static Color setActive = Colors.grey[500] ?? const Color(0xFF9E9E9E);

@@ -6,12 +6,14 @@ class CustomButton extends StatefulWidget {
   final String text;
   final bool isGradient;
   final Function()? onTap;
+  final bool isInvertAnimation;
 
   const CustomButton({
     Key? key,
     this.onTap,
     this.isGradient = true,
     required this.text,
+    this.isInvertAnimation = false,
   }) : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class _CustomButtonState extends State<CustomButton>
     with TickerProviderStateMixin {
   late final _animationController = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1750),
+    duration: const Duration(milliseconds: 1000),
   );
   late final _animationTween = Tween<double>(begin: -1, end: 0)
       .chain(CurveTween(curve: Curves.easeInOutQuart))
@@ -32,7 +34,13 @@ class _CustomButtonState extends State<CustomButton>
   void initState() {
     super.initState();
     Future.delayed(
-        const Duration(milliseconds: 250), _animationController.forward);
+        const Duration(milliseconds: 50), _animationController.forward);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -48,7 +56,9 @@ class _CustomButtonState extends State<CustomButton>
         }
 
         return Transform.translate(
-          offset: Offset(_animationTween.value * 385, 0),
+          offset: Offset(
+              _animationTween.value * (widget.isInvertAnimation ? -387 : 385),
+              0),
           child: Opacity(opacity: opacity(), child: child),
         );
       },

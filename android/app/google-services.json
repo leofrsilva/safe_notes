@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "880879431649",
+    "project_id": "safe-notes-8319f",
+    "storage_bucket": "safe-notes-8319f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880879431649:android:aa15b7f6881215c3a1eca0",
+        "android_client_info": {
+          "package_name": "br.com.maxleco.safe_notes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880879431649-4li7pjd3rmvr8rjrgr0ad7blrhuuld5m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.maxleco.safe_notes",
+            "certificate_hash": "c0860d7801043de72430ae2d676b060a86a59690"
+          }
+        },
+        {
+          "client_id": "880879431649-lh2a1t4k8jqfuufmgtvjhhvu5s6lv6nc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDerP9oIRsTJvwFkj38LLADOSKVLIfsY8A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880879431649-lh2a1t4k8jqfuufmgtvjhhvu5s6lv6nc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

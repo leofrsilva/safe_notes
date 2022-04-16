@@ -1,6 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:safe_notes/app/modules/auth/auth_page.dart';
 
-import 'presenter/auth_page.dart';
 import 'submodules/getin/getin_module.dart';
 import 'submodules/register/register_module.dart';
 
@@ -19,7 +19,7 @@ class AuthModule extends Module {
             ModuleRoute(
               '/register',
               module: RegisterModule(),
-              transition: TransitionType.leftToRight,
+              transition: TransitionType.rightToLeft,
             ),
           ],
         ),

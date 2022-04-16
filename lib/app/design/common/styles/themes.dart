@@ -18,6 +18,7 @@ class Themes {
         fontWeight: FontWeight.bold,
       ),
     ),
+    iconTheme: IconThemeData(color: ColorPalettes.whiteSemiTransparent),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -38,5 +39,6 @@ class Themes {
         fontWeight: FontWeight.w700,
       ),
     ),
+    iconTheme: IconThemeData(color: ColorPalettes.secondy),
   );
 }

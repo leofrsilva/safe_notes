@@ -9,6 +9,10 @@ class Sizes {
     return MediaQuery.of(context).size.width;
   }
 
+  static double heightStatusBar(BuildContext context) {
+    return MediaQuery.of(context).viewPadding.top;
+  }
+
   static double dp4(BuildContext context) {
     return Sizes.width(context) / 100;
   }

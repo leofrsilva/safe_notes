@@ -17,15 +17,11 @@ abstract class Failure {
 }
 
 class UnknownError extends Failure {
-  final dynamic exception;
-  final StackTrace? stackTrace;
-  final String? label;
-
   UnknownError({
     String? errorMessage,
-    this.label,
-    this.exception,
-    this.stackTrace,
+    dynamic exception,
+    StackTrace? stackTrace,
+    String? label,
   }) : super(
           stackTrace: stackTrace,
           label: label,
@@ -33,3 +29,9 @@ class UnknownError extends Failure {
           errorMessage: errorMessage ?? 'Unknown Error',
         );
 }
+
+abstract class NoInternetConnection extends Failure {
+  NoInternetConnection() : super(errorMessage: 'Sem conexão com a Internet');
+}
+
+class NoDataFound extends Failure {}
