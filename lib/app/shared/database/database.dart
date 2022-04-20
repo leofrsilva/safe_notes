@@ -7,7 +7,9 @@
 
 // part 'database.g.dart'; // the generated code will be there
 
-// @Database(version: 1, entities: [])
+// import 'package:safe_notes/app/shared/database/entities/folder_entity.dart';
+
+// @Database(version: 1, entities: [FolderEntity])
 // abstract class AppDatabase extends FloorDatabase {
   
 // }

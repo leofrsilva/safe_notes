@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:fpdart/fpdart.dart';
+import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/design/widgets/loading/loading_overlay.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/token/i_expire_token.dart';
 
-import '../../domain/errors/signup_failures.dart';
-import '../../domain/usecases/i_signup_firebase_usecase.dart';
+import '../domain/errors/signup_failures.dart';
+import '../domain/usecases/i_signup_firebase_usecase.dart';
 
 class AdicionarUserController {
-  final ICreateUserAuthenticationUsecase createUserAuthenticationUsecase;
-  final ISetUserFirestoreUsecase setUserFirestoreUsecase;
+  final AppCore _appCore;
+  final IExpireToken _expireToken;
+  final ICreateUserAuthenticationUsecase _createUserAuthenticationUsecase;
+  final ISetUserFirestoreUsecase _setUserFirestoreUsecase;
   Failure? failure;
 
   late final ValueNotifier<int> currentPage;
@@ -32,8 +35,10 @@ class AdicionarUserController {
   UsuarioModel usuario = UsuarioModel.empty();
 
   AdicionarUserController(
-    this.createUserAuthenticationUsecase,
-    this.setUserFirestoreUsecase,
+    this._appCore,
+    this._expireToken,
+    this._createUserAuthenticationUsecase,
+    this._setUserFirestoreUsecase,
   ) {
     pageController = PageController(initialPage: 0);
     currentPage = ValueNotifier<int>(0);
@@ -43,19 +48,6 @@ class AdicionarUserController {
     textControllerName = TextEditingController();
     textControllerEmail = TextEditingController();
     textControllerDate = TextEditingController();
-  }
-
-  Future<String?> validatorEmail(String email) async {
-    // final checkEmailExisting = await checkEmailExistingUserUsecase(email);
-    // if (checkEmailExisting.isLeft()) {
-    //   final failure = checkEmailExisting.fold(id, id) as Failure;
-    //   if (failure is EmailExistingUserError) {
-    //     return 'O Email já Existente!';
-    //   } else if (failure is CheckEmailExistingUserSqliteError) {
-    //     return 'O erro na checagem da existencia do Email!';
-    //   }
-    // }
-    return null;
   }
 
   void backForInfUser() {
@@ -84,9 +76,6 @@ class AdicionarUserController {
   Future<void> savedInfoAccess(BuildContext context) async {
     failure = null;
     final formState = formKeyToInfoAccess.currentState;
-    checkEmailErrorMessage = await validatorEmail(
-      textControllerEmail.text,
-    );
 
     if (formState != null) {
       if (formState.validate()) {
@@ -107,11 +96,18 @@ class AdicionarUserController {
           }
           // Create Authentication
           else if (failure is CreateUserAuthFirebaseError) {
-            SnackbarError.show(
-              context,
-              title: 'Erro ao Criar Usuário',
-              message: failure!.errorMessage,
-            );
+            if (failure!.exception.code == 'network-request-failed') {
+              SnackbarError.show(context, message: failure!.errorMessage);
+            } else if (failure!.exception.code == 'email-already-in-use') {
+              checkEmailErrorMessage = failure!.errorMessage;
+              formState.validate();
+            } else {
+              SnackbarError.show(
+                context,
+                title: 'Erro ao Criar Usuário',
+                message: failure!.errorMessage,
+              );
+            }
           }
           // Set Firestore
           else if (failure is SignupFirestoreError) {
@@ -132,31 +128,29 @@ class AdicionarUserController {
   }
 
   Future<void> processesCreationUser(BuildContext context) async {
-    final userAuth = await createUserAuthenticationUsecase(
+    final userAuth = await _createUserAuthenticationUsecase(
       usuario.email,
       usuario.senha,
     );
     userAuth.fold(
       (error) => failure = error,
       (uid) async {
-        usuario = usuario.copyWith(docRef: uid, logged: true);
-        // final createUser = await createUserUsecase.call(usuario);
-        // createUser.fold(
-        //   (error) => failure = error,
-        //   (usuarioEntity) async {
-        //     final setUserFirestore =
-        //         await setUserFirestoreUsecase(usuarioEntity);
-        //     setUserFirestore.fold(
-        //       (error) => failure = error,
-        //       (_) {
-        //         final userShared = Modular.get<UserSharedController>();
-        //         userShared.setModel =
-        //             UsuarioModel.fromEntity(usuarioEntity).toDBUser();
-        //         Modular.to.navigate('/dashboard/');
-        //       },
-        //     );
-        //   },
-        // );
+        usuario = usuario.copyWith(
+          docRef: uid,
+          logged: true,
+          dateCreate: DateTime.now(),
+          dateModification: DateTime.now(),
+        );
+        final setUserFirestore = await _setUserFirestoreUsecase(usuario);
+        setUserFirestore.fold(
+          (error) => failure = error,
+          (_) async {
+            await _expireToken.generaterToken(usuario.toInfoUser());
+
+            _appCore.setUsuario(usuario);
+            Modular.to.navigate('/dashboard/home/');
+          },
+        );
       },
     );
   }

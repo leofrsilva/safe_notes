@@ -6,12 +6,12 @@ class CreateUserAuthFirebaseError extends Failure {
   CreateUserAuthFirebaseError(
     StackTrace stackTrace,
     String label,
-    dynamic exception,
+    dynamic firebaseAuthException,
     String errorMessage,
   ) : super(
           stackTrace: stackTrace,
           label: label,
-          exception: exception,
+          exception: firebaseAuthException,
           errorMessage: errorMessage,
         );
 }

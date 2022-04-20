@@ -24,6 +24,13 @@ class ExpireToken extends IExpireToken {
 
   @override
   Future<void> generaterToken(Map<String, dynamic> infoUser) async {
+    infoUser.updateAll((key, value) {
+      if (value is DateTime) {
+        return 'Type-DateTime|||${value.millisecondsSinceEpoch}';
+      }
+      return value;
+    });
+
     int issuedAt = DateTime.now().millisecondsSinceEpoch;
     int expire = DateTime.fromMillisecondsSinceEpoch(issuedAt)
         .add(const Duration(days: 3))
@@ -34,6 +41,7 @@ class ExpireToken extends IExpireToken {
       'exp': expire,
       'user': infoUser,
     };
+
     final strPayload = jsonEncode(payload);
 
     final key = crypt.Key.fromUtf8(_key.to32Length);
@@ -48,7 +56,9 @@ class ExpireToken extends IExpireToken {
   }
 
   @override
-  Future<Map<String, dynamic>?> checkToken() async {
+  Future<Map<String, dynamic>?> checkToken({
+    Function? onCallBackExpiredTime,
+  }) async {
     String? token = await _tokenShared.getToken();
 
     if (token != null) {
@@ -70,9 +80,20 @@ class ExpireToken extends IExpireToken {
       int now = DateTime.now().millisecondsSinceEpoch;
 
       if (now <= expire) {
-        return payload['user'];
+        Map<String, dynamic> user = payload['user'];
+        user.updateAll((key, value) {
+          if (value is String && value.contains('Type-DateTime|||')) {
+            final milliseconds = int.tryParse(value.split('|||').last);
+            return DateTime.fromMillisecondsSinceEpoch(milliseconds ?? 0);
+          }
+          return value;
+        });
+        return user;
       } else {
         _tokenShared.removeToken();
+        if (onCallBackExpiredTime != null) {
+          await onCallBackExpiredTime.call();
+        }
       }
     }
     return null;

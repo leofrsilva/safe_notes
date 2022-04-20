@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:safe_notes/app/app_core.dart';
+import 'package:safe_notes/app/shared/token/expire_token.dart';
 
 import 'domain/repositories/i_getin_firebase_repository.dart';
 import 'domain/usecases/get_user_firestore_usecase.dart';
 import 'domain/usecases/i_getin_firebase_usecase.dart';
 import 'domain/usecases/login_authentication_usecase.dart';
+import 'domain/usecases/update_logged_user_firestore_usecase.dart';
 import 'external/datasources/getin_firebase_datasource.dart';
 import 'infra/datasources/i_getin_firebase_datasource.dart';
 import 'infra/repositories/getin_firebase_repository.dart';
@@ -28,12 +31,19 @@ class GetInModule extends Module {
         Bind.lazySingleton<ILoginAuthenticationUsecase>(
           (i) => LoginAuthenticationUsecase(i<IGetinFirebaseRepository>()),
         ),
+        Bind.lazySingleton<IUpdateLoggedUserFirestoreUsecase>(
+          (i) =>
+              UpdateLoggedUserFirestoreUsecase(i<IGetinFirebaseRepository>()),
+        ),
         Bind.lazySingleton<IGetUserFirestoreUsecase>(
           (i) => GetUserFirestoreUsecase(i<IGetinFirebaseRepository>()),
         ),
         //
         Bind.lazySingleton<GetinController>((i) => GetinController(
+              i<AppCore>(),
+              ExpireToken(),
               i<ILoginAuthenticationUsecase>(),
+              i<IUpdateLoggedUserFirestoreUsecase>(),
               i<IGetUserFirestoreUsecase>(),
             )),
       ];

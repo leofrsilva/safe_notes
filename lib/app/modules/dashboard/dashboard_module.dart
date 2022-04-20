@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/shared/token/expire_token.dart';
 import 'package:safe_notes/app/shared/token/i_expire_token.dart';
+
+import 'package:safe_notes/app/shared/leave/leave.dart';
 
 import 'presenter/pages/drawer_menu_controller.dart';
 import 'presenter/dashboard_controller.dart';
@@ -11,23 +15,25 @@ import 'submodules/home/home_module.dart';
 class DashboardModule extends Module {
   @override
   List<Bind<Object>> get binds => [
-        // Bind.lazySingleton<IAuthenticationSqliteDatasource>(
-        //   (i) => AuthenticationSqliteDatasource(i<AppDatabase>().usuarioDao),
-        // ),
-        // Bind.lazySingleton<IAuthenticationSqliteRepository>(
-        //   (i) => AuthenticationSqliteRepository(
-        //       i<IAuthenticationSqliteDatasource>()),
-        // ),
-        // Bind.lazySingleton<ILogoutUserSqliteUsecase>(
-        //   (i) => LogoutUserSqliteUsecase(i<IAuthenticationSqliteRepository>()),
-        // ),
-        Bind.lazySingleton<IExpireToken>((i) => ExpireToken()),
+        Bind.lazySingleton<ILeaveDatasource>(
+          (i) => LeaveDatasource(
+            FirebaseAuth.instance,
+            FirebaseFirestore.instance,
+          ),
+        ),
+        Bind.lazySingleton<ILeaveRepository>(
+          (i) => LeaveRepository(i<ILeaveDatasource>()),
+        ),
+        Bind.lazySingleton<ILeaveAuthUsecase>(
+          (i) => LeaveAuthUsecase(i<ILeaveRepository>()),
+        ),
+        //
         Bind.lazySingleton<DashboardController>((i) => DashboardController(
-              i<IExpireToken>(),
-              FirebaseAuth.instance,
-              // i<ILogoutUserSqliteUsecase>(),
+              i<AppCore>(),
+              ExpireToken(),
+              i<ILeaveAuthUsecase>(),
             )),
-
+        //
         Bind.singleton((i) => DrawerMenuController()),
       ];
 

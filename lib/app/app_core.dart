@@ -6,7 +6,7 @@ class AppCore {
 
   UsuarioModel? _usuarioModel;
   UsuarioModel? getUsuario() => _usuarioModel;
-  vsetUsuario(UsuarioModel? model) => _usuarioModel = model;
+  setUsuario(UsuarioModel? model) => _usuarioModel = model;
 
   setUsuarioFromEntity(UsuarioEntity entity) {
     _usuarioModel = UsuarioModel.fromEntity(entity);

@@ -12,7 +12,7 @@ import '../../../../../../../stub/usuario_entity_stub.dart';
 void main() {
   final datasource = GetinFirebaseDatasourceMock();
 
-  group('user firebase repository getUserFirestore | ', () {
+  group('getin firebase repository getUserFirestore | ', () {
     final entity = user0;
 
     test('retorna um UsuarioEntity', () async {
@@ -42,7 +42,7 @@ void main() {
     });
   });
 
-  group('user firebase repository signIn | ', () {
+  group('getin firebase repository signIn | ', () {
     const email = 'email';
     const pass = 'pass';
 
@@ -81,6 +81,33 @@ void main() {
 
       expect(result, isA<Left>());
       expect(result.fold(id, id), isA<NoFoundUserInLoginAuthFirebase>());
+    });
+  });
+
+  group('getin firebase repository updateLoggedUserFirestore | ', () {
+    test('isRight igual a True', () async {
+      const docRef = 'docRef';
+
+      when(() => datasource.updateLoggedUserFirestore(docRef))
+          .thenAnswer((_) async => dynamic);
+
+      final repository = GetinFirebaseRepository(datasource);
+      final result = await repository.updateLoggedUserFirestore(docRef);
+
+      expect(result.isRight(), equals(true));
+    });
+
+    test('retornar um GetinFirestoreError', () async {
+      const docRef = 'docRef';
+
+      when(() => datasource.updateLoggedUserFirestore(docRef))
+          .thenThrow(GetinFirestoreErrorMock());
+
+      final repository = GetinFirebaseRepository(datasource);
+      final result = await repository.updateLoggedUserFirestore(docRef);
+
+      expect(result.isLeft(), equals(true));
+      expect(result.fold(id, id), isA<GetinFirestoreError>());
     });
   });
 }

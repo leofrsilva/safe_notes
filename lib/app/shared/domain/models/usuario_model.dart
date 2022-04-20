@@ -104,4 +104,37 @@ class UsuarioModel extends UsuarioEntity {
       'logged': logged,
     };
   }
+
+  UsuarioModel.fromInfoUser(Map<String, dynamic> json)
+      : super(
+          senha: '',
+          docRef: json['docRef'],
+          name: json['name'],
+          email: json['email'],
+          genre: json['genre'],
+          dateBirth: json['date_birth'],
+          dateCreate: json['date_create'],
+          dateModification: json['date_modification'],
+          logged: json['logged'],
+        );
+
+  Map<String, dynamic> toInfoUser() {
+    return <String, dynamic>{
+      'docRef': docRef,
+      'name': name,
+      'email': email,
+      'genre': genre,
+      'date_birth': dateBirth,
+      'date_create': dateCreate,
+      'date_modification': dateModification,
+      'logged': logged,
+    };
+  }
+
+  static Map<String, dynamic> toLoggedJson() {
+    return <String, dynamic>{
+      'logged': true,
+      'date_modification': DateTime.now(),
+    };
+  }
 }

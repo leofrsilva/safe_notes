@@ -1,8 +1,8 @@
 import 'package:floor/floor.dart';
 
 class BaseEntity {
-  @PrimaryKey(autoGenerate: true)
-  final int? id;
+  @primaryKey
+  final int id;
 
   @ColumnInfo(name: 'date_create')
   final String dateCreate;
@@ -11,7 +11,7 @@ class BaseEntity {
   final String dateModification;
 
   BaseEntity({
-    this.id,
+    required this.id,
     required this.dateCreate,
     required this.dateModification,
   });

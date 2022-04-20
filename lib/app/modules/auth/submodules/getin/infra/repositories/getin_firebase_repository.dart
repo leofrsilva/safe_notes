@@ -40,4 +40,21 @@ class GetinFirebaseRepository extends IGetinFirebaseRepository {
       ));
     }
   }
+
+  @override
+  Future<Either<Failure, dynamic>> updateLoggedUserFirestore(
+      String docRef) async {
+    try {
+      final result = await _datasource.updateLoggedUserFirestore(docRef);
+      return Right(result);
+    } on Failure catch (e) {
+      return Left(e);
+    } on Exception catch (exception, stacktrace) {
+      return Left(UnknownError(
+        exception: exception,
+        stackTrace: stacktrace,
+        label: 'GetinFirebaseRepository-updateLoggedUserFirestore',
+      ));
+    }
+  }
 }

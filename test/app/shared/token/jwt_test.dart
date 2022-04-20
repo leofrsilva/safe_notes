@@ -14,11 +14,14 @@ void main() {
     await jwt.generaterToken({
       'name': 'leonardo',
       'email': 'leonardo@gmail.com',
+      'date_create': DateTime.now(),
     });
     final result = await jwt.checkToken();
+
     expect(result, isNotNull);
     expect(result, isA<Map<String, dynamic>>());
     expect(result!['name'], equals('leonardo'));
     expect(result['email'], equals('leonardo@gmail.com'));
+    expect(result['date_create'], isA<DateTime>());
   });
 }

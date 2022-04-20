@@ -10,7 +10,7 @@ import '../../../../../../../stub/usuario_entity_stub.dart';
 void main() {
   final datasource = SignupFirebaseDatasourceMock();
 
-  group('user firebase repository signUp | ', () {
+  group('signup firebase repository signUp | ', () {
     const email = 'email';
     const pass = 'pass';
 
@@ -52,7 +52,7 @@ void main() {
     });
   });
 
-  group('user firebase repository insertUserFirestore | ', () {
+  group('signup firebase repository insertUserFirestore | ', () {
     final entity = user0;
 
     test('isRight igual a True, preenchimento feito com sucesso', () async {

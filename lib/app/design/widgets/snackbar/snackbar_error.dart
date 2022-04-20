@@ -48,13 +48,19 @@ class SnackbarError {
                 children: [
                   titleWidget,
                   const SizedBox(height: 4.0),
-                  Text(
-                    message,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontFamily: 'JosefinSans',
-                      color: ColorPalettes.whiteSemiTransparent,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          message,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'JosefinSans',
+                            color: ColorPalettes.whiteSemiTransparent,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -62,7 +68,7 @@ class SnackbarError {
           ],
         ),
       ),
-      duration: duration ?? const Duration(milliseconds: 10000),
+      duration: duration ?? const Duration(milliseconds: 1500),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

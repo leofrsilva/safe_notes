@@ -99,4 +99,47 @@ void main() {
       );
     });
   });
+
+  group('ser firebase datasource updateLoggedUserFirestore | ', () {
+    const docRef = 'docRef';
+    UsuarioModel model = UsuarioModel(
+      docRef: docRef,
+      email: 'Test_Firestore@gmail.com',
+      name: 'Teste Firestore',
+      senha: '',
+      genre: 'M',
+      logged: false,
+      dateBirth: DateTime.now(),
+    );
+
+    test('retornar um dynamic, update feito com sucesso', () async {
+      await firestore
+          .collection('usuario')
+          .doc(model.docRef)
+          .set(model.toJson());
+
+      await datasource.updateLoggedUserFirestore(docRef);
+
+      final doc = await firestore.collection('usuario').doc(model.docRef).get();
+
+      expect(doc.data, isNotNull);
+      expect(doc.data()!['logged'], equals(true));
+    });
+
+    test('retornar um GetinFirestoreError', () async {
+      final firestoreMock = FirebaseFirestoreMock();
+      final datasourceMock = GetinFirebaseDatasource(auth, firestoreMock);
+
+      when(() => firestoreMock
+              .collection('usuario')
+              .doc(docRef)
+              .update(UsuarioModel.toLoggedJson()))
+          .thenThrow(GetinFirestoreErrorMock());
+
+      expect(
+        () => datasourceMock.updateLoggedUserFirestore(model.docRef),
+        throwsA(isA<GetinFirestoreError>()),
+      );
+    });
+  });
 }

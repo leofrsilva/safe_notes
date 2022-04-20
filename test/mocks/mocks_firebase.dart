@@ -20,7 +20,10 @@ final userAuthMock = MockUser(
   email: 'test@somedomain.com',
 );
 
-class FirebaseAuthMock extends Mock implements FirebaseAuth {}
+class FirebaseAuthMock extends Mock implements FirebaseAuth {
+  @override
+  Future<void> signOut() async {}
+}
 
 class NoUserCredentialMock extends Mock implements UserCredential {
   @override

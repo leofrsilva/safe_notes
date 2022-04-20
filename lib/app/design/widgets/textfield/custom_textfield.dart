@@ -138,6 +138,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                               widget.onChanged!(text);
                             }
                           },
+                          textInputAction:
+                              widget.nextFocus ? TextInputAction.next : null,
                           onEditingComplete: widget.nextFocus
                               ? () => FocusScope.of(context).nextFocus()
                               : null,

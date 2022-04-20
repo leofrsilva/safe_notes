@@ -55,6 +55,9 @@ class SignupFirebaseDatasource extends ISignupFirebaseDatasource {
         case "invalid-credential":
           errorMessage = "Seu E-mail é inválido";
           break;
+        case "network-request-failed":
+          errorMessage = "Sem Conexão com a Internet.";
+          break;
         default:
           errorMessage = "Ocorreu um erro indefinido.";
       }

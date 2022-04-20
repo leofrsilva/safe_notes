@@ -18,20 +18,24 @@ class HomePage extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        leading: IconButton(
-          icon: Icon(
-            drawerController.isShowDrawer.value ? Icons.arrow_back : Icons.menu,
-            size: 26,
-          ),
-          onPressed: () {
-            if (drawerController.isShowDrawer.value) {
-              drawerController.closeDrawer();
-            } else {
-              FocusScope.of(context).unfocus();
-              drawerController.openDrawer();
-            }
-          },
-        ),
+        leading: ValueListenableBuilder<bool>(
+            valueListenable: drawerController.isShowDrawer,
+            builder: (context, value, child) {
+              return IconButton(
+                icon: Icon(
+                  value ? Icons.arrow_back : Icons.menu,
+                  size: 26,
+                ),
+                onPressed: () {
+                  if (value) {
+                    drawerController.closeDrawer();
+                  } else {
+                    FocusScope.of(context).unfocus();
+                    drawerController.openDrawer();
+                  }
+                },
+              );
+            }),
       ),
       body: Container(),
     );

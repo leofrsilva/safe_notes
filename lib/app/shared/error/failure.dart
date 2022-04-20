@@ -2,11 +2,12 @@ import 'package:flutter/cupertino.dart';
 
 abstract class Failure {
   final String errorMessage;
+  final dynamic exception;
 
   Failure({
     StackTrace? stackTrace,
     String? label,
-    dynamic exception,
+    this.exception,
     this.errorMessage = '',
   }) {
     if (stackTrace != null) {

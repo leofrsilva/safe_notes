@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:safe_notes/app/app_core.dart';
+import 'package:safe_notes/app/shared/token/expire_token.dart';
 
 import 'domain/repositories/i_signup_firebase_repository.dart';
 import 'domain/usecases/create_authentication_usecase.dart';
@@ -9,8 +11,8 @@ import 'domain/usecases/set_user_firestore_usecase.dart';
 import 'external/datasources/signup_firebase_datasource.dart';
 import 'infra/datasources/i_signup_firebase_datasource.dart';
 import 'infra/repositories/signup_firebase_repository.dart';
-import 'presenter/pages/adicionar_user_page.dart';
-import 'presenter/pages/adicionar_user_store.dart';
+import 'presenter/adicionar_user_page.dart';
+import 'presenter/adicionar_user_store.dart';
 
 class RegisterModule extends Module {
   @override
@@ -35,6 +37,8 @@ class RegisterModule extends Module {
         //
         Bind.lazySingleton<AdicionarUserController>(
             (i) => AdicionarUserController(
+                  i<AppCore>(),
+                  ExpireToken(),
                   i<ICreateUserAuthenticationUsecase>(),
                   i<ISetUserFirestoreUsecase>(),
                 )),

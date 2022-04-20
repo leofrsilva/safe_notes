@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
@@ -9,26 +10,6 @@ class GetinFirebaseDatasource extends IGetinFirebaseDatasource {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
   GetinFirebaseDatasource(this._auth, this._firestore);
-
-  @override
-  Future<UsuarioModel> getUserFirestore(String docRef) async {
-    final docSnapshot = await _firestore
-        .collection('usuario')
-        .doc(docRef)
-        .get()
-        .catchError((error) {
-      throw GetinFirestoreError(
-        'GetinFirebaseDatasource.getUserFirestore',
-        error,
-        error.message,
-      );
-    });
-    if (docSnapshot.data() == null) {
-      throw GetinNoDataFoundFirestoreError();
-    }
-    return UsuarioModel.fromJson(docSnapshot.data()!)
-        .copyWith(docRef: docSnapshot.id);
-  }
 
   @override
   Future<String> signIn(String email, String pass) async {
@@ -62,6 +43,9 @@ class GetinFirebaseDatasource extends IGetinFirebaseDatasource {
         case "operation-not-allowed":
           errorMessage = "Entrar com E-mail e Senha não está ativado.";
           break;
+        case "network-request-failed":
+          errorMessage = "Sem Conexão com a Internet.";
+          break;
         default:
           errorMessage = "Ocorreu um erro indefinido.";
       }
@@ -72,5 +56,41 @@ class GetinFirebaseDatasource extends IGetinFirebaseDatasource {
         errorMessage,
       );
     }
+  }
+
+  @override
+  Future<UsuarioModel> getUserFirestore(String docRef) async {
+    final docSnapshot = await _firestore
+        .collection('usuario')
+        .doc(docRef)
+        .get()
+        .catchError((error) {
+      throw GetinFirestoreError(
+        'GetinFirebaseDatasource.getUserFirestore',
+        error,
+        error.message,
+      );
+    });
+    if (docSnapshot.data() == null) {
+      throw GetinNoDataFoundFirestoreError();
+    }
+    return UsuarioModel.fromJson(docSnapshot.data()!)
+        .copyWith(docRef: docSnapshot.id);
+  }
+
+  @override
+  Future<dynamic> updateLoggedUserFirestore(String docRef) async {
+    await _firestore
+        .collection('usuario')
+        .doc(docRef)
+        .update(UsuarioModel.toLoggedJson())
+        .catchError((error) {
+      throw GetinFirestoreError(
+        'GetinFirebaseDatasource.updateLoggedUserFirestore',
+        error,
+        error.message,
+      );
+    });
+    return dynamic;
   }
 }

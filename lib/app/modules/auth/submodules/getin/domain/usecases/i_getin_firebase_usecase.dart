@@ -9,3 +9,7 @@ abstract class ILoginAuthenticationUsecase {
 abstract class IGetUserFirestoreUsecase {
   Future<Either<Failure, UsuarioEntity>> call(String docRef);
 }
+
+abstract class IUpdateLoggedUserFirestoreUsecase {
+  Future<Either<Failure, dynamic>> call(String docRef);
+}

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 
+import '../dashboard_controller.dart';
+
 class DrawerMenuPage extends StatelessWidget {
-  const DrawerMenuPage({Key? key}) : super(key: key);
+  DrawerMenuPage({Key? key}) : super(key: key);
+
+  final drawerController = Modular.get<DashboardController>();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,14 @@ class DrawerMenuPage extends StatelessWidget {
           padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [],
+            children: [
+              ListTile(
+                title: const Text('Sair'),
+                onTap: () {
+                  drawerController.logout(context);
+                },
+              ),
+            ],
           ),
         ),
       ),
