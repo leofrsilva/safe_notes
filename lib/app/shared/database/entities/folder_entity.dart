@@ -21,19 +21,18 @@ class FolderEntity extends BaseEntity {
 
   final int level;
 
-  final String name;
+  final int color;
 
-  final String color;
+  final String name;
 
   @ColumnInfo(name: 'is_deleted')
   final int isDeleted;
 
   FolderEntity({
+    this.folderParent,
     required int folderId,
     required String dateCreate,
     required String dateModification,
-    //
-    this.folderParent,
     required this.userId,
     required this.level,
     required this.name,

@@ -29,3 +29,17 @@ class GetinFirestoreError extends Failure {
           errorMessage: errorMessage,
         );
 }
+
+class SetFolderSqliteError extends Failure {
+  SetFolderSqliteError(
+    StackTrace stackTrace,
+    String label,
+    dynamic exception,
+    String errorMessage,
+  ) : super(
+          stackTrace: stackTrace,
+          label: label,
+          exception: exception,
+          errorMessage: errorMessage,
+        );
+}

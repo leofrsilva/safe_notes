@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
@@ -10,7 +8,7 @@ import 'package:safe_notes/app/shared/error/failure.dart';
 import 'package:safe_notes/app/shared/token/i_expire_token.dart';
 
 import '../../domain/errors/getin_failures.dart';
-import '../../domain/usecases/i_getin_firebase_usecase.dart';
+import '../../domain/usecases/external/i_getin_firebase_usecase.dart';
 
 class GetinController {
   final AppCore _appCore;
@@ -114,7 +112,7 @@ class GetinController {
                 await _expireToken.generaterToken(usuario.toInfoUser());
 
                 _appCore.setUsuario(usuario);
-                Modular.to.navigate('/dashboard/home/');
+                Modular.to.navigate('/dashboard/notes/');
               },
             );
           },

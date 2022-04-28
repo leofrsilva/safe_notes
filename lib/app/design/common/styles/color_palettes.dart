@@ -25,6 +25,8 @@ class ColorPalettes {
   static Color black12 = Colors.black12;
   static Color transparent = const Color(0x00000000);
 
+  static Color fontColor = const Color.fromARGB(255, 82, 82, 82);
+
   // static Color getColorCircleProgress(double s) {
   //   var r = ColorPalettes.red;
   //   if (s > 4.5 && s < 7) {

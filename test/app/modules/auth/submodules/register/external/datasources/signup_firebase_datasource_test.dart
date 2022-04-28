@@ -12,7 +12,7 @@ void main() {
   final firestore = FakeFirebaseFirestore();
   final datasource = SignupFirebaseDatasource(auth, firestore);
 
-  group('ser firebase datasource signUp | ', () {
+  group('signup firebase datasource signUp | ', () {
     final email = userAuthMock.email!;
     const pass = '123456';
 
@@ -51,7 +51,7 @@ void main() {
     });
   });
 
-  group('ser firebase datasource insertUserFirestore | ', () {
+  group('signup firebase datasource insertUserFirestore | ', () {
     const docRef = 'DOCREF';
     UsuarioModel model = UsuarioModel(
       docRef: docRef,

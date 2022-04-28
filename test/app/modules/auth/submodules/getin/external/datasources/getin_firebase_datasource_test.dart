@@ -12,7 +12,7 @@ void main() {
   final firestore = FakeFirebaseFirestore();
   final datasource = GetinFirebaseDatasource(auth, firestore);
 
-  group('ser firebase datasource signIn | ', () {
+  group('getin firebase datasource signIn | ', () {
     final email = userAuthMock.email!;
     const pass = '123456';
 
@@ -49,7 +49,7 @@ void main() {
     });
   });
 
-  group('ser firebase datasource getUserFirestore | ', () {
+  group('getin firebase datasource getUserFirestore | ', () {
     const docRef = 'DOCREF';
     UsuarioModel model = UsuarioModel(
       docRef: docRef,
@@ -100,7 +100,7 @@ void main() {
     });
   });
 
-  group('ser firebase datasource updateLoggedUserFirestore | ', () {
+  group('getin firebase datasource updateLoggedUserFirestore | ', () {
     const docRef = 'docRef';
     UsuarioModel model = UsuarioModel(
       docRef: docRef,

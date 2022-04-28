@@ -1,15 +1,22 @@
 // // database.dart
 
-// // required package imports
-// import 'dart:async';
-// import 'package:floor/floor.dart';
-// import 'package:sqflite/sqflite.dart' as sqflite;
+// required package imports
+import 'dart:async';
+import 'package:floor/floor.dart';
+import 'package:sqflite/sqflite.dart' as sqflite;
+import 'daos/folder_dao.dart';
+import 'entities/folder_entity.dart';
+import 'entities/note_entity.dart';
+import 'entities/tag_entity.dart';
+import 'views/folder_qtd_child_view.dart';
 
-// part 'database.g.dart'; // the generated code will be there
+part 'database.g.dart'; // the generated code will be there
 
-// import 'package:safe_notes/app/shared/database/entities/folder_entity.dart';
-
-// @Database(version: 1, entities: [FolderEntity])
-// abstract class AppDatabase extends FloorDatabase {
-  
-// }
+@Database(
+  version: 1,
+  entities: [TagEntity, NoteEntity, FolderEntity],
+  views: [FolderQtdChildView],
+)
+abstract class AppDatabase extends FloorDatabase {
+  FolderDAO get folderDao;
+}

@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
+import 'package:safe_notes/app/shared/database/database.dart';
 
 import 'package:safe_notes/app/shared/leave/leave.dart';
 import 'package:safe_notes/app/shared/token/expire_token.dart';
+import '../setting/presenter/controllers/first_boot_store.dart';
 import 'splash_page.dart';
-import 'splash_store.dart';
+import 'splash_controller.dart';
 
 class SplashModule extends Module {
   @override
@@ -24,9 +26,16 @@ class SplashModule extends Module {
           (i) => LeaveAuthUsecase(i<ILeaveRepository>()),
         ),
         //
-        Bind.lazySingleton<SplashStore>((i) => SplashStore(
+        // Bind.lazySingleton<AccessBootStore>(
+        //   (i) => AccessBootStore(i<AppDatabase>().folderDao),
+        // ),
+        Bind.lazySingleton<FirstBootStore>(
+          (i) => FirstBootStore(i<AppDatabase>().folderDao),
+        ),
+        Bind.lazySingleton<SplashController>((i) => SplashController(
               i<AppCore>(),
               ExpireToken(),
+              i<FirstBootStore>(),
               i<ILeaveAuthUsecase>(),
             )),
       ];

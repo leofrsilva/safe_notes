@@ -6,7 +6,7 @@ import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 
 import 'splash_module.dart';
-import 'splash_store.dart';
+import 'splash_controller.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends ModularState<SplashPage, SplashStore> {
+class _SplashPageState extends ModularState<SplashPage, SplashController> {
   Future<String> _getVersion() async {
     if (Platform.isAndroid || Platform.isIOS) {
       final info = await PackageInfo.fromPlatform();
@@ -30,7 +30,7 @@ class _SplashPageState extends ModularState<SplashPage, SplashStore> {
       Modular.isModuleReady<SplashModule>(),
       Future.delayed(const Duration(milliseconds: 500)),
     ]).then((_) async {
-      store.checkLoggedInUser(context);
+      await store.checkLoggedInUser(context);
     });
   }
 

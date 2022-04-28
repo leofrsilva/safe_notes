@@ -11,15 +11,15 @@ class FolderModel {
 
   int get folderId => _entity.id;
 
-  int get parentId => _entity.folderParent ?? 0;
+  int get folderParent => _entity.folderParent ?? 0;
 
   int get level => _entity.level;
 
+  int get color => _entity.color;
+
   String get name => _entity.name;
 
-  String get color => _entity.color;
-
-  bool get isDeleted => _entity.isDeleted.toBool ?? false;
+  bool get isDeleted => _entity.isDeleted.toBool!;
 
   DateTime get dateCreate => _entity.dateCreate.toDateTime;
 
@@ -31,29 +31,32 @@ class FolderModel {
       : _entity = FolderEntity(
           folderId: 0,
           userId: '',
-          folderParent: null,
           level: 0,
           name: '',
-          color: '',
-          isDeleted: ''.toInt,
-          dateCreate: DateTime.now().toString(),
-          dateModification: DateTime.now().toString(),
+          color: 0,
+          isDeleted: 0,
+          dateCreate: '',
+          dateModification: '',
         );
 
+  static int get _generaterId {
+    return DateTime.now().millisecondsSinceEpoch;
+  }
+
   FolderModel({
+    int? folderParent,
     required int folderId,
     required DateTime dateCreate,
     required DateTime dateModification,
     required String userId,
-    required int folderParent,
     required int level,
+    required int color,
     required String name,
-    required String color,
     required bool isDeleted,
   }) : _entity = FolderEntity(
-          folderId: folderId,
-          userId: userId,
+          folderId: folderId == 0 ? _generaterId : folderId,
           folderParent: folderParent,
+          userId: userId,
           level: level,
           name: name,
           color: color,
@@ -69,20 +72,20 @@ class FolderModel {
     String? userId,
     int? folderParent,
     int? level,
+    int? color,
     String? name,
-    String? color,
     bool? isDeleted,
   }) {
     return FolderModel(
+      folderParent: folderParent ?? this.folderParent,
       folderId: folderId ?? this.folderId,
-      dateCreate: dateCreate ?? this.dateCreate,
-      dateModification: dateModification ?? this.dateModification,
       userId: userId ?? this.userId,
-      folderParent: folderParent ?? parentId,
       level: level ?? this.level,
       name: name ?? this.name,
       color: color ?? this.color,
       isDeleted: isDeleted ?? this.isDeleted,
+      dateCreate: dateCreate ?? this.dateCreate,
+      dateModification: dateModification ?? this.dateModification,
     );
   }
 }
