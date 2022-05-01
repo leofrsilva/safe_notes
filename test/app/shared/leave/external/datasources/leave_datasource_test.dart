@@ -33,12 +33,5 @@ void main() {
         throwsA(isA<LeaveFirestoreError>()),
       );
     });
-    test('retornar um NoUserLoggedInAuthError', () async {
-      when(() => auth.currentUser).thenReturn(null);
-      expect(
-        () => datasource.leaveAuth(),
-        throwsA(isA<NoUserLoggedInAuthError>()),
-      );
-    });
   });
 }

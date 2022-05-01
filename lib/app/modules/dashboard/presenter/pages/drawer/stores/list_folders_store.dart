@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
@@ -10,28 +9,28 @@ class ListFoldersStore
   final IGetListFoldersUsecase _getListFoldersUsecase;
   ListFoldersStore(this._getListFoldersUsecase) : super(Stream.value([]));
 
-  getListFolders(BuildContext context) {
+  void getListFolders() {
     setLoading(true);
     final either = _getListFoldersUsecase.call();
     either.fold(
       (failure) => setError(failure),
       (stream) {
-        update(stream);
-        // update(Stream.value([
-        //   folder11,
-        //   folder111,
-        //   folder4,
-        //   folder41,
-        //   folder42,
-        //   folder2,
-        //   folder3,
-        //   folder,
-        //   folder1,
-        //   folder1111,
-        //   folder21,
-        //   folder22,
-        //   folder221,
-        // ]));
+        // update(stream);
+        update(Stream.value([
+          folder11,
+          folder111,
+          folder4,
+          folder41,
+          folder42,
+          folder2,
+          folder3,
+          folder,
+          folder1,
+          folder1111,
+          folder21,
+          folder22,
+          folder221,
+        ]).asBroadcastStream());
       },
     );
     setLoading(false);

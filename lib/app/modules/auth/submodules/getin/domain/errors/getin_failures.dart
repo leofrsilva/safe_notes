@@ -30,8 +30,8 @@ class GetinFirestoreError extends Failure {
         );
 }
 
-class SetFolderSqliteError extends Failure {
-  SetFolderSqliteError(
+class DeleteAllFolderExceptSqliteError extends Failure {
+  DeleteAllFolderExceptSqliteError(
     StackTrace stackTrace,
     String label,
     dynamic exception,

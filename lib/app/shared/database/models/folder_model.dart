@@ -11,7 +11,7 @@ class FolderModel {
 
   int get folderId => _entity.id;
 
-  int get folderParent => _entity.folderParent ?? 0;
+  int? get folderParent => _entity.folderParent;
 
   int get level => _entity.level;
 

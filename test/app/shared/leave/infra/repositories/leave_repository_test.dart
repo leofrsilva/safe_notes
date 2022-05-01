@@ -28,15 +28,5 @@ void main() {
       expect(result.isLeft(), equals(true));
       expect(result.fold(id, id), isA<LeaveFirestoreError>());
     });
-
-    test('retornar um NoUserLoggedInAuthError', () async {
-      when(() => datasource.leaveAuth()).thenThrow(NoUserLoggedInAuthError());
-
-      final repository = LeaveRepository(datasource);
-      final result = await repository.leaveAuth();
-
-      expect(result.isLeft(), equals(true));
-      expect(result.fold(id, id), isA<NoUserLoggedInAuthError>());
-    });
   });
 }

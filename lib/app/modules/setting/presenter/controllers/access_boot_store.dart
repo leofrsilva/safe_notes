@@ -3,11 +3,11 @@ import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FirstBootStore {
+class AccessBootStore {
   final FolderDAO _folderDAO;
   final String _firstBoot = 'first-boot';
 
-  FirstBootStore(this._folderDAO);
+  AccessBootStore(this._folderDAO);
 
   Future<void> updateFolderUserID(String uid) async {
     await _updateDefaultFolder(uid);
@@ -19,8 +19,10 @@ class FirstBootStore {
       var folderModel = FolderModel.fromEntity(folder);
       folderModel = folderModel.copyWith(
         userId: uid,
+        folderParent: null,
         dateModification: DateTime.now(),
       );
+
       await _folderDAO.updateFolders([folderModel.entity]);
     }
   }
@@ -34,10 +36,10 @@ class FirstBootStore {
 
   Future _createDefaultFolder() async {
     FolderModel folder = DefaultDatabase.folderDefault;
-    await _folderDAO.insertFolder(folder.entity).then((_) {
-      _saveValueFirsBoot(isFirstBoot: false);
-    }).onError((_, __) {
-      _saveValueFirsBoot(isFirstBoot: true);
+    await _folderDAO.insertFolder(folder.entity).then((_) async {
+      await _saveValueFirsBoot(isFirstBoot: false);
+    }).onError((_, __) async {
+      await _saveValueFirsBoot(isFirstBoot: true);
     });
   }
 

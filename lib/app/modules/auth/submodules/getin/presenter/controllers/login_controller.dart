@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
-import 'package:safe_notes/app/design/widgets/loading/loading_overlay.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
+import 'package:safe_notes/app/design/widgets/widgets.dart';
+import 'package:safe_notes/app/modules/setting/presenter/controllers/access_boot_store.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 import 'package:safe_notes/app/shared/token/i_expire_token.dart';
@@ -10,25 +11,28 @@ import 'package:safe_notes/app/shared/token/i_expire_token.dart';
 import '../../domain/errors/getin_failures.dart';
 import '../../domain/usecases/external/i_getin_firebase_usecase.dart';
 
-class GetinController {
+class LoginController {
   final AppCore _appCore;
   final IExpireToken _expireToken;
+  final AccessBootStore _accessBootStore;
   final ILoginAuthenticationUsecase _loginAuthenticationUsecase;
   final IUpdateLoggedUserFirestoreUsecase _updateLoggedUserFirestoreUsecase;
   final IGetUserFirestoreUsecase _getUserFirestoreUsecase;
   Failure? failure;
 
-  late final GlobalKey<FormState> formKey;
+  late GlobalKey<FormState> formKey;
+  set formState(GlobalKey<FormState> value) => formKey = value;
 
   String _emailField = '';
-  String _passsField = '';
+  String _passField = '';
 
   set emailField(String value) => _emailField = value;
-  set passsField(String value) => _passsField = value;
+  set passField(String value) => _passField = value;
 
-  GetinController(
+  LoginController(
     this._appCore,
     this._expireToken,
+    this._accessBootStore,
     this._loginAuthenticationUsecase,
     this._updateLoggedUserFirestoreUsecase,
     this._getUserFirestoreUsecase,
@@ -94,7 +98,7 @@ class GetinController {
   Future<void> processesLogin() async {
     final loginAuth = await _loginAuthenticationUsecase(
       _emailField,
-      _passsField,
+      _passField,
     );
     loginAuth.fold(
       (error) => failure = error,
@@ -109,6 +113,7 @@ class GetinController {
               (usuarioEntity) async {
                 final usuario = UsuarioModel.fromEntity(usuarioEntity);
 
+                await _accessBootStore.updateFolderUserID(usuario.docRef);
                 await _expireToken.generaterToken(usuario.toInfoUser());
 
                 _appCore.setUsuario(usuario);

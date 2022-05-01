@@ -1,6 +1,8 @@
 class ImagesAssets {
   static String imgSplah = 'assets/images/padlock-white-128x128.png';
-  static String imgLogin = 'assets/images/safe-notes-icon-aux-128x128.png';
+  static String imgLoginBg = 'assets/images/safe-notes-icon-bg-128x128.png';
+  static String imgLoginSecondy =
+      'assets/images/safe-notes-icon-secondy-128x128.png';
   // static String profile = 'assets/images/rifa.jpeg';
   // static String instagram = 'assets/images/insta.png';
   // static String github = 'assets/images/github.png';

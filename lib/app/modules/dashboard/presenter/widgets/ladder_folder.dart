@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/styles/color_palettes.dart';
 import 'package:safe_notes/app/design/widgets/expansion/custom_expansion_tile.dart';
 import 'package:safe_notes/app/design/widgets/expansion/folder_expansion_tile.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 import 'package:safe_notes/app/shared/database/views/list_folder_qtd_child_view.dart';
 
+import '../pages/drawer/drawer_menu_controller.dart';
+
 // ignore: must_be_immutable
 class LadderFolder extends StatelessWidget {
   late Color colorTile;
   late ListFolderQtdChildView folderers;
+  late DrawerMenuController _drawerMenuController;
+
   final List<FolderQtdChildView> listFolders;
   bool selected = false;
 
@@ -17,14 +22,10 @@ class LadderFolder extends StatelessWidget {
     required this.listFolders,
   }) : super(key: key) {
     reorganization();
+    _drawerMenuController = Modular.get<DrawerMenuController>();
   }
 
   reorganization() {
-    //? TEMP -------
-    listFolders.sort((previous, posterior) {
-      return previous.id.compareTo(posterior.id);
-    });
-    //? ------------
     listFolders.sort((previous, posterior) {
       return previous.level.compareTo(posterior.level);
     });
@@ -64,6 +65,9 @@ class LadderFolder extends StatelessWidget {
       }
 
       list.add(CustomExpansionTile(
+        initiallyExpanded: _drawerMenuController.checkFolderIsExpanded(
+          folderChild.current.id,
+        ),
         selected: selected,
         spaceStart: padding,
         backgroundColor: colorTile,
@@ -106,6 +110,9 @@ class LadderFolder extends StatelessWidget {
 
     colorTile = Theme.of(context).primaryColor;
     return FolderExpansionTile(
+      initiallyExpanded: _drawerMenuController.checkFolderIsExpanded(
+        folderers.current.id,
+      ),
       selected: selected,
       title: folderers.current.name,
       backgroundColor: colorTile,

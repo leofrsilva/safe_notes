@@ -11,5 +11,3 @@ class LeaveFirestoreError extends Failure {
           errorMessage: errorMessage,
         );
 }
-
-class NoUserLoggedInAuthError extends Failure {}

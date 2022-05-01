@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
+import 'package:safe_notes/app/modules/setting/presenter/controllers/access_boot_store.dart';
 import 'package:safe_notes/app/shared/token/expire_token.dart';
 
 import 'domain/repositories/i_signup_firebase_repository.dart';
@@ -39,6 +40,7 @@ class RegisterModule extends Module {
             (i) => AdicionarUserController(
                   i<AppCore>(),
                   ExpireToken(),
+                  i<AccessBootStore>(),
                   i<ICreateUserAuthenticationUsecase>(),
                   i<ISetUserFirestoreUsecase>(),
                 )),

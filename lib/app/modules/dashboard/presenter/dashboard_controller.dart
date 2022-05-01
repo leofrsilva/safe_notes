@@ -25,9 +25,9 @@ class DashboardController {
   }
 
   Future<void> processesLogin(context) async {
-    _appCore.removeUsuario();
+    await _expireToken.expireToken();
 
-    await _expireToken.removeToken();
+    _appCore.removeUsuario();
 
     final either = await _leaveAuthUsecase.call();
     either.fold(
@@ -44,11 +44,11 @@ class DashboardController {
         }
         await Future.delayed(
           const Duration(milliseconds: 1500),
-          () => Modular.to.navigate('/auth/getin/'),
+          () => Modular.to.navigate('/auth/getin/relogar'),
         );
       },
       (_) async {
-        Modular.to.navigate('/auth/getin/');
+        Modular.to.navigate('/auth/getin/relogar');
       },
     );
   }

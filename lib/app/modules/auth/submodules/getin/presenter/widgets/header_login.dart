@@ -28,7 +28,7 @@ class HeaderLogin extends StatelessWidget {
                   Align(
                     alignment: AlignmentDirectional.center,
                     child: Image.asset(
-                      ImagesAssets.imgLogin,
+                      ImagesAssets.imgLoginBg,
                       color: Theme.of(context).backgroundColor,
                       fit: BoxFit.cover,
                       width: Sizes.height(context) * 0.12,

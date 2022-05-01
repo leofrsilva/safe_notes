@@ -8,8 +8,11 @@ abstract class FolderDAO {
   @insert
   Future<int> insertFolder(FolderEntity record);
 
-  @update
+  @Update(onConflict: OnConflictStrategy.replace)
   Future<int> updateFolders(List<FolderEntity> records);
+
+  @Query('DELETE FROM Folder WHERE id != :folderId')
+  Future<void> deleteAllExcept(int folderId);
 
   @Query('UPDATE Folder SET is_deleted = 1 WHERE id = :folderId')
   Future<void> deleteFolder(int folderId);

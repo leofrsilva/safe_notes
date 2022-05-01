@@ -20,7 +20,7 @@ class DrawerMenuPage extends StatefulWidget {
 }
 
 class _DrawerMenuPageState extends State<DrawerMenuPage> {
-  late ListFoldersStore listFoldersStore;
+  // late ListFoldersStore listFoldersStore;
   late DashboardController drawerController;
   late DrawerMenuController drawerMenuController;
 
@@ -46,7 +46,7 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
   Widget buildListFolders() {
     return ScopedBuilder<ListFoldersStore, Failure,
         Stream<List<FolderQtdChildView>>>.transition(
-      store: listFoldersStore,
+      store: drawerMenuController.listFolders,
       onLoading: (context) => const Center(
         child: CircularProgressIndicator.adaptive(),
       ),
@@ -69,6 +69,7 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
               if (snapshot.connectionState == ConnectionState.done ||
                   snapshot.connectionState == ConnectionState.active) {
                 final listFolders = snapshot.data ?? [];
+                drawerMenuController.loadListFoldersIsExpanded(listFolders);
                 return LadderFolder(listFolders: listFolders);
               }
             }
@@ -84,9 +85,6 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
     super.initState();
     drawerController = Modular.get<DashboardController>();
     drawerMenuController = Modular.get<DrawerMenuController>();
-
-    listFoldersStore = Modular.get<ListFoldersStore>();
-    listFoldersStore.getListFolders(context);
   }
 
   @override

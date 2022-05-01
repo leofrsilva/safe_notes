@@ -32,17 +32,4 @@ void main() {
     expect(result.isLeft(), equals(true));
     expect(result.fold(id, id), isA<LeaveFirestoreError>());
   });
-
-  test(
-      'leave auth usecase LeaveAuthUsecase.Call | retornar um NoUserLoggedInAuthError',
-      () async {
-    when(() => repository.leaveAuth())
-        .thenAnswer((invocation) async => Left(NoUserLoggedInAuthError()));
-
-    final usecase = LeaveAuthUsecase(repository);
-    final result = await usecase.call();
-
-    expect(result.isLeft(), equals(true));
-    expect(result.fold(id, id), isA<NoUserLoggedInAuthError>());
-  });
 }

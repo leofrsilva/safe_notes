@@ -152,6 +152,12 @@ class _$FolderDAO extends FolderDAO {
   final UpdateAdapter<FolderEntity> _folderEntityUpdateAdapter;
 
   @override
+  Future<void> deleteAllExcept(int folderId) async {
+    await _queryAdapter.queryNoReturn('DELETE FROM Folder WHERE id != ?1',
+        arguments: [folderId]);
+  }
+
+  @override
   Future<void> deleteFolder(int folderId) async {
     await _queryAdapter.queryNoReturn(
         'UPDATE Folder SET is_deleted = 1 WHERE id = ?1',
@@ -198,6 +204,6 @@ class _$FolderDAO extends FolderDAO {
   @override
   Future<int> updateFolders(List<FolderEntity> records) {
     return _folderEntityUpdateAdapter.updateListAndReturnChangedRows(
-        records, OnConflictStrategy.abort);
+        records, OnConflictStrategy.replace);
   }
 }

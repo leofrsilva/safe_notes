@@ -7,6 +7,7 @@ export 'button/custom_button_inline.dart';
 export 'button/custom_button_outline.dart';
 export 'texttitle/text_title.dart';
 export 'textfield/custom_textfield.dart';
+export 'textfield/custom_textfield_readonly.dart';
 export 'input_date/custom_input_date.dart';
 export 'radio_button/custom_radio_button.dart';
 

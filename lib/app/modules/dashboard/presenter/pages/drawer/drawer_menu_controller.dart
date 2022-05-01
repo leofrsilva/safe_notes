@@ -1,8 +1,41 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:safe_notes/app/design/common/utils/sizes.dart';
+import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
+
+import 'stores/list_folders_store.dart';
 
 class DrawerMenuController {
+  final ListFoldersStore _listFoldersStore;
+  ListFoldersStore get listFolders => _listFoldersStore;
+
+  final streamControler =
+      StreamController<List<FolderQtdChildView>>.broadcast();
+
+  Map<int, bool> listFoldersIsExpanded = {};
+
+  checkFolderIsExpanded(int id) {
+    return listFoldersIsExpanded[id];
+  }
+
+  loadListFoldersIsExpanded(List<FolderQtdChildView> listFolderQtdChildView) {
+    bool isExpanded;
+    for (var folderQtdChildView in listFolderQtdChildView) {
+      if (folderQtdChildView.level > 0) {
+        isExpanded = false;
+      } else {
+        isExpanded = true;
+      }
+      listFoldersIsExpanded.addAll({folderQtdChildView.id: isExpanded});
+    }
+  }
+
+  DrawerMenuController(this._listFoldersStore) {
+    _listFoldersStore.getListFolders();
+  }
+
   final selectedMenuItem = ValueNotifier<int>(0);
 
   final _scaled = 0.85;

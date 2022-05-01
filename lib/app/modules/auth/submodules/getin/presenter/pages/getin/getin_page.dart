@@ -5,7 +5,7 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
 
-import '../widgets/header_login.dart';
+import '../../widgets/header_login.dart';
 import 'getin_controller.dart';
 
 class GetInPage extends StatefulWidget {
@@ -74,7 +74,7 @@ class _GetInPageState extends State<GetInPage> {
                 return null;
               },
               onSaved: (String? val) {
-                _controller.emailField = val?.trim() ?? '';
+                _controller.email = val?.trim() ?? '';
               },
             ),
             SizedBox(height: Sizes.height(context) * 0.025),
@@ -96,7 +96,7 @@ class _GetInPageState extends State<GetInPage> {
                 return null;
               },
               onSaved: (String? val) {
-                _controller.passsField = val?.trim() ?? '';
+                _controller.pass = val?.trim() ?? '';
               },
             ),
             Container(

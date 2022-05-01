@@ -26,7 +26,7 @@ class LeaveDatasource extends ILeaveDatasource {
             error.message,
           );
         },
-      ).timeout(const Duration(milliseconds: 1500), onTimeout: () async {
+      ).timeout(const Duration(milliseconds: 2500), onTimeout: () async {
         throw LeaveFirestoreError(
           'LeaveDatasource.leaveAuth',
           'network-request-failed',
@@ -34,8 +34,6 @@ class LeaveDatasource extends ILeaveDatasource {
         );
       });
       await _auth.signOut();
-    } else {
-      throw NoUserLoggedInAuthError();
     }
     return dynamic;
   }

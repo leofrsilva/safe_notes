@@ -23,6 +23,42 @@ class ExpireToken extends IExpireToken {
   }
 
   @override
+  Future<void> expireToken() async {
+    final infoUser = await checkToken();
+
+    if (infoUser != null) {
+      infoUser.updateAll((key, value) {
+        if (value is DateTime) {
+          return 'Type-DateTime|||${value.millisecondsSinceEpoch}';
+        }
+        return value;
+      });
+
+      int issuedAt = DateTime.now().millisecondsSinceEpoch;
+      int expire = DateTime.now().millisecondsSinceEpoch;
+
+      final payload = {
+        'iat': issuedAt,
+        'exp': expire,
+        'user': infoUser,
+      };
+
+      final strPayload = jsonEncode(payload);
+
+      final key = crypt.Key.fromUtf8(_key.to32Length);
+      final iv = crypt.IV.fromUtf8(_key.toIVString);
+      final encrypter =
+          crypt.Encrypter(crypt.AES(key, mode: crypt.AESMode.ctr));
+
+      final encrypted = encrypter.encrypt(strPayload, iv: iv);
+      final cipherPayload = encrypted.base64;
+      final token = _base64UrlEncode(cipherPayload);
+
+      await _tokenShared.setToken(token);
+    }
+  }
+
+  @override
   Future<void> generaterToken(Map<String, dynamic> infoUser) async {
     infoUser.updateAll((key, value) {
       if (value is DateTime) {
@@ -33,7 +69,7 @@ class ExpireToken extends IExpireToken {
 
     int issuedAt = DateTime.now().millisecondsSinceEpoch;
     int expire = DateTime.fromMillisecondsSinceEpoch(issuedAt)
-        .add(const Duration(days: 10))
+        .add(const Duration(minutes: 15))
         .millisecondsSinceEpoch;
 
     final payload = {
@@ -56,9 +92,7 @@ class ExpireToken extends IExpireToken {
   }
 
   @override
-  Future<Map<String, dynamic>?> checkToken({
-    Function? onCallBackExpiredTime,
-  }) async {
+  Future<Map<String, dynamic>?> checkToken() async {
     String? token = await _tokenShared.getToken();
 
     if (token != null) {
@@ -90,10 +124,11 @@ class ExpireToken extends IExpireToken {
         });
         return user;
       } else {
-        _tokenShared.removeToken();
-        if (onCallBackExpiredTime != null) {
-          await onCallBackExpiredTime.call();
-        }
+        Map<String, dynamic> user = payload['user'];
+        return {
+          'email': user['email'],
+          'name': user['name'],
+        };
       }
     }
     return null;

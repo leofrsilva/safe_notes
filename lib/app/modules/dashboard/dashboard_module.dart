@@ -17,7 +17,7 @@ import 'presenter/pages/drawer/drawer_menu_controller.dart';
 import 'presenter/dashboard_controller.dart';
 import 'presenter/dashboard_page.dart';
 import 'presenter/pages/drawer/stores/list_folders_store.dart';
-import 'presenter/pages/perfil/perfil_page.dart';
+import 'presenter/pages/manager_folders/manager_folders_page.dart';
 import 'submodules/favorites/favorites_module.dart';
 import 'submodules/folders/folders_module.dart';
 import 'submodules/lixeira/lixeira_module.dart';
@@ -60,7 +60,9 @@ class DashboardModule extends Module {
         Bind.lazySingleton<ListFoldersStore>(
           (i) => ListFoldersStore(i<IGetListFoldersUsecase>()),
         ),
-        Bind.singleton((i) => DrawerMenuController()),
+        Bind.singleton((i) => DrawerMenuController(
+              i<ListFoldersStore>(),
+            )),
       ];
 
   @override
@@ -91,9 +93,14 @@ class DashboardModule extends Module {
             ),
           ],
         ),
+        // ChildRoute(
+        //   '/perfil',
+        //   child: (_, __) => const PerfilPage(),
+        //   transition: TransitionType.rightToLeft,
+        // ),
         ChildRoute(
-          '/perfil',
-          child: (_, __) => const PerfilPage(),
+          '/manager-folder',
+          child: (_, __) => const ManagerFolderPage(),
           transition: TransitionType.rightToLeft,
         ),
       ];

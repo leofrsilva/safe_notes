@@ -94,7 +94,6 @@ class FolderExpansionTileState extends State<FolderExpansionTile>
   late Animation<double> _heightFactor;
 
   late Color _selectColor;
-  late Color _selectTextColor;
   late Color _materialColor;
   bool _isExpanded = false;
 
@@ -218,34 +217,13 @@ class FolderExpansionTileState extends State<FolderExpansionTile>
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 2.0),
-                          child: widget.children.isNotEmpty
-                              ? turnsButton
-                              : Container(),
+                          child: turnsButton,
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-
-              // leading: Container(
-              //   color: Colors.red,
-              //   constraints: const BoxConstraints(minHeight: 48.0),
-              //   child: InkWell(
-              //     borderRadius: BorderRadius.circular(8.0),
-              //     onTap: onExpanded,
-              //     child: Stack(
-              //       alignment: AlignmentDirectional.center,
-              //       children: [
-              //         const Icon(
-              //           Icons.folder_outlined,
-              //           size: 26,
-              //         ),
-              //         turnsButton,
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ),
           ),
           ClipRect(
