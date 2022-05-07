@@ -27,21 +27,21 @@ class FolderModel {
 
   FolderModel.fromEntity(this._entity);
 
+  static int get _generaterId {
+    return DateTime.now().millisecondsSinceEpoch;
+  }
+
   FolderModel.empty()
       : _entity = FolderEntity(
-          folderId: 0,
+          folderId: _generaterId,
           userId: '',
           level: 0,
           name: '',
           color: 0,
           isDeleted: 0,
-          dateCreate: '',
-          dateModification: '',
+          dateCreate: DateTime.now().toString(),
+          dateModification: DateTime.now().toString(),
         );
-
-  static int get _generaterId {
-    return DateTime.now().millisecondsSinceEpoch;
-  }
 
   FolderModel({
     int? folderParent,
@@ -87,5 +87,19 @@ class FolderModel {
       dateCreate: dateCreate ?? this.dateCreate,
       dateModification: dateModification ?? this.dateModification,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': folderId,
+      'folder_parent': folderParent,
+      'user_id': userId,
+      'level': level,
+      'name': name,
+      'color': color,
+      'is_deleted': isDeleted,
+      'date_create': dateCreate,
+      'date_modification': dateModification,
+    };
   }
 }

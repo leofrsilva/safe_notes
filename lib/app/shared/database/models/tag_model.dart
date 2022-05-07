@@ -9,11 +9,13 @@ class TagModel {
 
   int get tagId => _entity.id;
 
+  int get color => _entity.color;
+
   String get name => _entity.name;
 
-  String get description => _entity.description;
+  String get description => _entity.description ?? '';
 
-  String get color => _entity.color;
+  bool get isDeleted => _entity.isDeleted.toBool!;
 
   DateTime get dateCreate => _entity.dateCreate.toDateTime;
 
@@ -21,27 +23,34 @@ class TagModel {
 
   TagModel.fromEntity(this._entity);
 
+  static int get _generaterId {
+    return DateTime.now().millisecondsSinceEpoch;
+  }
+
   TagModel.empty()
       : _entity = TagEntity(
-            tagId: 0,
-            name: '',
-            color: '',
-            description: '',
-            dateCreate: '',
-            dateModification: '');
+          tagId: _generaterId,
+          name: '',
+          color: 0,
+          isDeleted: 0,
+          dateCreate: DateTime.now().toString(),
+          dateModification: DateTime.now().toString(),
+        );
 
   TagModel({
     required int tagId,
     required DateTime dateCreate,
     required DateTime dateModification,
     required String name,
-    required String description,
-    required String color,
+    required int color,
+    required bool isDeleted,
+    String? description,
   }) : _entity = TagEntity(
-          tagId: tagId,
+          tagId: tagId == 0 ? _generaterId : tagId,
           name: name,
           color: color,
           description: description,
+          isDeleted: isDeleted.toInt,
           dateCreate: dateCreate.toString(),
           dateModification: dateModification.toString(),
         );
@@ -50,9 +59,10 @@ class TagModel {
     int? tagId,
     DateTime? dateCreate,
     DateTime? dateModification,
-    String? name,
-    String? color,
     String? description,
+    String? name,
+    int? color,
+    bool? isDeleted,
   }) {
     return TagModel(
       tagId: tagId ?? this.tagId,
@@ -60,7 +70,20 @@ class TagModel {
       dateModification: dateModification ?? this.dateModification,
       name: name ?? this.name,
       color: color ?? this.color,
+      isDeleted: isDeleted ?? this.isDeleted,
       description: description ?? this.description,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': tagId,
+      'name': name,
+      'color': color,
+      'description': description,
+      'is_deleted': isDeleted,
+      'date_create': dateCreate,
+      'date_modification': dateModification,
+    };
   }
 }

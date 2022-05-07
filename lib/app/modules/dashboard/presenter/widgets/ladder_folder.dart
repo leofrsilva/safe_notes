@@ -8,31 +8,36 @@ import 'package:safe_notes/app/shared/database/views/list_folder_qtd_child_view.
 
 import '../pages/drawer/drawer_menu_controller.dart';
 
-// ignore: must_be_immutable
-class LadderFolder extends StatelessWidget {
-  late Color colorTile;
-  late ListFolderQtdChildView folderers;
-  late DrawerMenuController _drawerMenuController;
-
+class LadderFolder extends StatefulWidget {
+  final Function(int) onTapFolder;
   final List<FolderQtdChildView> listFolders;
-  bool selected = false;
 
-  LadderFolder({
+  const LadderFolder({
     Key? key,
     required this.listFolders,
-  }) : super(key: key) {
-    reorganization();
-    _drawerMenuController = Modular.get<DrawerMenuController>();
-  }
+    required this.onTapFolder,
+  }) : super(key: key);
 
-  reorganization() {
-    listFolders.sort((previous, posterior) {
+  @override
+  State<LadderFolder> createState() => _LadderFolderState();
+}
+
+class _LadderFolderState extends State<LadderFolder> {
+  final _reactiveListFolder =
+      Modular.get<DrawerMenuController>().reactiveListFolder;
+
+  bool selected = false;
+
+  ListFolderQtdChildView? folderers;
+
+  void reorganization() {
+    widget.listFolders.sort((previous, posterior) {
       return previous.level.compareTo(posterior.level);
     });
 
-    if (listFolders.isNotEmpty) {
-      folderers = ListFolderQtdChildView(current: listFolders.first);
-      insertChildrens(folderers);
+    if (widget.listFolders.isNotEmpty) {
+      folderers = ListFolderQtdChildView(current: widget.listFolders.first);
+      insertChildrens(folderers!);
     }
   }
 
@@ -41,8 +46,8 @@ class LadderFolder extends StatelessWidget {
     int parentId = listFolderQtdChildView.current.id;
     int childLevel = listFolderQtdChildView.current.level + 1;
 
-    for (int i = 0; i < listFolders.length; i++) {
-      currentFolder = listFolders[i];
+    for (int i = 0; i < widget.listFolders.length; i++) {
+      currentFolder = widget.listFolders[i];
 
       if (currentFolder.level == childLevel &&
           currentFolder.parentId == parentId) {
@@ -51,6 +56,55 @@ class LadderFolder extends StatelessWidget {
         listFolderQtdChildView.childrens.add(child);
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    reorganization();
+  }
+
+  @override
+  void didUpdateWidget(covariant LadderFolder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    reorganization();
+  }
+
+  bool isExpanded(int folderId) {
+    return _reactiveListFolder.checkFolderIsExpanded(folderId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.listFolders.isEmpty) return Container();
+
+    return FolderExpansionTile(
+      initiallyExpanded: isExpanded(folderers!.current.id),
+      selected: selected,
+      title: folderers!.current.name,
+      iconColor: Color(folderers!.current.color),
+      turnsColor: ColorPalettes.secondy.withOpacity(0.5),
+      selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
+      trailing: folderers!.current.qtd != 0
+          ? Text(
+              folderers!.current.qtd.toString(),
+              style: TextStyle(
+                color: ColorPalettes.secondy,
+              ),
+            )
+          : null,
+      children: generaterWidgetsFolders(folderers!.childrens),
+      onExpansionChanged: (bool isExpanded) {
+        if (isExpanded) {
+          _reactiveListFolder.expanded(folderId: folderers!.current.id);
+        } else {
+          _reactiveListFolder.notExpanded(folderId: folderers!.current.id);
+        }
+      },
+      onPressed: () {
+        widget.onTapFolder(folderers!.current.id);
+      },
+    );
   }
 
   List<Widget> generaterWidgetsFolders(
@@ -65,12 +119,11 @@ class LadderFolder extends StatelessWidget {
       }
 
       list.add(CustomExpansionTile(
-        initiallyExpanded: _drawerMenuController.checkFolderIsExpanded(
+        initiallyExpanded: isExpanded(
           folderChild.current.id,
         ),
         selected: selected,
         spaceStart: padding,
-        backgroundColor: colorTile,
         turnsColor: ColorPalettes.secondy.withOpacity(0.5),
         selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
         leading: Icon(
@@ -81,6 +134,7 @@ class LadderFolder extends StatelessWidget {
           folderChild.current.name,
           textAlign: TextAlign.start,
           style: TextStyle(
+            height: 1.6,
             fontSize: selected ? 16 : null,
             fontFamily: 'JosefinSans',
             fontWeight: selected ? FontWeight.bold : FontWeight.w600,
@@ -96,41 +150,18 @@ class LadderFolder extends StatelessWidget {
               )
             : null,
         children: generaterWidgetsFolders(folderChild.childrens),
+        onExpansionChanged: (bool isExpanded) {
+          if (isExpanded) {
+            _reactiveListFolder.expanded(folderId: folderChild.current.id);
+          } else {
+            _reactiveListFolder.notExpanded(folderId: folderChild.current.id);
+          }
+        },
         onPressed: () {
-          print(folderChild.current.name);
+          widget.onTapFolder(folderChild.current.id);
         },
       ));
     }
     return list;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (listFolders.isEmpty) return Container();
-
-    colorTile = Theme.of(context).primaryColor;
-    return FolderExpansionTile(
-      initiallyExpanded: _drawerMenuController.checkFolderIsExpanded(
-        folderers.current.id,
-      ),
-      selected: selected,
-      title: folderers.current.name,
-      backgroundColor: colorTile,
-      iconColor: Color(folderers.current.color),
-      turnsColor: ColorPalettes.secondy.withOpacity(0.5),
-      selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
-      trailing: folderers.current.qtd != 0
-          ? Text(
-              folderers.current.qtd.toString(),
-              style: TextStyle(
-                color: ColorPalettes.secondy,
-              ),
-            )
-          : null,
-      children: generaterWidgetsFolders(folderers.childrens),
-      onPressed: () {
-        print(folderers.current.name);
-      },
-    );
   }
 }

@@ -16,35 +16,30 @@ class HeaderRelogar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Sizes.height(context) * 0.45,
       width: Sizes.width(context),
       child: Stack(
         children: [
           Align(
             alignment: AlignmentDirectional.topEnd,
-            child: Padding(
-              padding: EdgeInsets.only(top: Sizes.heightStatusBar(context)),
-              child: IconButton(
-                color: ColorPalettes.secondy,
-                icon: Icon(
-                  Icons.close_outlined,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: onPressedIcon,
+            child: IconButton(
+              color: ColorPalettes.secondy,
+              icon: Icon(
+                Icons.close_outlined,
+                color: Theme.of(context).primaryColor,
               ),
+              onPressed: onPressedIcon,
             ),
           ),
           Align(
             alignment: AlignmentDirectional.bottomCenter,
             child: Container(
-              margin: EdgeInsets.only(
-                top: Sizes.heightStatusBar(context),
-              ),
+              height: Sizes.height(context) * 0.35,
               alignment: AlignmentDirectional.bottomCenter,
-              height:
-                  Sizes.height(context) * 0.39 - Sizes.heightStatusBar(context),
+              padding: EdgeInsets.only(
+                bottom: Sizes.height(context) * 0.015,
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(

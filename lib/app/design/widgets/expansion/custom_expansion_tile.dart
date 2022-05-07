@@ -95,18 +95,32 @@ class CustomExpansionTileState extends State<CustomExpansionTile>
   late Color _materialColor;
   bool _isExpanded = false;
 
-  @override
-  void initState() {
-    super.initState();
+  initialConfig(BuildContext context) {
     _heightFactorTween = CurveTween(curve: widget.heightFactorCurve);
     _turnsTween = CurveTween(curve: widget.turnsCurve);
 
-    _controller = AnimationController(duration: widget.duration, vsync: this);
     _heightFactor = _controller.drive(_heightFactorTween);
     _iconTurns = _controller.drive(_halfTween.chain(_turnsTween));
     _isExpanded = PageStorage.of(context)?.readState(context) as bool? ??
         widget.initiallyExpanded;
-    if (_isExpanded) _controller.value = 1.0;
+    if (_isExpanded) {
+      _controller.value = 1.0;
+    } else {
+      _controller.value = 0.0;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+    initialConfig(context);
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomExpansionTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    initialConfig(context);
   }
 
   @override
@@ -182,13 +196,12 @@ class CustomExpansionTileState extends State<CustomExpansionTile>
                   ? const EdgeInsets.symmetric(horizontal: 15.0)
                   : EdgeInsetsDirectional.only(
                       start: widget.spaceStart!,
-                      end: 15.0,
+                      // end: 15.0,
                     ),
               title: widget.title,
               trailing: widget.trailing,
               leading: Container(
-                padding: const EdgeInsets.only(bottom: 5.0),
-                constraints: const BoxConstraints(minHeight: 48.0),
+                constraints: const BoxConstraints(minHeight: 50.0),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(8.0),
                   onTap: onExpanded,

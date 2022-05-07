@@ -12,17 +12,21 @@ import 'base_entity.dart';
 class TagEntity extends BaseEntity {
   final String name;
 
-  final String description;
+  final String? description;
 
-  final String color;
+  final int color;
+
+  @ColumnInfo(name: 'is_deleted')
+  final int isDeleted;
 
   TagEntity({
     required int tagId,
     required String dateCreate,
     required String dateModification,
-    required this.name,
-    required this.description,
     required this.color,
+    required this.name,
+    required this.isDeleted,
+    this.description,
   }) : super(
           id: tagId,
           dateCreate: dateCreate,

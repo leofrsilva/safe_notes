@@ -13,6 +13,10 @@ class Sizes {
     return MediaQuery.of(context).viewPadding.top;
   }
 
+  static double heightKeyboard(BuildContext context) {
+    return MediaQuery.of(context).viewInsets.bottom;
+  }
+
   static double dp4(BuildContext context) {
     return Sizes.width(context) / 100;
   }

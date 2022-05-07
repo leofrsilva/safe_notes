@@ -9,8 +9,8 @@ import 'package:safe_notes/app/shared/error/failure.dart';
 
 import '../../dashboard_controller.dart';
 import '../../../../../design/widgets/menu/button_manage_folders.dart';
+import '../../stores/list_folders_store.dart';
 import 'drawer_menu_controller.dart';
-import 'stores/list_folders_store.dart';
 
 class DrawerMenuPage extends StatefulWidget {
   const DrawerMenuPage({Key? key}) : super(key: key);
@@ -20,15 +20,14 @@ class DrawerMenuPage extends StatefulWidget {
 }
 
 class _DrawerMenuPageState extends State<DrawerMenuPage> {
-  // late ListFoldersStore listFoldersStore;
-  late DashboardController drawerController;
-  late DrawerMenuController drawerMenuController;
+  late DashboardController _drawerController;
+  late DrawerMenuController _drawerMenuController;
 
   onTapItemSelected(int index) async {
-    drawerMenuController.selectedMenuItem.value = index;
-    drawerMenuController.closeDrawer();
+    _drawerMenuController.selectedMenuItem.value = index;
+    _drawerMenuController.closeDrawer();
     await Future.delayed(
-      drawerMenuController.duration,
+      _drawerMenuController.duration,
       () {
         if (0 == index) {
           Modular.to.navigate('/dashboard/notes');
@@ -46,7 +45,7 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
   Widget buildListFolders() {
     return ScopedBuilder<ListFoldersStore, Failure,
         Stream<List<FolderQtdChildView>>>.transition(
-      store: drawerMenuController.listFolders,
+      store: _drawerMenuController.listFoldersStore,
       onLoading: (context) => const Center(
         child: CircularProgressIndicator.adaptive(),
       ),
@@ -62,20 +61,26 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
         );
       },
       onState: (context, state) {
-        return StreamBuilder<List<FolderQtdChildView>>(
-          stream: state,
-          builder: ((context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.connectionState == ConnectionState.done ||
-                  snapshot.connectionState == ConnectionState.active) {
-                final listFolders = snapshot.data ?? [];
-                drawerMenuController.loadListFoldersIsExpanded(listFolders);
-                return LadderFolder(listFolders: listFolders);
-              }
-            }
+        return AnimatedBuilder(
+          animation: _drawerMenuController.listFoldersStore.reactiveListFolder,
+          builder: (context, child) {
             return Container();
-          }),
+          },
         );
+        // return StreamBuilder<List<FolderQtdChildView>>(
+        //   stream: state,
+        //   builder: ((context, snapshot) {
+        //     if (snapshot.hasData) {
+        //       if (snapshot.connectionState == ConnectionState.done ||
+        //           snapshot.connectionState == ConnectionState.active) {
+        //         final listFolders = snapshot.data ?? [];
+        //         _drawerMenuController.loadListFoldersIsExpanded(listFolders);
+        //         return LadderFolder(listFolders: listFolders);
+        //       }
+        //     }
+        //     return Container();
+        //   }),
+        // );
       },
     );
   }
@@ -83,8 +88,8 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
   @override
   void initState() {
     super.initState();
-    drawerController = Modular.get<DashboardController>();
-    drawerMenuController = Modular.get<DrawerMenuController>();
+    _drawerController = Modular.get<DashboardController>();
+    _drawerMenuController = Modular.get<DrawerMenuController>();
   }
 
   @override
@@ -92,17 +97,18 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: SizedBox(
-        width: drawerMenuController.widthExpanded,
+        width: _drawerMenuController.widthExpanded,
         height: Sizes.height(context),
         child: ValueListenableBuilder<int>(
-            valueListenable: drawerMenuController.selectedMenuItem,
+            valueListenable: _drawerMenuController.selectedMenuItem,
             builder: (context, value, child) {
               return Padding(
                 padding: EdgeInsetsDirectional.only(
                   end: 12.0,
                   start: 12.0,
                   bottom: 12.0,
-                  top: 12.0 + drawerMenuController.sizePaddingVertical(context),
+                  top:
+                      12.0 + _drawerMenuController.sizePaddingVertical(context),
                 ),
                 child: RawScrollbar(
                   thickness: 5,
@@ -138,23 +144,34 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                         //   text: 'Perfil',
                         //   icon: Icons.account_circle_outlined,
                         //   onTap: () async {
-                        //     drawerMenuController.closeDrawer();
+                        //     _drawerMenuController.closeDrawer();
                         //     await Future.delayed(
-                        //       drawerMenuController.duration,
+                        //       _drawerMenuController.duration,
                         //       () => Modular.to.pushNamed('/dashboard/perfil'),
                         //     );
                         //   },
                         // ),
                         Divider(color: Theme.of(context).backgroundColor),
-                        buildListFolders(),
+                        // buildListFolders(),
+                        AnimatedBuilder(
+                          animation: _drawerMenuController
+                              .listFoldersStore.reactiveListFolder,
+                          builder: (context, child) {
+                            return LadderFolder(
+                              listFolders: _drawerMenuController.listFolders,
+                              onTapFolder: (folderId) {},
+                            );
+                          },
+                        ),
+
                         const SizedBox(height: 6.0),
                         ButtonManageFolders(
                           onTap: () async {
-                            drawerMenuController.closeDrawer();
+                            _drawerMenuController.closeDrawer();
                             await Future.delayed(
-                              drawerMenuController.duration,
+                              _drawerMenuController.duration,
                               () => Modular.to
-                                  .pushNamed('/dashboard/manager-folder'),
+                                  .pushNamed('/dashboard/manager-folder/'),
                             );
                           },
                         ),
@@ -164,8 +181,8 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                           text: 'Sair',
                           icon: Icons.exit_to_app_outlined,
                           onTap: () {
-                            drawerMenuController.selectedMenuItem.value = 9999;
-                            drawerController.logout(context);
+                            _drawerMenuController.selectedMenuItem.value = 9999;
+                            _drawerController.logout(context);
                           },
                         ),
                       ],

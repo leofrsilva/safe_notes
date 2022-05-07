@@ -5,11 +5,12 @@ class FolderExpansionTile extends StatefulWidget {
   const FolderExpansionTile({
     Key? key,
     required this.title,
-    this.onExpansionChanged,
     this.onPressed,
+    this.onExpansionChanged,
     this.selected = false,
     this.iconSize,
     this.iconColor,
+    this.fontColor,
     this.selectedColor,
     this.children = const <Widget>[],
     this.trailing,
@@ -25,6 +26,8 @@ class FolderExpansionTile extends StatefulWidget {
   }) : super(key: key);
 
   final bool selected;
+
+  final Color? fontColor;
 
   final double? iconSize;
 
@@ -97,18 +100,32 @@ class FolderExpansionTileState extends State<FolderExpansionTile>
   late Color _materialColor;
   bool _isExpanded = false;
 
-  @override
-  void initState() {
-    super.initState();
+  initialConfig(BuildContext context) {
     _heightFactorTween = CurveTween(curve: widget.heightFactorCurve);
     _turnsTween = CurveTween(curve: widget.turnsCurve);
 
-    _controller = AnimationController(duration: widget.duration, vsync: this);
     _heightFactor = _controller.drive(_heightFactorTween);
     _iconTurns = _controller.drive(_halfTween.chain(_turnsTween));
     _isExpanded = PageStorage.of(context)?.readState(context) as bool? ??
         widget.initiallyExpanded;
-    if (_isExpanded) _controller.value = 1.0;
+    if (_isExpanded) {
+      _controller.value = 1.0;
+    } else {
+      _controller.value = 0.0;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+    initialConfig(context);
+  }
+
+  @override
+  void didUpdateWidget(covariant FolderExpansionTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    initialConfig(context);
   }
 
   @override
@@ -184,11 +201,12 @@ class FolderExpansionTileState extends State<FolderExpansionTile>
                 widget.title,
                 textAlign: TextAlign.start,
                 style: TextStyle(
+                  height: 1.6,
                   fontSize: widget.selected ? 16 : null,
                   fontFamily: 'JosefinSans',
                   fontWeight:
                       widget.selected ? FontWeight.bold : FontWeight.w600,
-                  color: ColorPalettes.white,
+                  color: widget.fontColor ?? ColorPalettes.white,
                 ),
               ),
               trailing: widget.trailing,
@@ -197,9 +215,8 @@ class FolderExpansionTileState extends State<FolderExpansionTile>
                 end: 16.0,
               ),
               leading: Container(
-                padding: const EdgeInsets.only(bottom: 5.0),
                 constraints: const BoxConstraints(
-                  minHeight: 48.0,
+                  minHeight: 50.0,
                   minWidth: 44.0,
                 ),
                 child: InkWell(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
-import 'package:safe_notes/app/design/widgets/glow_behavior/no_glow_behavior.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 
 import 'adicionar_user_store.dart';

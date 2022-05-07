@@ -8,8 +8,10 @@ class CustomTextField extends StatefulWidget {
   final bool isPass;
   final bool isEmail;
   final String title;
+  final String? hint;
   final bool nextFocus;
   final bool spacingWhenInFocus;
+  final FocusNode? focusNode;
   void Function(String)? onChanged;
   final Function(String?)? onSaved;
   String? Function(String?)? validator;
@@ -17,15 +19,19 @@ class CustomTextField extends StatefulWidget {
 
   AutovalidateMode? autovalidateMode;
   final TextEditingController? controller;
+  final String? initialValue;
 
   CustomTextField({
     Key? key,
     required this.title,
+    this.hint,
     this.controller,
+    this.initialValue,
     this.isPass = false,
     this.isEmail = false,
     this.nextFocus = false,
     this.spacingWhenInFocus = false,
+    this.focusNode,
     this.onSaved,
     this.validator,
     this.onChanged,
@@ -71,7 +77,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       isNotVisible = false;
     }
 
-    focusNode = FocusNode();
+    focusNode = widget.focusNode ?? FocusNode();
     focusNode.addListener(listenerFocus);
 
     if (widget.controller != null) {
@@ -86,7 +92,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
   void dispose() {
     focusNode.removeListener(listenerFocus);
     isFocus.dispose();
-    focusNode.dispose();
+    if (widget.focusNode == null) {
+      focusNode.dispose();
+    }
     super.dispose();
   }
 
@@ -97,8 +105,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
       height: 70 + paddingTop,
       child: FormField<String>(
           autovalidateMode: widget.autovalidateMode,
-          initialValue:
-              widget.controller != null ? widget.controller?.text : '',
+          initialValue: widget.controller != null
+              ? widget.controller?.text
+              : widget.initialValue ?? '',
           validator: widget.validator,
           onSaved: widget.onSaved,
           builder: (FormFieldState<String> state) {
@@ -144,6 +153,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
                               ? () => FocusScope.of(context).nextFocus()
                               : null,
                           decoration: InputDecoration(
+                            hintText: widget.hint,
+                            hintStyle: TextStyles.fieldStyle.copyWith(
+                              color: ColorPalettes.grey,
+                              height: 3.5,
+                            ),
                             filled: true,
                             fillColor: ColorPalettes.whiteSemiTransparent,
                             hoverColor: ColorPalettes.whiteSemiTransparent,

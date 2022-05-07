@@ -29,28 +29,42 @@ class _GetInPageState extends State<GetInPage> {
             FocusScope.of(context).focusedChild?.unfocus();
           }
         },
-        child: Form(
-          key: _controller.formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const HeaderLogin(),
-                form(context),
-                buttons(context),
-              ],
+        child: Stack(
+          children: [
+            NoWave(
+              fractionHeight:
+                  Sizes.heightStatusBar(context) / Sizes.height(context),
             ),
-          ),
+            SafeArea(
+              child: Form(
+                key: _controller.formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const HeaderLogin(),
+                      form(context),
+                      buttons(context),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget form(BuildContext context) => Container(
-        height: Sizes.height(context) * 0.35,
+        height: Sizes.height(context) * 0.375,
         alignment: AlignmentDirectional.center,
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: EdgeInsets.only(
+          left: 20.0,
+          right: 20.0,
+          top: Sizes.height(context) * 0.02,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -113,12 +127,14 @@ class _GetInPageState extends State<GetInPage> {
       );
 
   Widget buttons(BuildContext context) => Container(
-        height: Sizes.height(context) * 0.35,
-        alignment: AlignmentDirectional.center,
+        // color: Colors.deepPurple,
+        height: Sizes.height(context) * 0.2875,
+        alignment: AlignmentDirectional.bottomCenter,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: Sizes.height(context) * 0.025),
             CustomButton(
               text: 'Entrar',
               onTap: () => _controller.login(context),

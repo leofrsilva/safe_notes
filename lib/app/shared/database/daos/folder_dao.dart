@@ -14,12 +14,24 @@ abstract class FolderDAO {
   @Query('DELETE FROM Folder WHERE id != :folderId')
   Future<void> deleteAllExcept(int folderId);
 
-  @Query('UPDATE Folder SET is_deleted = 1 WHERE id = :folderId')
-  Future<void> deleteFolder(int folderId);
-
   @Query('SELECT * FROM Folder WHERE id = :folderId')
-  Future<FolderEntity?> findUser(int folderId);
+  Future<FolderEntity?> findFolder(int folderId);
 
   @Query('SELECT * FROM FolderQtdChild ORDER BY id')
   Stream<List<FolderQtdChildView>> getFoldersQtdChild();
+
+//
+  @Query('SELECT * FROM Folder WHERE folder_parent = :folderId')
+  Future<List<FolderEntity>> findAllFolderChildrens(int folderId);
+
+  @Query('UPDATE Folder SET is_deleted = 1 WHERE id = :folderId')
+  Future<void> deleteFolder(int folderId);
+
+  Future delete(int folderId) async {
+    var listChildrens = await findAllFolderChildrens(folderId);
+    for (var child in listChildrens) {
+      await delete(child.id);
+      await deleteFolder(child.id);
+    }
+  }
 }

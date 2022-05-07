@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:safe_notes/app/design/common/utils/sizes.dart';
+import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
 
@@ -26,7 +26,12 @@ class _RelogarPageState extends State<RelogarPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: ColorPalettes.transparent,
+      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+    ));
 
     return Scaffold(
       body: GestureDetector(
@@ -35,30 +40,42 @@ class _RelogarPageState extends State<RelogarPage> {
             FocusScope.of(context).focusedChild?.unfocus();
           }
         },
-        child: Form(
-          key: _controller.formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                header(context),
-                fields(context),
-                buttons(context),
-              ],
+        child: Stack(
+          children: [
+            Container(
+              width: Sizes.width(context),
+              height: Sizes.heightStatusBar(context),
+              color: Theme.of(context).backgroundColor,
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: Sizes.heightStatusBar(context),
+              ),
+              child: Form(
+                key: _controller.formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      header(context),
+                      fields(context),
+                      buttons(context),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   header(BuildContext context) {
-    return Container(
-      height: Sizes.height(context) * 0.45,
-      alignment: AlignmentDirectional.center,
+    return SizedBox(
+      height: Sizes.height(context) * 0.45 - Sizes.heightStatusBar(context),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ValueListenableBuilder<String>(
             valueListenable: _controller.name,

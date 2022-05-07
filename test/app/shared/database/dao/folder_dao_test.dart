@@ -34,7 +34,7 @@ void main() {
     folder = folder.copyWith(isDeleted: true);
     await folderDAO.updateFolders([folder.entity]);
 
-    final entity = await folderDAO.findUser(id);
+    final entity = await folderDAO.findFolder(id);
     expect(entity, isNotNull);
 
     final resultFolder = FolderModel.fromEntity(entity!);
@@ -48,7 +48,7 @@ void main() {
 
     await folderDAO.deleteFolder(id);
 
-    final entity = await folderDAO.findUser(id);
+    final entity = await folderDAO.findFolder(id);
     expect(entity, isNotNull);
 
     final resultFolder = FolderModel.fromEntity(entity!);
@@ -56,11 +56,11 @@ void main() {
     expect(resultFolder.isDeleted, equals(true));
   });
 
-  test('folder dao findUser', () async {
+  test('folder dao findFolder', () async {
     var folder = folder3;
     int id = await folderDAO.insertFolder(folder.entity);
 
-    final entity = await folderDAO.findUser(id);
+    final entity = await folderDAO.findFolder(id);
     expect(entity, isNotNull);
     expect(entity, isA<FolderEntity>());
   });

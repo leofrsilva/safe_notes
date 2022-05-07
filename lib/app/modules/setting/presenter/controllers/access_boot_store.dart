@@ -14,7 +14,7 @@ class AccessBootStore {
   }
 
   Future _updateDefaultFolder(String uid) async {
-    final folder = await _folderDAO.findUser(DefaultDatabase.folderIdDefault);
+    final folder = await _folderDAO.findFolder(DefaultDatabase.folderIdDefault);
     if (folder != null) {
       var folderModel = FolderModel.fromEntity(folder);
       folderModel = folderModel.copyWith(

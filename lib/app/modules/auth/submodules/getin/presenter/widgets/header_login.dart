@@ -8,11 +8,11 @@ class HeaderLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Sizes.height(context) * 0.3,
+      height: Sizes.height(context) * 0.30 - Sizes.heightStatusBar(context),
       width: Sizes.width(context),
       child: Stack(
         children: [
-          WaveLeft(fractionHeight: 0.3 + 0.4),
+          WaveLeft(fractionHeight: 0.30 + 0.40),
           Container(
             margin: EdgeInsets.only(
               top: Sizes.heightStatusBar(context),

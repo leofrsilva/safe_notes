@@ -27,4 +27,18 @@ class TextStyles {
         fontWeight: FontWeight.w600,
         color: ColorPalettes.grey,
       );
+
+  static TextStyle textButton(BuildContext context) => TextStyle(
+        fontSize: 18,
+        fontFamily: 'JosefinSans',
+        fontWeight: FontWeight.w600,
+        color: Theme.of(context).primaryColor,
+      );
+
+  static TextStyle titleFolder(BuildContext context) => TextStyle(
+        fontSize: 13,
+        fontFamily: 'JosefinSans',
+        fontWeight: FontWeight.w600,
+        color: ColorPalettes.blueGrey,
+      );
 }

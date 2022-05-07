@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:safe_notes/app/design/common/common.dart';
-import 'package:safe_notes/app/design/widgets/glow_behavior/no_glow_behavior.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
 

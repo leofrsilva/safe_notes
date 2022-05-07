@@ -22,6 +22,7 @@ final folderQtsChild = FolderQtdChildView(
   id: 100,
   name: 'Pasta',
   color: 0xFF28EDDA,
+  isDeleted: 0,
   qtd: 4,
 );
 
@@ -31,6 +32,7 @@ final folderQtsChild1 = FolderQtdChildView(
   id: 101,
   name: 'Pasta 1',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 1,
 );
 
@@ -40,6 +42,7 @@ final folderQtsChild11 = FolderQtdChildView(
   id: 1011,
   name: 'Pasta 1 - 1',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 1,
 );
 
@@ -49,6 +52,7 @@ final folderQtsChild111 = FolderQtdChildView(
   id: 10111,
   name: 'Pasta 1 - 1 - 1',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 1,
 );
 
@@ -58,6 +62,7 @@ final folderQtsChild1111 = FolderQtdChildView(
   id: 101111,
   name: 'Pasta 1 - 1 - 1 - 1',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 0,
 );
 
@@ -67,6 +72,7 @@ final folderQtsChild2 = FolderQtdChildView(
   id: 102,
   name: 'Pasta 2',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 2,
 );
 
@@ -76,6 +82,7 @@ final folderQtsChild21 = FolderQtdChildView(
   id: 1021,
   name: 'Pasta 2 - 1',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 0,
 );
 
@@ -85,6 +92,7 @@ final folderQtsChild22 = FolderQtdChildView(
   id: 1022,
   name: 'Pasta 2 - 2',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 1,
 );
 
@@ -94,6 +102,7 @@ final folderQtsChild221 = FolderQtdChildView(
   id: 10221,
   name: 'Pasta 2 - 2 - 1',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 0,
 );
 
@@ -103,6 +112,7 @@ final folderQtsChild3 = FolderQtdChildView(
   id: 103,
   name: 'Pasta 3',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 0,
 );
 
@@ -112,6 +122,7 @@ final folderQtsChild4 = FolderQtdChildView(
   id: 104,
   name: 'Pasta 4',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 2,
 );
 
@@ -121,6 +132,7 @@ final folderQtsChild41 = FolderQtdChildView(
   id: 1041,
   name: 'Pasta 4 - 1',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 0,
 );
 
@@ -130,5 +142,6 @@ final folderQtsChild42 = FolderQtdChildView(
   id: 1042,
   name: 'Pasta 4 - 2',
   color: 0xFF885599,
+  isDeleted: 0,
   qtd: 0,
 );

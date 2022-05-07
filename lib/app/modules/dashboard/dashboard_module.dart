@@ -16,10 +16,10 @@ import 'infra/repositories/folder_repository.dart';
 import 'presenter/pages/drawer/drawer_menu_controller.dart';
 import 'presenter/dashboard_controller.dart';
 import 'presenter/dashboard_page.dart';
-import 'presenter/pages/drawer/stores/list_folders_store.dart';
-import 'presenter/pages/manager_folders/manager_folders_page.dart';
+import 'presenter/stores/list_folders_store.dart';
+import 'submodules/folder/folders_module.dart';
+import 'submodules/manager_folders/manager_folders_module.dart';
 import 'submodules/favorites/favorites_module.dart';
-import 'submodules/folders/folders_module.dart';
 import 'submodules/lixeira/lixeira_module.dart';
 import 'submodules/notes/notes_module.dart';
 
@@ -57,7 +57,7 @@ class DashboardModule extends Module {
               i<ILeaveAuthUsecase>(),
             )),
         //
-        Bind.lazySingleton<ListFoldersStore>(
+        Bind.singleton<ListFoldersStore>(
           (i) => ListFoldersStore(i<IGetListFoldersUsecase>()),
         ),
         Bind.singleton((i) => DrawerMenuController(
@@ -87,8 +87,8 @@ class DashboardModule extends Module {
               transition: TransitionType.rightToLeft,
             ),
             ModuleRoute(
-              '/folders',
-              module: FoldersModule(),
+              '/folder',
+              module: FolderModule(),
               transition: TransitionType.rightToLeft,
             ),
           ],
@@ -98,9 +98,9 @@ class DashboardModule extends Module {
         //   child: (_, __) => const PerfilPage(),
         //   transition: TransitionType.rightToLeft,
         // ),
-        ChildRoute(
+        ModuleRoute(
           '/manager-folder',
-          child: (_, __) => const ManagerFolderPage(),
+          module: ManagerFoldersModule(),
           transition: TransitionType.rightToLeft,
         ),
       ];

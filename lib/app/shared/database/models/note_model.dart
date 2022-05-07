@@ -23,16 +23,20 @@ class NoteModel {
 
   DateTime get dateModification => _entity.dateModification.toDateTime;
 
+  static int get _generaterId {
+    return DateTime.now().millisecondsSinceEpoch;
+  }
+
   NoteModel.empty()
       : _entity = NoteEntity(
-            folderId: 0,
-            tagId: 0,
-            noteId: 0,
-            body: '',
-            title: '',
-            isDeleted: 0,
-            dateCreate: '',
-            dateModification: '');
+          folderId: _generaterId,
+          noteId: 0,
+          body: '',
+          title: '',
+          isDeleted: 0,
+          dateCreate: DateTime.now().toString(),
+          dateModification: DateTime.now().toString(),
+        );
 
   NoteModel({
     required int noteId,
@@ -44,7 +48,7 @@ class NoteModel {
     required int folderId,
     int? tagId,
   }) : _entity = NoteEntity(
-          folderId: folderId,
+          folderId: noteId == 0 ? _generaterId : noteId,
           tagId: tagId,
           noteId: noteId,
           body: body,
@@ -74,5 +78,18 @@ class NoteModel {
       folderId: folderId ?? this.folderId,
       tagId: tagId ?? this.tagId,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'folderId': folderId,
+      'noteId': noteId,
+      'tagId': tagId,
+      'body': body,
+      'title': title,
+      'is_deleted': isDeleted,
+      'date_create': dateCreate,
+      'date_modification': dateModification,
+    };
   }
 }

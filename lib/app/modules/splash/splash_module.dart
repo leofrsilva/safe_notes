@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
-import 'package:safe_notes/app/shared/database/database.dart';
 
 import 'package:safe_notes/app/shared/leave/leave.dart';
 import 'package:safe_notes/app/shared/token/expire_token.dart';
