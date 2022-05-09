@@ -241,7 +241,7 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         ),
         child: Text(
           'Criar subpasta',
-          style: TextStyles.titleFolder(context),
+          style: TextStyles.titleFolderList,
         ),
       ),
     ];
@@ -258,7 +258,7 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         ),
         child: Text(
           'Criar subpasta',
-          style: TextStyles.titleFolder(context),
+          style: TextStyles.titleFolderList,
         ),
       ),
       PopupMenu<ActionFolder>(
@@ -266,7 +266,7 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         value: ActionFolder.rename,
         child: Text(
           'Renomear',
-          style: TextStyles.titleFolder(context),
+          style: TextStyles.titleFolderList,
         ),
       ),
       PopupMenu<ActionFolder>(
@@ -274,7 +274,7 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         value: ActionFolder.delete,
         child: Text(
           'Excluir',
-          style: TextStyles.titleFolder(context),
+          style: TextStyles.titleFolderList,
         ),
       ),
       PopupMenu<ActionFolder>(
@@ -286,7 +286,7 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         ),
         child: Text(
           'Alterar cor da pasta',
-          style: TextStyles.titleFolder(context),
+          style: TextStyles.titleFolderList,
         ),
       ),
     ];

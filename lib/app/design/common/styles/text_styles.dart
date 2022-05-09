@@ -35,10 +35,37 @@ class TextStyles {
         color: Theme.of(context).primaryColor,
       );
 
-  static TextStyle titleFolder(BuildContext context) => TextStyle(
-        fontSize: 13,
-        fontFamily: 'JosefinSans',
-        fontWeight: FontWeight.w600,
-        color: ColorPalettes.blueGrey,
-      );
+  static TextStyle titleFolderList = TextStyle(
+    fontSize: 13,
+    fontFamily: 'JosefinSans',
+    fontWeight: FontWeight.w600,
+    color: ColorPalettes.blueGrey,
+  );
+
+  // CARDS
+  static TextStyle cardTitleFolder = TextStyle(
+    fontSize: 13,
+    fontFamily: 'JosefinSans',
+    fontWeight: FontWeight.w600,
+    color: ColorPalettes.blueGrey,
+  );
+
+  static TextStyle cardTitleNote = const TextStyle(
+    fontSize: 13,
+    fontFamily: 'JosefinSans',
+    fontWeight: FontWeight.w600,
+    // color: ColorPalettes.blueGrey,
+  );
+
+  static TextStyle cardDateNote = TextStyle(
+    fontSize: 12,
+    fontFamily: 'JosefinSans',
+    color: ColorPalettes.grey,
+  );
+
+  static TextStyle cardBodyNote = TextStyle(
+    fontSize: 12,
+    fontFamily: 'JosefinSans',
+    color: ColorPalettes.blueGrey,
+  );
 }

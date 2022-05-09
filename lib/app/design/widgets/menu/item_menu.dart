@@ -6,6 +6,7 @@ class ItemMenu extends StatelessWidget {
   final bool selected;
   final int? colorIcon;
   final IconData? icon;
+  final Widget? trailing;
   final double? sizeIcon;
   final double paddingStart;
   final Function()? onTap;
@@ -15,6 +16,7 @@ class ItemMenu extends StatelessWidget {
     this.icon,
     this.paddingStart = 0.0,
     this.selected = false,
+    this.trailing,
     this.sizeIcon,
     this.colorIcon,
     this.onTap,
@@ -54,6 +56,7 @@ class ItemMenu extends StatelessWidget {
             color: ColorPalettes.white,
           ),
         ),
+        trailing: trailing,
         onTap: onTap,
       ),
     );

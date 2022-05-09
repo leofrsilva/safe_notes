@@ -312,6 +312,21 @@ class _$NoteDAO extends NoteDAO {
   }
 
   @override
+  Future<List<NoteEntity>> getNotesDeleted() async {
+    return _queryAdapter.queryList(
+        'SELECT        Note.id,       Note.title,       Note.body,       Note.tag_id,       Note.folder_id,       Note.is_deleted,       Note.date_create,       Note.date_modification     FROM Note Inner JOIN Folder                on (Note.folder_id = Folder.id                and Folder.is_deleted = 0)     WHERE Note.is_deleted = 1',
+        mapper: (Map<String, Object?> row) => NoteEntity(
+            noteId: row['id'] as int,
+            dateCreate: row['date_create'] as String,
+            dateModification: row['date_modification'] as String,
+            title: row['title'] as String,
+            body: row['body'] as String,
+            isDeleted: row['is_deleted'] as int,
+            folderId: row['folder_id'] as int,
+            tagId: row['tag_id'] as int?));
+  }
+
+  @override
   Future<int> insertNote(NoteEntity record) {
     return _noteEntityInsertionAdapter.insertAndReturnId(
         record, OnConflictStrategy.abort);

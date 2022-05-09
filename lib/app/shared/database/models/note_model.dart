@@ -5,6 +5,8 @@ import '../entities/note_entity.dart';
 class NoteModel {
   final NoteEntity _entity;
 
+  NoteEntity get entity => _entity;
+
   NoteModel.fromEntity(this._entity);
 
   int get folderId => _entity.folderId;
@@ -48,7 +50,7 @@ class NoteModel {
     required int folderId,
     int? tagId,
   }) : _entity = NoteEntity(
-          folderId: noteId == 0 ? _generaterId : noteId,
+          folderId: folderId == 0 ? _generaterId : folderId,
           tagId: tagId,
           noteId: noteId,
           body: body,

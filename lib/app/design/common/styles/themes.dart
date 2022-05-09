@@ -2,6 +2,12 @@ import 'color_palettes.dart';
 import 'package:flutter/material.dart';
 
 class Themes {
+  static bool isDark(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+    return isDarkMode;
+  }
+
   static ThemeData lightTheme = ThemeData(
     // fontFamily: 'IBMPlexSans',
     backgroundColor: ColorPalettes.lightBG,

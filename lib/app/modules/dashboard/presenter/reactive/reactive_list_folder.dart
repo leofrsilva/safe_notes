@@ -5,7 +5,15 @@ class ReactiveListFolder extends ChangeNotifier {
   final _listFoldersIsExpanded = <FolderQtdChildView, bool>{};
   final _qtdDeleted = ValueNotifier<int>(0);
 
-  // ValueNotifier<int> qtd
+  //? ---------------------------------------------------------------
+  //? -- DELETED
+  //? ---------------------------------------------------------------
+  ValueNotifier<int> get deleted => _qtdDeleted;
+
+  List<FolderQtdChildView> get listDeleted {
+    return list.where((folder) => folder.isDeleted == 1).toList();
+  }
+
   set _countDeleted(List<FolderQtdChildView> folders) {
     int count = 0;
     for (var folder in folders) {
@@ -13,6 +21,8 @@ class ReactiveListFolder extends ChangeNotifier {
     }
     _qtdDeleted.value = count;
   }
+  //? ---------------------------------------------------------------
+  //? ---------------------------------------------------------------
 
   List<FolderQtdChildView> get list {
     _listFoldersIsExpanded.keys.forEach((folder) {

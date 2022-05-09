@@ -133,13 +133,24 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                           icon: Icons.star_border_rounded,
                           onTap: () => onTapItemSelected(1),
                         ),
-                        ItemMenu(
-                          selected: 2 == value,
-                          text: 'Lixeira',
-                          sizeIcon: 28,
-                          icon: Icons.delete_outline,
-                          onTap: () => onTapItemSelected(2),
-                        ),
+                        ValueListenableBuilder<int>(
+                            valueListenable: _drawerMenuController
+                                .listFoldersStore.reactiveListFolder.deleted,
+                            builder: (context, value, child) {
+                              return ItemMenu(
+                                selected: 2 == value,
+                                text: 'Lixeira',
+                                sizeIcon: 28,
+                                icon: Icons.delete_outline,
+                                trailing: Text(
+                                  value.toString(),
+                                  style: TextStyle(
+                                    color: ColorPalettes.secondy,
+                                  ),
+                                ),
+                                onTap: () => onTapItemSelected(2),
+                              );
+                            }),
                         // ItemMenu(
                         //   text: 'Perfil',
                         //   icon: Icons.account_circle_outlined,

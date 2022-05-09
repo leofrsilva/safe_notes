@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:floor/floor.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'daos/folder_dao.dart';
-import 'daos/note_dart.dart';
+import 'daos/note_dao.dart';
 import 'daos/tag_dao.dart';
 import 'entities/folder_entity.dart';
 import 'entities/note_entity.dart';
