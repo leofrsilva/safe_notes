@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/styles/color_palettes.dart';
+import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 
 class FolderExpansionTileWithPopup extends StatefulWidget {
   const FolderExpansionTileWithPopup({

@@ -24,6 +24,8 @@ class NoteEntity extends BaseEntity {
 
   final String body;
 
+  final int favorite;
+
   @ColumnInfo(name: 'is_deleted')
   final int isDeleted;
 
@@ -39,6 +41,7 @@ class NoteEntity extends BaseEntity {
     required String dateModification,
     required this.title,
     required this.body,
+    required this.favorite,
     required this.isDeleted,
     required this.folderId,
     this.tagId,

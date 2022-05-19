@@ -6,6 +6,7 @@ import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import '../../../../../../shared/database/views/folder_qtd_child_view.dart';
 import '../../../../presenter/pages/drawer/drawer_menu_controller.dart';
+import '../../../../presenter/reactive/i_reactive_list_folder.dart';
 import '../manager_folders_controller.dart';
 
 class EditNamePage extends StatefulWidget {
@@ -21,8 +22,8 @@ class EditNamePage extends StatefulWidget {
 }
 
 class _EditNamePageState extends State<EditNamePage> {
-  late DrawerMenuController _drawerMenuController;
   late TextEditingController _textEditingFolder;
+  late IReactiveListFolder _reactiveListFolder;
   late ManagerFoldersController _controller;
   late GlobalKey<FormState> _formKey;
   late FocusNode _focusNode;
@@ -35,8 +36,7 @@ class _EditNamePageState extends State<EditNamePage> {
   String? validatorName(String? name) {
     if (name != null) {
       var folderQtdChildView = widget.folderQtdChildView.copyWith(name: name);
-      if (_drawerMenuController.reactiveListFolder
-          .checkNameAlreadyExists(folderQtdChildView)) {
+      if (_reactiveListFolder.checkNameAlreadyExists(folderQtdChildView)) {
         return 'Já existe uma pasta com esse nome.';
       }
     }
@@ -57,7 +57,8 @@ class _EditNamePageState extends State<EditNamePage> {
   void initState() {
     super.initState();
     _controller = Modular.get<ManagerFoldersController>();
-    _drawerMenuController = Modular.get<DrawerMenuController>();
+    _reactiveListFolder =
+        Modular.get<DrawerMenuController>().shared.reactiveFolders;
     folder = folder.copyWith(
       folderId: widget.folderQtdChildView.id,
       userId: _controller.userUId,
@@ -111,6 +112,7 @@ class _EditNamePageState extends State<EditNamePage> {
                         top: 20.0,
                         left: 20.0,
                         right: 20.0,
+                        bottom: 8.0,
                       ),
                       margin: EdgeInsets.only(bottom: bottomPadding),
                       decoration: BoxDecoration(
@@ -123,7 +125,7 @@ class _EditNamePageState extends State<EditNamePage> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            CustomTextField(
+                            CustomTextFieldWithHint(
                               controller: _textEditingFolder,
                               title: 'Renomear a Pasta',
                               hint: 'Nome da Pasta',
@@ -140,7 +142,7 @@ class _EditNamePageState extends State<EditNamePage> {
                                     } else if (name.length > 1) {
                                       canAdd = true;
                                     }
-                                    folder = folder.copyWith(name: name);
+                                    folder = folder.copyWith(name: name.trim());
                                   }
                                 });
                                 final formState = _formKey.currentState;
@@ -161,9 +163,19 @@ class _EditNamePageState extends State<EditNamePage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   TextButton(
-                                    child: Text(
-                                      'Cancelar',
-                                      style: TextStyles.textButton(context),
+                                    style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    )),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                        vertical: 5.0,
+                                      ),
+                                      child: Text(
+                                        'Cancelar',
+                                        style: TextStyles.textButton(context),
+                                      ),
                                     ),
                                     onPressed: () {
                                       Modular.to.pop();
@@ -175,13 +187,23 @@ class _EditNamePageState extends State<EditNamePage> {
                                     color: ColorPalettes.blueGrey,
                                   ),
                                   TextButton(
-                                    child: Text(
-                                      'Renomear',
-                                      style: TextStyles.textButton(context)
-                                          .copyWith(
-                                        color: canAdd
-                                            ? Theme.of(context).primaryColor
-                                            : ColorPalettes.grey,
+                                    style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    )),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                        vertical: 5.0,
+                                      ),
+                                      child: Text(
+                                        'Renomear',
+                                        style: TextStyles.textButton(context)
+                                            .copyWith(
+                                          color: canAdd
+                                              ? Theme.of(context).primaryColor
+                                              : ColorPalettes.grey,
+                                        ),
                                       ),
                                     ),
                                     onPressed: canAdd

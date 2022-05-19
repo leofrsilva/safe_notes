@@ -38,7 +38,7 @@ class GetInModule extends Module {
             (i) => DeleteFolderRepository(
                   i<IDeleteFolderDatasource>(),
                 )),
-        //?
+        //
         Bind.lazySingleton<IDeleteAllFolderExceptUsecase>(
           (i) => DeleteAllFolderExceptUsecase(i<IDeleteFolderRepository>()),
         ),
@@ -52,7 +52,7 @@ class GetInModule extends Module {
             (i) => GetinFirebaseRepository(
                   i<IGetinFirebaseDatasource>(),
                 )),
-        //?
+        //
         Bind.lazySingleton<ILoginAuthenticationUsecase>(
           (i) => LoginAuthenticationUsecase(i<IGetinFirebaseRepository>()),
         ),

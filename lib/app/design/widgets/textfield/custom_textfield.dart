@@ -137,7 +137,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                               : null,
                           focusNode: focusNode,
                           obscureText: isNotVisible,
-                          style: TextStyles.fieldStyle,
+                          style: TextStyles.fieldStyle.copyWith(
+                            height: 0.9,
+                          ),
                           inputFormatters: widget.inputFormatters,
                           cursorColor: Theme.of(context).primaryColor,
                           onChanged: (text) {

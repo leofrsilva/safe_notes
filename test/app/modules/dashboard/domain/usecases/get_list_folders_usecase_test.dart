@@ -9,7 +9,7 @@ import '../../../../../mocks/mocks_sqlite.dart';
 import '../../../../../stub/folder_qtd_child_view.dart';
 
 void main() {
-  final repository = FolderRepositoryMock();
+  final repository = GetListRepositoryMock();
 
   test(
       'get list folders usecase GetListFoldersUsecase.Call | retorna uma Stream de Lista de FolderQtdChildView',

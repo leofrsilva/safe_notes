@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
-import 'package:safe_notes/app/design/common/utils/date_constant.dart';
+import 'package:safe_notes/app/design/common/util/date_constant.dart';
+
+import '../util/date_convert.dart';
 
 extension StringExtension on String {
   bool isValidEmail() {
@@ -67,5 +69,26 @@ extension DateTimeExtension on DateTime {
     final m = month.toString().padLeft(2, '0');
     final d = day.toString().padLeft(2, '0');
     return "$d/$m/$y";
+  }
+
+  String get toStrDate {
+    final y = year.toString().padLeft(4, '0');
+    final m = month.toString().padLeft(2, '0');
+    final strM = DateConvert.abrv(int.parse(m));
+    final d = day.toString().padLeft(2, '0');
+
+    return "$d de $strM de $y";
+  }
+
+  String get toStrDateTime {
+    final y = year.toString().padLeft(4, '0');
+    final m = month.toString().padLeft(2, '0');
+    final strM = DateConvert.abrv(int.parse(m));
+    final d = day.toString().padLeft(2, '0');
+
+    final h = hour;
+    final min = minute;
+
+    return "$d de $strM de $y $h:$min";
   }
 }

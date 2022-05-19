@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/utils/sizes.dart';
-import 'package:safe_notes/app/design/common/styles/color_palettes.dart';
+import 'package:safe_notes/app/design/common/util/sizes.dart';
+import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 import 'package:safe_notes/app/design/widgets/wave/wave_left.dart';
 
 class BarStatus extends StatelessWidget {

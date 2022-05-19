@@ -67,6 +67,7 @@ class _EditColorPageState extends State<EditColorPage> {
                         top: 15.0,
                         left: 20.0,
                         right: 20.0,
+                        bottom: 6.0,
                       ),
                       decoration: BoxDecoration(
                         color: Theme.of(context).backgroundColor,
@@ -100,6 +101,11 @@ class _EditColorPageState extends State<EditColorPage> {
                                 children: [
                                   Expanded(
                                     child: TextButton(
+                                      style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      )),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                           vertical: 5.0,

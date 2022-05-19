@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
@@ -12,7 +13,7 @@ import 'pages/delete_folder_page.dart';
 import 'pages/edit_color_page.dart';
 import 'pages/edit_name_page.dart';
 
-class ManagerFoldersController {
+class ManagerFoldersController extends Disposable {
   final AppCore _appCore;
   final IAddFolderUsecase _addFolderUsecase;
   final IEditFolderUsecase _editFolderUsecase;
@@ -20,7 +21,7 @@ class ManagerFoldersController {
   final DrawerMenuController _drawerMenuController;
 
   ReactiveListFolder get reactiveListFolder =>
-      _drawerMenuController.reactiveListFolder;
+      _drawerMenuController.shared.reactiveFolders;
 
   ManagerFoldersController(
     this._appCore,
@@ -80,14 +81,14 @@ class ManagerFoldersController {
     );
   }
 
-  callDeleteFolderPage(BuildContext context, List<int> ids) {
+  callDeleteFolderPage(BuildContext context, List<FolderQtdChildView> folders) {
     showDialog(
       context: context,
       barrierDismissible: true,
       barrierColor: Colors.black26,
       builder: (context) {
         return DeleteFolderPage(
-          listIdToDelete: ids,
+          listFolderQtdChildView: folders,
         );
       },
     );
@@ -101,16 +102,14 @@ class ManagerFoldersController {
           message: 'Erro ao registar Pasta!',
         );
       } else {
-        await Future.delayed(const Duration(milliseconds: 250), () {
-          _drawerMenuController.reactiveListFolder
-              .expanded(folderId: folder.folderParent ?? 0);
-        });
+        _drawerMenuController.shared.reactiveFolders
+            .expanded(folderId: folder.folderParent ?? 0);
       }
     });
   }
 
   void editFolder(BuildContext context, FolderModel folder) {
-    _editFolderUsecase.call(folder).then((either) {
+    _editFolderUsecase.call(folder).then((either) async {
       if (either.isLeft()) {
         SnackbarError.show(
           context,
@@ -120,16 +119,35 @@ class ManagerFoldersController {
     });
   }
 
-  void deleteFolder(BuildContext context, folderId) {
-    _deleteFolderUsecase.call(folderId).then((either) {
+  void deleteFolder(BuildContext context, List<FolderModel> folders) {
+    _deleteFolderUsecase.call(folders).then((either) {
       if (either.isLeft()) {
         SnackbarError.show(
           context,
           message: 'Erro ao deletar Pasta!',
         );
       } else {
-        _drawerMenuController.listFoldersStore.getListFolders();
+        print(Modular.to.navigateHistory.first.name);
+        //  await Modular.isModuleReady<FolderModule>().then((_) async {
+        // await Future.delayed(
+        //   _drawerMenuController.durationNavigateFolder,
+        //   () {
+        //     final _controllerFolder = Modular.get<FolderController>();
+        //     _controllerFolder.folder = folder;
+        //     _drawerMenuController.moduleFolderSaveFolderParent(folder);
+        //   },
+        // );
+        // });
       }
     });
+  }
+
+  Future saveBuffer(Map<int, bool> mapBufferExpanded) async {
+    _drawerMenuController.shared.listFoldersStore.saveBuffer(mapBufferExpanded);
+  }
+
+  @override
+  void dispose() async {
+    await saveBuffer(reactiveListFolder.getBufferExpanded);
   }
 }

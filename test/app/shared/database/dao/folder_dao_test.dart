@@ -46,7 +46,8 @@ void main() {
     var folder = folder2.copyWith(isDeleted: false);
     int id = await folderDAO.insertFolder(folder.entity);
 
-    await folderDAO.deleteFolder(id);
+    folder = folder.copyWith(isDeleted: true);
+    await folderDAO.updateFolders([folder.entity]);
 
     final entity = await folderDAO.findFolder(id);
     expect(entity, isNotNull);

@@ -15,12 +15,14 @@ class CardFolder extends StatelessWidget {
     required this.background,
   }) : super(key: key);
 
-  final size = 90.0;
-
   @override
   Widget build(BuildContext context) {
+    double size = 80.0;
     if (Sizes.orientation(context) == Orientation.portrait) {
-    } else {}
+      size = (Sizes.width(context) / 4) - 1.0;
+    } else {
+      size = (Sizes.width(context) / 7) + 3.0;
+    }
 
     return Container(
       width: size * 0.925,
@@ -74,9 +76,12 @@ class CardFolder extends StatelessWidget {
                     width: (size * 0.75) / 2,
                     // color: Colors.black12,
                     margin: const EdgeInsets.only(top: 5.0),
+                    padding: EdgeInsets.only(
+                      left: (size * 0.075),
+                    ),
                     child: Text(
                       qtd.toString(),
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.start,
                       style: TextStyles.cardTitleFolder,
                     ),
                   ),
@@ -87,7 +92,7 @@ class CardFolder extends StatelessWidget {
                   child: Container(
                     height: size * 0.35,
                     width: (size * 0.825),
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.bottomLeft,
                     margin: const EdgeInsets.only(top: 5.0),
                     padding: EdgeInsets.only(
                       left: (size * 0.075),

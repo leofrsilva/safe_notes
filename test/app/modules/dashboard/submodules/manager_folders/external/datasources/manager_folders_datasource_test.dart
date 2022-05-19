@@ -63,20 +63,20 @@ void main() {
   });
 
   group('manager folders datasource editFolder |', () {
-    final folderEntity = folder2.entity;
+    final folderModel = folder2;
 
     test('Editou a Pasta com Sucesso', () async {
-      await folderDAO.insertFolder(folderEntity);
+      await folderDAO.insertFolder(folderModel.entity);
 
-      var folderEdited = folder2.copyWith(
+      var folderEdited = folderModel.copyWith(
         color: 222222,
         name: 'Folder Edited',
       );
-      final result = await datasource.editFolder(folderEdited.entity);
+      final result = await datasource.editFolder(folderEdited);
 
       expect(result, equals(1));
 
-      var folderResult = await folderDAO.findFolder(folderEntity.id);
+      var folderResult = await folderDAO.findFolder(folderModel.folderId);
       expect(folderResult, isNotNull);
       expect(folderResult!.name, equals(folderEdited.name));
       expect(folderResult.color, equals(folderEdited.color));
@@ -86,17 +86,17 @@ void main() {
       final folderDAOMock = FolderDAOExceptionMock();
       final datasouceMock = ManagerFoldersDatasource(folderDAOMock);
 
-      when(() => folderDAOMock.findFolder(folderEntity.id))
-          .thenAnswer((_) async => folderEntity);
+      when(() => folderDAOMock.findFolder(folderModel.folderId))
+          .thenAnswer((_) async => folderModel.entity);
       expect(
-        () => datasouceMock.editFolder(folderEntity),
+        () => datasouceMock.editFolder(folderModel),
         throwsA(isA<EditFolderSqliteError>()),
       );
 
-      when(() => folderDAOMock.findFolder(folderEntity.id))
+      when(() => folderDAOMock.findFolder(folderModel.folderId))
           .thenThrow(SqliteExceptionMock());
       expect(
-        () => datasouceMock.editFolder(folderEntity),
+        () => datasouceMock.editFolder(folderModel),
         throwsA(isA<EditFolderSqliteError>()),
       );
     });
@@ -105,17 +105,17 @@ void main() {
       final folderDAOMock = FolderDAONoUpdateFolderMock();
       final datasouceMock = ManagerFoldersDatasource(folderDAOMock);
 
-      when(() => folderDAOMock.findFolder(folderEntity.id))
-          .thenAnswer((_) async => folderEntity);
+      when(() => folderDAOMock.findFolder(folderModel.folderId))
+          .thenAnswer((_) async => folderModel.entity);
       expect(
-        () => datasouceMock.editFolder(folderEntity),
+        () => datasouceMock.editFolder(folderModel),
         throwsA(isA<NoFolderRecordsChangedSqliteError>()),
       );
 
-      when(() => folderDAOMock.findFolder(folderEntity.id))
+      when(() => folderDAOMock.findFolder(folderModel.folderId))
           .thenAnswer((_) async => null);
       expect(
-        () => datasouceMock.editFolder(folderEntity),
+        () => datasouceMock.editFolder(folderModel),
         throwsA(isA<NoFolderRecordsChangedSqliteError>()),
       );
     });
@@ -128,7 +128,7 @@ void main() {
       await folderDAO.insertFolder(folder111.entity);
       await folderDAO.insertFolder(folder1111.entity);
 
-      await datasource.deleteFolder(folder1.folderId);
+      await datasource.deleteFolder([folder1.entity]);
 
       var folder = await folderDAO.findFolder(folder1111.folderId);
       expect(folder, isNotNull);
@@ -149,7 +149,7 @@ void main() {
       final datasouceMock = ManagerFoldersDatasource(folderDAOMock);
 
       expect(
-        () => datasouceMock.deleteFolder(folder1.folderId),
+        () => datasouceMock.deleteFolder([folder1.entity]),
         throwsA(isA<DeleteFolderSqliteError>()),
       );
     });

@@ -26,26 +26,11 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final background = Theme.of(context).backgroundColor;
     return Scaffold(
-      backgroundColor: background,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: background,
-        title: Text(
-          'Gerenciar Pastas',
-          style: TextStyle(
-            fontFamily: 'JosefinSans',
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).primaryColor,
-          ),
-        ),
+        title: const Text('Gerenciar Pastas'),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).primaryColor,
-            size: 26,
-          ),
+          icon: const Icon(Icons.arrow_back, size: 26),
           onPressed: () => Modular.to.pop(),
         ),
       ),
@@ -63,7 +48,7 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
                 animation: _reactiveListFolder,
                 builder: (context, child) {
                   return LadderFolderManager(
-                    listFolders: _reactiveListFolder.list,
+                    listFolders: _reactiveListFolder.listFolder,
                   );
                 },
               ),
@@ -78,7 +63,7 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
               ),
               InkWell(
                 onTap: () => _controller.callAddSubFolderPage(
-                    context, _reactiveListFolder.list.first),
+                    context, _reactiveListFolder.listFolder.first),
                 child: Container(
                   height: 48,
                   decoration: BoxDecoration(

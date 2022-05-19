@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safe_notes/app/design/common/style/styles.dart';
 
 class CustomExpansionTileWithPopup extends StatefulWidget {
   const CustomExpansionTileWithPopup({
@@ -7,10 +8,12 @@ class CustomExpansionTileWithPopup extends StatefulWidget {
     this.leading,
     required this.title,
     this.onPressed,
-    this.onLongPress,
-    this.onExpansionChanged,
+    this.modeEdit = false,
     this.selected = false,
     this.selectedColor,
+    this.onLongPress,
+    required this.onChangedCheck,
+    this.onExpansionChanged,
     this.children = const <Widget>[],
     this.trailing,
     this.borderRadius = const BorderRadius.all(Radius.circular(10.0)),
@@ -26,10 +29,6 @@ class CustomExpansionTileWithPopup extends StatefulWidget {
 
   final GlobalKey? keyPopUp;
 
-  final bool selected;
-
-  final Color? selectedColor;
-
   final Widget? leading;
 
   final Widget? trailing;
@@ -38,9 +37,18 @@ class CustomExpansionTileWithPopup extends StatefulWidget {
 
   final List<Widget> children;
 
+  final Function()? onPressed;
+
+  //
+  final bool modeEdit;
+
+  final bool selected;
+
+  final Color? selectedColor;
+
   final Function()? onLongPress;
 
-  final Function()? onPressed;
+  final Function(bool?) onChangedCheck;
 
   /// Called when the tile expands or collapses.
   ///
@@ -99,11 +107,17 @@ class CustomExpansionTileWithPopupState
   late Animation<double> _iconTurns;
   late Animation<double> _heightFactor;
 
+  late bool _modeEdit;
+  late bool _check;
+
   late Color _selectColor;
   late Color _materialColor;
   bool _isExpanded = false;
 
   initialConfig(BuildContext context) {
+    _modeEdit = widget.modeEdit;
+    _check = widget.selected;
+
     _heightFactorTween = CurveTween(curve: widget.heightFactorCurve);
     _turnsTween = CurveTween(curve: widget.turnsCurve);
 
@@ -187,46 +201,83 @@ class CustomExpansionTileWithPopupState
       );
     }
 
+    Widget checkEdit = AnimatedCrossFade(
+      firstCurve: Curves.elasticInOut,
+      secondCurve: Curves.elasticInOut,
+      duration: widget.duration,
+      firstChild: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Checkbox(
+          value: _check,
+          fillColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return _selectColor;
+            }
+            return ColorPalettes.blueGrey;
+          }),
+          visualDensity: VisualDensity.compact,
+          shape: RoundedRectangleBorder(
+            borderRadius: widget.borderRadius,
+          ),
+          onChanged: (newValue) {
+            setState(() => _check = newValue ?? _check);
+            widget.onChangedCheck(newValue);
+          },
+        ),
+      ),
+      secondChild: Container(),
+      crossFadeState:
+          _modeEdit ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+    );
+
     return Material(
       color: _materialColor,
       borderRadius: widget.borderRadius,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          ListTile(
-            key: widget.keyPopUp,
-            onLongPress: widget.onLongPress,
-            onTap: widget.keyPopUp != null ? widget.onPressed : null,
-            shape: RoundedRectangleBorder(
-              borderRadius: widget.borderRadius,
-            ),
-            contentPadding: widget.spaceStart == null
-                ? const EdgeInsets.symmetric(horizontal: 15.0)
-                : EdgeInsetsDirectional.only(
-                    start: widget.spaceStart!,
-                    // end: 15.0,
+          Row(
+            children: [
+              checkEdit,
+              Expanded(
+                child: ListTile(
+                  key: widget.keyPopUp,
+                  onLongPress: widget.onLongPress,
+                  onTap: widget.keyPopUp != null ? widget.onPressed : null,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: widget.borderRadius,
                   ),
-            tileColor: widget.selected ? _selectColor : null,
-            title: widget.title,
-            trailing: widget.trailing,
-            leading: Container(
-              constraints: const BoxConstraints(minHeight: 50.0),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(8.0),
-                onTap: onExpanded,
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      turnsButton,
-                      const SizedBox(width: 4.0),
-                      widget.leading ?? Container(),
-                    ],
+                  title: widget.title,
+                  trailing: widget.trailing,
+                  contentPadding: widget.spaceStart == null
+                      ? const EdgeInsets.symmetric(horizontal: 15.0)
+                      : EdgeInsetsDirectional.only(
+                          start: _modeEdit
+                              ? widget.spaceStart! - 5.0
+                              : widget.spaceStart!,
+                          end: 16.0,
+                        ),
+                  leading: Container(
+                    constraints: const BoxConstraints(minHeight: 50.0),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(8.0),
+                      onTap: onExpanded,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            turnsButton,
+                            const SizedBox(width: 4.0),
+                            widget.leading ?? Container(),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
           ClipRect(
             child: Align(

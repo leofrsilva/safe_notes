@@ -11,5 +11,5 @@ abstract class IEditFolderUsecase {
 }
 
 abstract class IDeleteFolderUsecase {
-  Future<Either<Failure, dynamic>> call(int folderId);
+  Future<Either<Failure, dynamic>> call(List<FolderModel> folders);
 }

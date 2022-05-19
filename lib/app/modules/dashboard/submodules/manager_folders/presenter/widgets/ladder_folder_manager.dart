@@ -31,8 +31,9 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
   late ManagerFoldersController _managerFoldersController;
   late ReactiveListFolder _reactiveListFolder;
 
-  ListFolderQtdChildView? folderers;
   bool modeEdit = false;
+  List<int> listSelected = [];
+  ListFolderQtdChildView? folderers;
 
   void reorganization() {
     widget.listFolders.sort((previous, posterior) {
@@ -62,12 +63,22 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
     }
   }
 
+  bool isExpanded(int folderId) {
+    return _reactiveListFolder.checkFolderIsExpanded(folderId);
+  }
+
+  String qtdChildrenFolder(int folderId) {
+    int qtd = _reactiveListFolder.qtdChildrenFolder(folderId);
+    if (qtd == 0) return '';
+    return qtd.toString();
+  }
+
   @override
   void initState() {
     super.initState();
     _managerFoldersController = Modular.get<ManagerFoldersController>();
     _reactiveListFolder =
-        Modular.get<DrawerMenuController>().reactiveListFolder;
+        Modular.get<DrawerMenuController>().shared.reactiveFolders;
     reorganization();
   }
 
@@ -77,62 +88,67 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
     reorganization();
   }
 
-  bool isExpanded(int folderId) {
-    return _reactiveListFolder.checkFolderIsExpanded(folderId);
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.listFolders.isEmpty) return Container();
 
     var popupKey = GlobalKey();
-    return FolderExpansionTileWithPopup(
-      keyPopUp: popupKey,
-      initiallyExpanded: isExpanded(
-        folderers!.current.id,
-      ),
-      selected: false,
-      title: folderers!.current.name,
-      fontColor: ColorPalettes.blueGrey,
-      backgroundColor: ColorPalettes.transparent,
-      iconColor: Color(folderers!.current.color),
-      turnsColor: ColorPalettes.secondy.withOpacity(0.5),
-      selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
-      trailing: folderers!.current.qtd != 0
-          ? Text(
-              folderers!.current.qtd.toString(),
-              style: TextStyle(
-                color: ColorPalettes.secondy,
-              ),
-            )
-          : null,
-      children: generaterWidgetsFolders(context, folderers!.childrens),
-      onExpansionChanged: (bool isExpanded) {
-        if (isExpanded) {
-          _reactiveListFolder.expanded(folderId: folderers!.current.id);
-        } else {
-          _reactiveListFolder.notExpanded(folderId: folderers!.current.id);
+    return WillPopScope(
+      onWillPop: () async {
+        if (modeEdit == true) {
+          setState(() => modeEdit = false);
+          listSelected.clear();
+          return false;
         }
+        return true;
       },
-      onLongPress: () => setState(() => modeEdit = true),
-      onPressed: () async {
-        final action = await showMenu<ActionFolder>(
-          context: context,
-          items: popUpFolderDefault(context),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+      child: FolderExpansionTileWithPopup(
+        keyPopUp: popupKey,
+        initiallyExpanded: isExpanded(
+          folderers!.current.id,
+        ),
+        title: folderers!.current.name,
+        fontColor: ColorPalettes.blueGrey,
+        backgroundColor: ColorPalettes.transparent,
+        iconColor: Color(folderers!.current.color),
+        turnsColor: ColorPalettes.secondy.withOpacity(0.5),
+        selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
+        trailing: Text(
+          qtdChildrenFolder(folderers!.current.id),
+          style: TextStyle(
+            color: ColorPalettes.secondy,
           ),
-          position: RelativeRectPosition.getRelativeRect(popupKey),
-        );
-        if (action != null) {
-          if (action == ActionFolder.createSubpasta) {
-            _managerFoldersController.callAddSubFolderPage(
-              context,
-              folderers!.current,
-            );
+        ),
+        children: generaterWidgetsFolders(context, folderers!.childrens),
+        onExpansionChanged: (bool isExpanded) {
+          if (isExpanded) {
+            _reactiveListFolder.expanded(folderId: folderers!.current.id);
+          } else {
+            _reactiveListFolder.notExpanded(folderId: folderers!.current.id);
           }
-        }
-      },
+        },
+        //? onLongPress: () => setState(() => modeEdit = true),
+        onPressed: () async {
+          if (!modeEdit) {
+            final action = await showMenu<ActionFolder>(
+              context: context,
+              items: popUpFolderDefault(context),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              position: RelativeRectPosition.getRelativeRect(popupKey),
+            );
+            if (action != null) {
+              if (action == ActionFolder.createSubpasta) {
+                _managerFoldersController.callAddSubFolderPage(
+                  context,
+                  folderers!.current,
+                );
+              }
+            }
+          }
+        },
+      ),
     );
   }
 
@@ -152,6 +168,8 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
       var popupKey = GlobalKey();
       list.add(
         CustomExpansionTileWithPopup(
+          selected: listSelected.contains(folderChild.current.id),
+          modeEdit: modeEdit,
           keyPopUp: popupKey,
           initiallyExpanded: isExpanded(
             folderChild.current.id,
@@ -174,14 +192,12 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
               color: ColorPalettes.blueGrey,
             ),
           ),
-          trailing: folderChild.current.qtd != 0
-              ? Text(
-                  folderChild.current.qtd.toString(),
-                  style: TextStyle(
-                    color: ColorPalettes.secondy,
-                  ),
-                )
-              : null,
+          trailing: Text(
+            qtdChildrenFolder(folderChild.current.id),
+            style: TextStyle(
+              color: ColorPalettes.secondy,
+            ),
+          ),
           children: generaterWidgetsFolders(context, folderChild.childrens),
           onExpansionChanged: (bool isExpanded) {
             if (isExpanded) {
@@ -190,37 +206,62 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
               _reactiveListFolder.notExpanded(folderId: folderChild.current.id);
             }
           },
-          onLongPress: () => setState(() => modeEdit = true),
+          //? onLongPress: () {
+          //?   setState(() {
+          //?     listSelected.add(folderChild.current.id);
+          //?     modeEdit = true;
+          //?   });
+          //? },
+          onChangedCheck: (check) {
+            if (check != null) {
+              if (check) {
+                listSelected.remove(folderChild.current.id);
+              } else {
+                listSelected.add(folderChild.current.id);
+              }
+            }
+          },
           onPressed: () async {
-            final action = await showMenu<ActionFolder>(
-              context: context,
-              items: popUpFolder(context),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              position: RelativeRectPosition.getRelativeRect(popupKey),
-            );
-            if (action != null) {
-              if (action == ActionFolder.createSubpasta) {
-                _managerFoldersController.callAddSubFolderPage(
-                  context,
-                  folderChild.current,
-                );
-              } else if (action == ActionFolder.rename) {
-                _managerFoldersController.callEditNameFolderPage(
-                  context,
-                  folderChild.current,
-                );
-              } else if (action == ActionFolder.delete) {
-                _managerFoldersController.callDeleteFolderPage(
-                  context,
-                  [folderChild.current.id],
-                );
-              } else if (action == ActionFolder.alterColor) {
-                _managerFoldersController.callEditColorFolderPage(
-                  context,
-                  folderChild.current,
-                );
+            if (modeEdit) {
+              var selected = listSelected.contains(folderChild.current.id);
+              setState(() {
+                if (selected) {
+                  listSelected.remove(folderChild.current.id);
+                } else {
+                  listSelected.add(folderChild.current.id);
+                }
+              });
+            } else {
+              final action = await showMenu<ActionFolder>(
+                context: context,
+                items: popUpFolder(context),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                position: RelativeRectPosition.getRelativeRect(popupKey),
+              );
+              if (action != null) {
+                if (action == ActionFolder.createSubpasta) {
+                  _managerFoldersController.callAddSubFolderPage(
+                    context,
+                    folderChild.current,
+                  );
+                } else if (action == ActionFolder.rename) {
+                  _managerFoldersController.callEditNameFolderPage(
+                    context,
+                    folderChild.current,
+                  );
+                } else if (action == ActionFolder.delete) {
+                  _managerFoldersController.callDeleteFolderPage(
+                    context,
+                    [folderChild.current],
+                  );
+                } else if (action == ActionFolder.alterColor) {
+                  _managerFoldersController.callEditColorFolderPage(
+                    context,
+                    folderChild.current,
+                  );
+                }
               }
             }
           },
@@ -253,8 +294,8 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         height: 38.0,
         value: ActionFolder.createSubpasta,
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(20.0),
-          bottomRight: Radius.circular(20.0),
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
         ),
         child: Text(
           'Criar subpasta',

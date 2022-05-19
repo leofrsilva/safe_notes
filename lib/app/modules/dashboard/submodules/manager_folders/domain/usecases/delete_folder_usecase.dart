@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 
 import '../repositories/i_manager_folders_repository.dart';
@@ -9,7 +10,7 @@ class DeleteFolderUsecase extends IDeleteFolderUsecase {
   DeleteFolderUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(int folderId) {
-    return _repository.deleteFolder(folderId);
+  Future<Either<Failure, dynamic>> call(List<FolderModel> folders) {
+    return _repository.deleteFolder(folders);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:safe_notes/app/design/common/styles/color_palettes.dart';
+import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 import 'package:safe_notes/app/design/widgets/expansion/custom_expansion_tile.dart';
 import 'package:safe_notes/app/design/widgets/expansion/folder_expansion_tile.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
@@ -9,11 +9,13 @@ import 'package:safe_notes/app/shared/database/views/list_folder_qtd_child_view.
 import '../pages/drawer/drawer_menu_controller.dart';
 
 class LadderFolder extends StatefulWidget {
-  final Function(int) onTapFolder;
+  final Function(FolderQtdChildView) onTapFolder;
   final List<FolderQtdChildView> listFolders;
+  final int selected;
 
   const LadderFolder({
     Key? key,
+    required this.selected,
     required this.listFolders,
     required this.onTapFolder,
   }) : super(key: key);
@@ -23,12 +25,11 @@ class LadderFolder extends StatefulWidget {
 }
 
 class _LadderFolderState extends State<LadderFolder> {
-  final _reactiveListFolder =
-      Modular.get<DrawerMenuController>().reactiveListFolder;
-
-  bool selected = false;
+  final _reactiveFolders =
+      Modular.get<DrawerMenuController>().shared.reactiveFolders;
 
   ListFolderQtdChildView? folderers;
+  int selectedFolderId = 0;
 
   void reorganization() {
     widget.listFolders.sort((previous, posterior) {
@@ -58,20 +59,28 @@ class _LadderFolderState extends State<LadderFolder> {
     }
   }
 
+  bool isExpanded(int folderId) {
+    return _reactiveFolders.checkFolderIsExpanded(folderId);
+  }
+
+  String qtdChildrenFolder(int folderId) {
+    int qtd = _reactiveFolders.qtdChildrenFolder(folderId);
+    if (qtd == 0) return '';
+    return qtd.toString();
+  }
+
   @override
   void initState() {
     super.initState();
     reorganization();
+    selectedFolderId = widget.selected;
   }
 
   @override
   void didUpdateWidget(covariant LadderFolder oldWidget) {
     super.didUpdateWidget(oldWidget);
     reorganization();
-  }
-
-  bool isExpanded(int folderId) {
-    return _reactiveListFolder.checkFolderIsExpanded(folderId);
+    selectedFolderId = widget.selected;
   }
 
   @override
@@ -80,14 +89,14 @@ class _LadderFolderState extends State<LadderFolder> {
 
     return FolderExpansionTile(
       initiallyExpanded: isExpanded(folderers!.current.id),
-      selected: selected,
+      selected: widget.selected == folderers!.current.id,
       title: folderers!.current.name,
       iconColor: Color(folderers!.current.color),
       turnsColor: ColorPalettes.secondy.withOpacity(0.5),
       selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
       trailing: folderers!.current.qtd != 0
           ? Text(
-              folderers!.current.qtd.toString(),
+              qtdChildrenFolder(folderers!.current.id),
               style: TextStyle(
                 color: ColorPalettes.secondy,
               ),
@@ -96,13 +105,13 @@ class _LadderFolderState extends State<LadderFolder> {
       children: generaterWidgetsFolders(folderers!.childrens),
       onExpansionChanged: (bool isExpanded) {
         if (isExpanded) {
-          _reactiveListFolder.expanded(folderId: folderers!.current.id);
+          _reactiveFolders.expanded(folderId: folderers!.current.id);
         } else {
-          _reactiveListFolder.notExpanded(folderId: folderers!.current.id);
+          _reactiveFolders.notExpanded(folderId: folderers!.current.id);
         }
       },
       onPressed: () {
-        widget.onTapFolder(folderers!.current.id);
+        widget.onTapFolder(folderers!.current);
       },
     );
   }
@@ -119,10 +128,8 @@ class _LadderFolderState extends State<LadderFolder> {
       }
 
       list.add(CustomExpansionTile(
-        initiallyExpanded: isExpanded(
-          folderChild.current.id,
-        ),
-        selected: selected,
+        initiallyExpanded: isExpanded(folderChild.current.id),
+        selected: widget.selected == folderChild.current.id,
         spaceStart: padding,
         turnsColor: ColorPalettes.secondy.withOpacity(0.5),
         selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
@@ -135,15 +142,17 @@ class _LadderFolderState extends State<LadderFolder> {
           textAlign: TextAlign.start,
           style: TextStyle(
             height: 1.6,
-            fontSize: selected ? 16 : null,
+            fontSize: widget.selected == folderChild.current.id ? 16 : null,
             fontFamily: 'JosefinSans',
-            fontWeight: selected ? FontWeight.bold : FontWeight.w600,
+            fontWeight: widget.selected == folderChild.current.id
+                ? FontWeight.bold
+                : FontWeight.w600,
             color: ColorPalettes.white,
           ),
         ),
         trailing: folderChild.current.qtd != 0
             ? Text(
-                folderChild.current.qtd.toString(),
+                qtdChildrenFolder(folderChild.current.id),
                 style: TextStyle(
                   color: ColorPalettes.secondy,
                 ),
@@ -152,13 +161,13 @@ class _LadderFolderState extends State<LadderFolder> {
         children: generaterWidgetsFolders(folderChild.childrens),
         onExpansionChanged: (bool isExpanded) {
           if (isExpanded) {
-            _reactiveListFolder.expanded(folderId: folderChild.current.id);
+            _reactiveFolders.expanded(folderId: folderChild.current.id);
           } else {
-            _reactiveListFolder.notExpanded(folderId: folderChild.current.id);
+            _reactiveFolders.notExpanded(folderId: folderChild.current.id);
           }
         },
         onPressed: () {
-          widget.onTapFolder(folderChild.current.id);
+          widget.onTapFolder(folderChild.current);
         },
       ));
     }

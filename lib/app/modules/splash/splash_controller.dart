@@ -1,10 +1,14 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:safe_notes/app/app_core.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
-import 'package:safe_notes/app/shared/leave/domain/usecases/i_leave_auth_usecase.dart';
+import 'package:safe_notes/app/modules/dashboard/submodules/folder/presenter/folder_controller.dart';
 import 'package:safe_notes/app/shared/token/i_expire_token.dart';
+import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
+import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
+import 'package:safe_notes/app/shared/leave/domain/usecases/i_leave_auth_usecase.dart';
+import 'package:safe_notes/app/modules/dashboard/submodules/folder/folders_module.dart';
+import 'package:safe_notes/app/modules/setting/presenter/controllers/manager_route_navigator_store.dart';
 
 import '../../design/widgets/snackbar/snackbar_error.dart';
 import '../setting/presenter/controllers/access_boot_store.dart';
@@ -14,15 +18,45 @@ class SplashController {
   final IExpireToken _expireToken;
   final AccessBootStore _accessBootStore;
   final ILeaveAuthUsecase _leaveAuthUsecase;
+  final ManagerRouteNavigatorStore _managerRouteNavigatorStore;
 
   SplashController(
     this._appCore,
     this._expireToken,
     this._accessBootStore,
     this._leaveAuthUsecase,
+    this._managerRouteNavigatorStore,
   );
 
+  FolderQtdChildView? _folder;
   String strPage = '/auth/getin/';
+
+  Future<String> redirectRoute() async {
+    var page = await _managerRouteNavigatorStore.getPage();
+    if (page.isNotEmpty) {
+      var infoFolder = await _managerRouteNavigatorStore.getFolderParent();
+      if (infoFolder.isNotEmpty) {
+        _folder = FolderQtdChildView.fromJson(infoFolder);
+      }
+      return page;
+    }
+    return '/dashboard/mod-notes/';
+  }
+
+  Future navigateToModule() async {
+    Modular.to.navigate(strPage);
+    if (_folder != null) {
+      await Modular.isModuleReady<FolderModule>().then((_) async {
+        await Future.delayed(
+          const Duration(milliseconds: 200),
+          () async {
+            final _controllerFolder = Modular.get<FolderController>();
+            _controllerFolder.folder = _folder!;
+          },
+        );
+      });
+    }
+  }
 
   Future<void> checkLoggedInUser(BuildContext context) async {
     await _accessBootStore.loadFirstBoot();
@@ -33,12 +67,12 @@ class SplashController {
       if (infoUser.length > 2) {
         final usuario = UsuarioModel.fromInfoUser(infoUser);
         _appCore.setUsuario(usuario);
-        strPage = '/dashboard/notes/';
+        strPage = await redirectRoute();
       } else {
         await logout(context);
       }
     }
-    Modular.to.navigate(strPage);
+    navigateToModule();
   }
 
   Future logout(BuildContext context) async {

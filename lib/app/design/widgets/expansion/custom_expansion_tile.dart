@@ -196,7 +196,7 @@ class CustomExpansionTileState extends State<CustomExpansionTile>
                   ? const EdgeInsets.symmetric(horizontal: 15.0)
                   : EdgeInsetsDirectional.only(
                       start: widget.spaceStart!,
-                      // end: 15.0,
+                      end: 16.0,
                     ),
               title: widget.title,
               trailing: widget.trailing,

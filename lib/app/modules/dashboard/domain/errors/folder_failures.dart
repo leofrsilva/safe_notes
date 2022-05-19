@@ -13,3 +13,17 @@ class GetListFoldersSqliteError extends Failure {
           errorMessage: errorMessage,
         );
 }
+
+class GetListNotesSqliteError extends Failure {
+  GetListNotesSqliteError(
+    StackTrace stackTrace,
+    String label,
+    dynamic exception,
+    String errorMessage,
+  ) : super(
+          stackTrace: stackTrace,
+          label: label,
+          exception: exception,
+          errorMessage: errorMessage,
+        );
+}

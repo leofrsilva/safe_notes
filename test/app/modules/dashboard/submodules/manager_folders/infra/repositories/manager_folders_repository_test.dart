@@ -57,7 +57,7 @@ void main() {
     });
 
     test('retornar um EditFolderSqliteError', () async {
-      when(() => datasource.editFolder(folder.entity))
+      when(() => datasource.editFolder(folder))
           .thenThrow(EditFolderSqliteErrorMock());
 
       final repository = ManagerFoldersRepository(datasource);
@@ -68,7 +68,7 @@ void main() {
     });
 
     test('retornar um NoFolderRecordsChangedSqliteError', () async {
-      when(() => datasource.editFolder(folder.entity))
+      when(() => datasource.editFolder(folder))
           .thenThrow(NoFolderRecordsChangedSqliteErrorMock());
 
       final repository = ManagerFoldersRepository(datasource);
@@ -81,21 +81,17 @@ void main() {
 
   group('manager folders repository deleteFolder | ', () {
     test('isRight igual a True', () async {
-      when(() => datasource.deleteFolder(folder.folderId))
-          .thenAnswer((_) async => dynamic);
-
       final repository = ManagerFoldersRepository(datasource);
-      final result = await repository.deleteFolder(folder.folderId);
+      final result = await repository.deleteFolder([folder]);
 
       expect(result.isRight(), equals(true));
     });
 
     test('retornar um DeleteFolderSqliteError', () async {
-      when(() => datasource.deleteFolder(folder.folderId))
-          .thenThrow(DeleteFolderSqliteErrorMock());
+      final datasourceMock = ManagerFoldersDatasourceExceptionMock();
 
-      final repository = ManagerFoldersRepository(datasource);
-      final result = await repository.deleteFolder(folder.folderId);
+      final repository = ManagerFoldersRepository(datasourceMock);
+      final result = await repository.deleteFolder([folder]);
 
       expect(result.isLeft(), equals(true));
       expect(result.fold(id, id), isA<DeleteFolderSqliteError>());

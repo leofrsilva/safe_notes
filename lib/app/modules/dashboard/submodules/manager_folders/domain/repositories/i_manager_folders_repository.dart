@@ -5,5 +5,5 @@ import 'package:safe_notes/app/shared/error/failure.dart';
 abstract class IManagerFoldersRepository {
   Future<Either<Failure, dynamic>> addFolder(FolderModel folder);
   Future<Either<Failure, dynamic>> editFolder(FolderModel folder);
-  Future<Either<Failure, dynamic>> deleteFolder(int folderId);
+  Future<Either<Failure, dynamic>> deleteFolder(List<FolderModel> folders);
 }

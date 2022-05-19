@@ -19,7 +19,7 @@ class PerfilPage extends StatefulWidget {
 
 class _PerfilPageState extends State<PerfilPage> {
   late AppCore _appCore;
-  late SettingStore _settingStore;
+  late SettingController _settingStore;
   late UsuarioModel? _usuarioModel;
 
   @override
@@ -27,31 +27,17 @@ class _PerfilPageState extends State<PerfilPage> {
     super.initState();
     _appCore = Modular.get<AppCore>();
     _usuarioModel = _appCore.getUsuario()!;
-    _settingStore = Modular.get<SettingStore>();
+    _settingStore = Modular.get<SettingController>();
   }
 
   @override
   Widget build(BuildContext context) {
     if (_usuarioModel != null) {
-      final background = Theme.of(context).backgroundColor;
       return Scaffold(
-        backgroundColor: background,
         appBar: AppBar(
-          elevation: 0,
-          backgroundColor: background,
-          title: Text(
-            'Perfil',
-            style: TextStyle(
-              fontFamily: 'JosefinSans',
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
+          title: const Text('Perfil'),
           leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Theme.of(context).primaryColor,
-            ),
+            icon: const Icon(Icons.arrow_back, size: 26.0),
             onPressed: () => Modular.to.pop(),
           ),
         ),

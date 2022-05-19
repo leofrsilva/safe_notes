@@ -7,6 +7,8 @@ import 'package:safe_notes/app/modules/dashboard/presenter/widgets/ladder_folder
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 
+import '../../../submodules/folder/folders_module.dart';
+import '../../../submodules/folder/presenter/folder_controller.dart';
 import '../../dashboard_controller.dart';
 import '../../../../../design/widgets/menu/button_manage_folders.dart';
 import '../../stores/list_folders_store.dart';
@@ -24,20 +26,37 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
   late DrawerMenuController _drawerMenuController;
 
   onTapItemSelected(int index) async {
-    _drawerMenuController.selectedMenuItem.value = index;
     _drawerMenuController.closeDrawer();
     await Future.delayed(
       _drawerMenuController.duration,
       () {
         if (0 == index) {
-          Modular.to.navigate('/dashboard/notes');
+          Modular.to.navigate('/dashboard/mod-notes/');
         } else if (1 == index) {
-          Modular.to.navigate('/dashboard/favorites');
+          Modular.to.navigate('/dashboard/mod-favorites/');
         } else if (2 == index) {
-          Modular.to.navigate('/dashboard/lixeira');
-        } else if (3 == index) {
-          Modular.to.navigate('/dashboard/folders');
+          Modular.to.navigate('/dashboard/mod-lixeira/');
         }
+      },
+    );
+  }
+
+  onTapItemFolder(FolderQtdChildView folder) async {
+    _drawerMenuController.closeDrawer();
+    await Future.delayed(
+      _drawerMenuController.duration,
+      () async {
+        Modular.to.navigate('/dashboard/mod-folder/');
+        await Modular.isModuleReady<FolderModule>().then((_) async {
+          await Future.delayed(
+            _drawerMenuController.durationNavigateFolder,
+            () {
+              final _controllerFolder = Modular.get<FolderController>();
+              _controllerFolder.folder = folder;
+              _drawerMenuController.moduleFolderSaveFolderParent(folder);
+            },
+          );
+        });
       },
     );
   }
@@ -45,7 +64,7 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
   Widget buildListFolders() {
     return ScopedBuilder<ListFoldersStore, Failure,
         Stream<List<FolderQtdChildView>>>.transition(
-      store: _drawerMenuController.listFoldersStore,
+      store: _drawerMenuController.shared.listFoldersStore,
       onLoading: (context) => const Center(
         child: CircularProgressIndicator.adaptive(),
       ),
@@ -62,7 +81,7 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
       },
       onState: (context, state) {
         return AnimatedBuilder(
-          animation: _drawerMenuController.listFoldersStore.reactiveListFolder,
+          animation: _drawerMenuController.shared.reactiveFolders,
           builder: (context, child) {
             return Container();
           },
@@ -120,6 +139,20 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.settings),
+                                onPressed: () {
+                                  Modular.to.pushNamed('/setting/');
+                                },
+                              )
+                            ],
+                          ),
+                        ),
                         ItemMenu(
                           selected: 0 == value,
                           text: 'Todas as notas',
@@ -134,23 +167,24 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                           onTap: () => onTapItemSelected(1),
                         ),
                         ValueListenableBuilder<int>(
-                            valueListenable: _drawerMenuController
-                                .listFoldersStore.reactiveListFolder.deleted,
-                            builder: (context, value, child) {
-                              return ItemMenu(
-                                selected: 2 == value,
-                                text: 'Lixeira',
-                                sizeIcon: 28,
-                                icon: Icons.delete_outline,
-                                trailing: Text(
-                                  value.toString(),
-                                  style: TextStyle(
-                                    color: ColorPalettes.secondy,
-                                  ),
+                          valueListenable: _drawerMenuController
+                              .shared.reactiveFolders.deleted,
+                          builder: (context, qtd, child) {
+                            return ItemMenu(
+                              selected: 2 == value,
+                              text: 'Lixeira',
+                              sizeIcon: 28,
+                              icon: Icons.delete_outline,
+                              trailing: Text(
+                                qtd != 0 ? qtd.toString() : '',
+                                style: TextStyle(
+                                  color: ColorPalettes.secondy,
                                 ),
-                                onTap: () => onTapItemSelected(2),
-                              );
-                            }),
+                              ),
+                              onTap: () => onTapItemSelected(2),
+                            );
+                          },
+                        ),
                         // ItemMenu(
                         //   text: 'Perfil',
                         //   icon: Icons.account_circle_outlined,
@@ -165,16 +199,18 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                         Divider(color: Theme.of(context).backgroundColor),
                         // buildListFolders(),
                         AnimatedBuilder(
-                          animation: _drawerMenuController
-                              .listFoldersStore.reactiveListFolder,
+                          animation:
+                              _drawerMenuController.shared.reactiveFolders,
                           builder: (context, child) {
                             return LadderFolder(
-                              listFolders: _drawerMenuController.listFolders,
-                              onTapFolder: (folderId) {},
+                              selected: value,
+                              listFolders:
+                                  _drawerMenuController.shared.listFolders,
+                              onTapFolder: onTapItemFolder,
                             );
                           },
                         ),
-
+                        //
                         const SizedBox(height: 6.0),
                         ButtonManageFolders(
                           onTap: () async {

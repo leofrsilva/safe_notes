@@ -1,17 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
+import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../manager_folders_controller.dart';
 
+// ignore: must_be_immutable
 class DeleteFolderPage extends StatelessWidget {
-  final List<int> listIdToDelete;
+  final List<FolderQtdChildView> listFolderQtdChildView;
   final _controller = Modular.get<ManagerFoldersController>();
+
+  FolderModel folder = FolderModel.empty();
 
   DeleteFolderPage({
     Key? key,
-    required this.listIdToDelete,
+    required this.listFolderQtdChildView,
   }) : super(key: key);
+
+  confirmDelete(BuildContext context) {
+    List<FolderModel> listModel =
+        listFolderQtdChildView.map((folderQtdChildView) {
+      return folder.copyWith(
+        isDeleted: true,
+        folderId: folderQtdChildView.id,
+        userId: _controller.userUId,
+        name: folderQtdChildView.name,
+        level: folderQtdChildView.level,
+        color: folderQtdChildView.color,
+        folderParent: folderQtdChildView.parentId,
+      );
+    }).toList();
+
+    if (listFolderQtdChildView.length == 1) {
+      _controller.deleteFolder(context, listModel);
+    }
+    Modular.to.pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +63,7 @@ class DeleteFolderPage extends StatelessWidget {
                       top: 20.0,
                       left: 20.0,
                       right: 20.0,
+                      bottom: 8.0,
                     ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).backgroundColor,
@@ -56,9 +82,9 @@ class DeleteFolderPage extends StatelessWidget {
                               style: TextStyles.fieldStyle.copyWith(
                                 color: ColorPalettes.blueGrey,
                               ),
-                              text: 'Mover ${listIdToDelete.length} ',
+                              text: 'Mover ${listFolderQtdChildView.length} ',
                               children: [
-                                if (listIdToDelete.length > 1)
+                                if (listFolderQtdChildView.length > 1)
                                   const TextSpan(text: 'pastas para a Lixeira?')
                                 else
                                   const TextSpan(text: 'pasta para a Lixeira?'),
@@ -73,9 +99,18 @@ class DeleteFolderPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               TextButton(
-                                child: Text(
-                                  'Cancelar',
-                                  style: TextStyles.textButton(context),
+                                style: TextButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                )),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 5.0,
+                                  ),
+                                  child: Text(
+                                    'Cancelar',
+                                    style: TextStyles.textButton(context),
+                                  ),
                                 ),
                                 onPressed: () {
                                   Modular.to.pop();
@@ -87,19 +122,24 @@ class DeleteFolderPage extends StatelessWidget {
                                 color: ColorPalettes.blueGrey,
                               ),
                               TextButton(
-                                child: Text(
-                                  'Mover para a Lixeira',
-                                  style:
-                                      TextStyles.textButton(context).copyWith(
-                                    color: Theme.of(context).primaryColor,
+                                style: TextButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                )),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 5.0,
+                                  ),
+                                  child: Text(
+                                    'Mover para a Lixeira',
+                                    style:
+                                        TextStyles.textButton(context).copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ),
                                 onPressed: () {
-                                  if (listIdToDelete.length == 1) {
-                                    _controller.deleteFolder(
-                                        context, listIdToDelete.first);
-                                  }
-                                  Modular.to.pop();
+                                  confirmDelete(context);
                                 },
                               ),
                             ],

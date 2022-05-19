@@ -88,7 +88,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Tag` (`name` TEXT NOT NULL, `description` TEXT, `color` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `id` INTEGER NOT NULL, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Note` (`title` TEXT NOT NULL, `body` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `tag_id` INTEGER, `folder_id` INTEGER NOT NULL, `id` INTEGER NOT NULL, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL, FOREIGN KEY (`tag_id`) REFERENCES `Tag` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`folder_id`) REFERENCES `Folder` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Note` (`title` TEXT NOT NULL, `body` TEXT NOT NULL, `favorite` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `tag_id` INTEGER, `folder_id` INTEGER NOT NULL, `id` INTEGER NOT NULL, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL, FOREIGN KEY (`tag_id`) REFERENCES `Tag` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`folder_id`) REFERENCES `Folder` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Folder` (`folder_parent` INTEGER, `user_id` TEXT NOT NULL, `level` INTEGER NOT NULL, `color` INTEGER NOT NULL, `name` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `id` INTEGER NOT NULL, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL, FOREIGN KEY (`folder_parent`) REFERENCES `Folder` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database
@@ -96,7 +96,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE UNIQUE INDEX `index_Tag_color` ON `Tag` (`color`)');
         await database.execute(
-            'CREATE VIEW IF NOT EXISTS `FolderQtdChild` AS     SELECT \n      F.id,\n      F.name,\n      F.level, \n      F.color,\n      F.is_deleted AS isDeleted,\n      F.folder_parent AS parentId,  \n      (SELECT COUNT(id) \n       FROM Folder \n       WHERE (level = F.level + 1) AND\n             (folder_parent = F.id)  \n      ) \n      +\n      (SELECT COUNT(id) \n       FROM Note \n       WHERE (folder_id = F.id) \n      )\n      as qtd\n    FROM Folder F\n    GROUP BY id\n  ');
+            'CREATE VIEW IF NOT EXISTS `FolderQtdChild` AS     SELECT \n      F.id,\n      F.name,\n      F.level, \n      F.color,\n      F.is_deleted AS isDeleted,\n      F.folder_parent AS parentId,  \n      (SELECT COUNT(id) \n       FROM Folder \n       WHERE (level = F.level + 1) AND\n             (folder_parent = F.id) AND\n             (is_deleted = 0)\n      ) \n      +\n      (SELECT COUNT(id) \n       FROM Note \n       WHERE (folder_id = F.id) AND\n             (is_deleted = 0)\n      )\n      as qtd\n    FROM Folder F\n    GROUP BY id\n  ');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -221,13 +221,6 @@ class _$FolderDAO extends FolderDAO {
   }
 
   @override
-  Future<void> deleteFolder(int folderId) async {
-    await _queryAdapter.queryNoReturn(
-        'UPDATE Folder SET is_deleted = 1 WHERE id = ?1',
-        arguments: [folderId]);
-  }
-
-  @override
   Future<int> insertFolder(FolderEntity record) {
     return _folderEntityInsertionAdapter.insertAndReturnId(
         record, OnConflictStrategy.abort);
@@ -236,19 +229,20 @@ class _$FolderDAO extends FolderDAO {
   @override
   Future<int> updateFolders(List<FolderEntity> records) {
     return _folderEntityUpdateAdapter.updateListAndReturnChangedRows(
-        records, OnConflictStrategy.replace);
+        records, OnConflictStrategy.abort);
   }
 }
 
 class _$NoteDAO extends NoteDAO {
   _$NoteDAO(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database),
+      : _queryAdapter = QueryAdapter(database, changeListener),
         _noteEntityInsertionAdapter = InsertionAdapter(
             database,
             'Note',
             (NoteEntity item) => <String, Object?>{
                   'title': item.title,
                   'body': item.body,
+                  'favorite': item.favorite,
                   'is_deleted': item.isDeleted,
                   'tag_id': item.tagId,
                   'folder_id': item.folderId,
@@ -264,6 +258,23 @@ class _$NoteDAO extends NoteDAO {
             (NoteEntity item) => <String, Object?>{
                   'title': item.title,
                   'body': item.body,
+                  'favorite': item.favorite,
+                  'is_deleted': item.isDeleted,
+                  'tag_id': item.tagId,
+                  'folder_id': item.folderId,
+                  'id': item.id,
+                  'date_create': item.dateCreate,
+                  'date_modification': item.dateModification
+                },
+            changeListener),
+        _noteEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'Note',
+            ['id'],
+            (NoteEntity item) => <String, Object?>{
+                  'title': item.title,
+                  'body': item.body,
+                  'favorite': item.favorite,
                   'is_deleted': item.isDeleted,
                   'tag_id': item.tagId,
                   'folder_id': item.folderId,
@@ -283,8 +294,26 @@ class _$NoteDAO extends NoteDAO {
 
   final UpdateAdapter<NoteEntity> _noteEntityUpdateAdapter;
 
+  final DeletionAdapter<NoteEntity> _noteEntityDeletionAdapter;
+
   @override
-  Future<void> deleteFolder(int noteId) async {
+  Future<NoteEntity?> findNote(int noteId) async {
+    return _queryAdapter.query('SELECT * FROM Note WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => NoteEntity(
+            noteId: row['id'] as int,
+            dateCreate: row['date_create'] as String,
+            dateModification: row['date_modification'] as String,
+            title: row['title'] as String,
+            body: row['body'] as String,
+            favorite: row['favorite'] as int,
+            isDeleted: row['is_deleted'] as int,
+            folderId: row['folder_id'] as int,
+            tagId: row['tag_id'] as int?),
+        arguments: [noteId]);
+  }
+
+  @override
+  Future<void> deleteNote(int noteId) async {
     await _queryAdapter.queryNoReturn(
         'UPDATE Note SET is_deleted = 1 WHERE id = ?1',
         arguments: [noteId]);
@@ -298,32 +327,37 @@ class _$NoteDAO extends NoteDAO {
   }
 
   @override
-  Future<List<NoteEntity>> getAllNote() async {
-    return _queryAdapter.queryList('SELECT * FROM Note WHERE is_deleted = 0',
+  Future<List<NoteEntity>> getNotesDeleted() async {
+    return _queryAdapter.queryList(
+        'SELECT        Note.id,       Note.title,       Note.body,       Note.tag_id,       Note.favorite,       Note.folder_id,       Note.is_deleted,       Note.date_create,       Note.date_modification     FROM Note INNER JOIN Folder                on (Note.folder_id = Folder.id                AND Folder.is_deleted = 0)     WHERE Note.is_deleted = 1',
         mapper: (Map<String, Object?> row) => NoteEntity(
             noteId: row['id'] as int,
             dateCreate: row['date_create'] as String,
             dateModification: row['date_modification'] as String,
             title: row['title'] as String,
             body: row['body'] as String,
+            favorite: row['favorite'] as int,
             isDeleted: row['is_deleted'] as int,
             folderId: row['folder_id'] as int,
             tagId: row['tag_id'] as int?));
   }
 
   @override
-  Future<List<NoteEntity>> getNotesDeleted() async {
-    return _queryAdapter.queryList(
-        'SELECT        Note.id,       Note.title,       Note.body,       Note.tag_id,       Note.folder_id,       Note.is_deleted,       Note.date_create,       Note.date_modification     FROM Note Inner JOIN Folder                on (Note.folder_id = Folder.id                and Folder.is_deleted = 0)     WHERE Note.is_deleted = 1',
+  Stream<List<NoteEntity>> getNotes() {
+    return _queryAdapter.queryListStream(
+        'SELECT Note.id,            Note.title,            Note.body,            Note.tag_id,            Note.favorite,            Note.folder_id,            Note.is_deleted,            Note.date_create,            Note.date_modification     FROM Note INNER JOIN Folder                on (Note.folder_id = Folder.id                AND Folder.is_deleted = 0)     WHERE Note.is_deleted = 0',
         mapper: (Map<String, Object?> row) => NoteEntity(
             noteId: row['id'] as int,
             dateCreate: row['date_create'] as String,
             dateModification: row['date_modification'] as String,
             title: row['title'] as String,
             body: row['body'] as String,
+            favorite: row['favorite'] as int,
             isDeleted: row['is_deleted'] as int,
             folderId: row['folder_id'] as int,
-            tagId: row['tag_id'] as int?));
+            tagId: row['tag_id'] as int?),
+        queryableName: 'Note',
+        isView: false);
   }
 
   @override
@@ -336,6 +370,11 @@ class _$NoteDAO extends NoteDAO {
   Future<int> updateNotes(List<NoteEntity> records) {
     return _noteEntityUpdateAdapter.updateListAndReturnChangedRows(
         records, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deletePersistentNote(NoteEntity person) async {
+    await _noteEntityDeletionAdapter.delete(person);
   }
 }
 

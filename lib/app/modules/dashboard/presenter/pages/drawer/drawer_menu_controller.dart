@@ -1,20 +1,68 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:rx_notifier/rx_notifier.dart';
-import 'package:safe_notes/app/design/common/utils/sizes.dart';
+import 'package:safe_notes/app/design/common/util/sizes.dart';
+import 'package:safe_notes/app/modules/setting/presenter/controllers/manager_route_navigator_store.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
-import '../../reactive/reactive_list_folder.dart';
 import '../../stores/list_folders_store.dart';
+import '../../stores/list_notes_store.dart';
+import 'shared/shared_reactive_lists.dart';
 
-class DrawerMenuController {
+class DrawerMenuController extends Disposable {
+  late SharedReactiveLists shared;
+
   final ListFoldersStore _listFoldersStore;
-  ListFoldersStore get listFoldersStore => _listFoldersStore;
-  ReactiveListFolder get reactiveListFolder =>
-      _listFoldersStore.reactiveListFolder;
-  List<FolderQtdChildView> get listFolders => reactiveListFolder.list;
+  final ListNotesStore _listNotesStore;
 
-  DrawerMenuController(this._listFoldersStore) {
+  final ManagerRouteNavigatorStore _managerRouteNavigatorStore;
+  final durationNavigateFolder = const Duration(milliseconds: 150);
+
+  void moduleFolderSaveFolderParent(FolderQtdChildView folder) {
+    _managerRouteNavigatorStore.saveFolderParent(folder.toJson());
+  }
+
+  void onChangeRoute() async {
+    var page = Modular.to.path;
+    selectItemMenu(page);
+
+    if (page.contains('/dashboard/mod-')) {
+      if (!page.contains('/mod-folder')) {
+        _managerRouteNavigatorStore.removeFolderParent();
+      }
+      _managerRouteNavigatorStore.savePage(page: page);
+    }
+  }
+
+  void selectItemMenu(String path) {
+    if (path.contains('/mod-notes')) {
+      selectedMenuItem.value = 0;
+    } else if (path.contains('/mod-favorites')) {
+      selectedMenuItem.value = 1;
+    } else if (path.contains('/mod-lixeira')) {
+      selectedMenuItem.value = 2;
+    }
+  }
+
+  DrawerMenuController(
+    this._listFoldersStore,
+    this._listNotesStore,
+    this._managerRouteNavigatorStore,
+  ) {
+    shared = SharedReactiveLists(
+      _listFoldersStore,
+      _listNotesStore,
+    );
+
     _listFoldersStore.getListFolders();
+    _listNotesStore.getListNotes();
+
+    Modular.to.addListener(onChangeRoute);
+  }
+
+  @override
+  void dispose() {
+    Modular.to.removeListener(onChangeRoute);
   }
 
   final selectedMenuItem = ValueNotifier<int>(0);

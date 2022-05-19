@@ -1,11 +1,11 @@
 import 'theme_store.dart';
 
-class SettingStore {
+class SettingController {
   final ThemeStore _themeStore;
 
   ThemeStore get theme => _themeStore;
 
-  SettingStore(this._themeStore) {
+  SettingController(this._themeStore) {
     _themeStore.loadTheme();
   }
 }

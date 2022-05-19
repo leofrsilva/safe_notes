@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'pages/drawer/drawer_menu_page.dart';
 import 'pages/drawer/drawer_menu_controller.dart';
+import 'widgets/clip_view_port.dart';
 
 class DashboardPage extends StatelessWidget {
   DashboardPage({Key? key}) : super(key: key);
@@ -38,11 +39,11 @@ class DashboardPage extends StatelessWidget {
                     drawerMenuController.closeDrawer();
                   }
                 },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(
-                    drawerMenuController.isShowDrawer.value ? 45 : 0,
-                  )),
+                child: ClipViewPort(
                   child: const RouterOutlet(),
+                  curve: drawerMenuController.curve,
+                  duration: drawerMenuController.duration,
+                  isShowDrawer: drawerMenuController.isShowDrawer.value,
                 ),
               ),
             );

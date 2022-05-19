@@ -28,16 +28,20 @@ class _AppWidgetState extends State<AppWidget> {
   Widget build(BuildContext context) {
     return ScopedBuilder<ThemeStore, Failure, bool>.transition(
       store: themeStore,
-      onLoading: (context) => const Center(
+      onLoading: (context) => Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
+          valueColor: AlwaysStoppedAnimation<Color>(
+            ColorPalettes.lightPrimary,
+          ),
         ),
       ),
-      onState: (context, dark) {
+      onState: (context, isDark) {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'Safe Notes',
-          theme: dark ? Themes.darkTheme : Themes.lightTheme,
+          themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+          theme: Themes.lightTheme,
+          darkTheme: Themes.darkTheme,
           localizationsDelegates: const [
             GlobalWidgetsLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,

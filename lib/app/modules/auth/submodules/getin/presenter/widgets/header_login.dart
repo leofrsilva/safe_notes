@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
-import 'package:safe_notes/app/design/common/utils/utils.dart';
+import 'package:safe_notes/app/design/common/util/utils.dart';
 
 class HeaderLogin extends StatelessWidget {
   const HeaderLogin({Key? key}) : super(key: key);

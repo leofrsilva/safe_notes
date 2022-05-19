@@ -1,0 +1,4 @@
+enum ModeNoteEnum {
+  add,
+  edit,
+}

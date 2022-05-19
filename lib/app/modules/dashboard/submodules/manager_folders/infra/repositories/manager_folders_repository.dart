@@ -28,7 +28,7 @@ class ManagerFoldersRepository extends IManagerFoldersRepository {
   @override
   Future<Either<Failure, dynamic>> editFolder(FolderModel folder) async {
     try {
-      final result = await _datasource.editFolder(folder.entity);
+      final result = await _datasource.editFolder(folder);
       return Right(result);
     } on Failure catch (e) {
       return Left(e);
@@ -42,9 +42,13 @@ class ManagerFoldersRepository extends IManagerFoldersRepository {
   }
 
   @override
-  Future<Either<Failure, dynamic>> deleteFolder(int folderId) async {
+  Future<Either<Failure, dynamic>> deleteFolder(
+      List<FolderModel> folders) async {
     try {
-      final result = await _datasource.deleteFolder(folderId);
+      final entities = folders
+          .map((folder) => folder.copyWith(isDeleted: true).entity)
+          .toList();
+      final result = await _datasource.deleteFolder(entities);
       return Right(result);
     } on Failure catch (e) {
       return Left(e);

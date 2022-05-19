@@ -1,21 +1,40 @@
 import 'dart:async';
 
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:safe_notes/app/modules/setting/presenter/controllers/folder_buffer_expanded_store.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 
 import '../../domain/usecases/i_folder_usecase.dart';
+import '../reactive/i_reactive_list_folder.dart';
 import '../reactive/reactive_list_folder.dart';
 
 class ListFoldersStore
     extends NotifierStore<Failure, Stream<List<FolderQtdChildView>>> {
-  final reactiveListFolder = ReactiveListFolder();
+  final IReactiveListFolder _reactiveList = ReactiveListFolder();
+  ReactiveListFolder get reactiveList => _reactiveList as ReactiveListFolder;
+
   final IGetListFoldersUsecase _getListFoldersUsecase;
+  final FolderBufferExpandedStore _folderBufferExpandedStore;
 
-  ListFoldersStore(this._getListFoldersUsecase) : super(Stream.value([]));
+  ListFoldersStore(
+    this._getListFoldersUsecase,
+    this._folderBufferExpandedStore,
+  ) : super(Stream.value([])) {
+    _setBuffer();
+  }
 
-  void _setFolders(List<FolderQtdChildView> folders) {
-    reactiveListFolder.addAllFolder(folders);
+  Future<void> _setBuffer() async {
+    final mapIsExpanded = await _folderBufferExpandedStore.getBufferExpanded();
+    reactiveList.setBufferExpanded(mapIsExpanded);
+  }
+
+  Future<void> saveBuffer(Map<int, bool> mapBufferExpanded) async {
+    await _folderBufferExpandedStore.setBufferExpanded(mapBufferExpanded);
+  }
+
+  _setFolders(List<FolderQtdChildView> folders) {
+    reactiveList.addAllFolder(folders);
   }
 
   void getListFolders() {

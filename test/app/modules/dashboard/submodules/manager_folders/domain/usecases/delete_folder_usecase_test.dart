@@ -13,12 +13,12 @@ void main() {
 
   test('delete folder usecase DeleteFolderUsecase.Call | isRight igual a True',
       () async {
-    when(() => repository.deleteFolder(folder.folderId)).thenAnswer(
+    when(() => repository.deleteFolder([folder])).thenAnswer(
       (_) async => const Right(dynamic),
     );
 
     final usecase = DeleteFolderUsecase(repository);
-    final result = await usecase.call(folder.folderId);
+    final result = await usecase.call([folder]);
 
     expect(result.isRight(), equals(true));
   });
@@ -26,12 +26,12 @@ void main() {
   test(
       'delete folder usecase DeleteFolderUsecase.Call | retorna DeleteFolderSqliteError',
       () async {
-    when(() => repository.deleteFolder(folder.folderId)).thenAnswer(
+    when(() => repository.deleteFolder([folder])).thenAnswer(
       (_) async => Left(DeleteFolderSqliteErrorMock()),
     );
 
     final usecase = DeleteFolderUsecase(repository);
-    final result = await usecase.call(folder.folderId);
+    final result = await usecase.call([folder]);
 
     expect(result.isLeft(), equals(true));
     expect(result.fold(id, id), isA<DeleteFolderSqliteError>());

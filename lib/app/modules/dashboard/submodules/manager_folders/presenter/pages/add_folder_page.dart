@@ -7,6 +7,7 @@ import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../../presenter/pages/drawer/drawer_menu_controller.dart';
+import '../../../../presenter/reactive/i_reactive_list_folder.dart';
 import '../manager_folders_controller.dart';
 import '../widgets/grid_selection_color.dart';
 
@@ -23,7 +24,7 @@ class AddFolderPage extends StatefulWidget {
 }
 
 class _AddFolderPageState extends State<AddFolderPage> {
-  late DrawerMenuController _drawerMenuController;
+  late IReactiveListFolder _reactiveListFolder;
   late TextEditingController _textEditingFolder;
   late ManagerFoldersController _controller;
   late GlobalKey<FormState> _formKey;
@@ -41,8 +42,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
         level: widget.folderQtdChildView.level + 1,
         parentId: widget.folderQtdChildView.id,
       );
-      if (_drawerMenuController.reactiveListFolder
-          .checkNameAlreadyExists(folderQtdChildView)) {
+      if (_reactiveListFolder.checkNameAlreadyExists(folderQtdChildView)) {
         return 'Já existe uma pasta com esse nome.';
       }
     }
@@ -50,8 +50,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
   }
 
   String _generateDefaultNameFolder() {
-    int qtd =
-        _drawerMenuController.listFoldersStore.reactiveListFolder.qtdNameFolder(
+    int qtd = _reactiveListFolder.qtdNameFolder(
       widget.folderQtdChildView.id,
       widget.folderQtdChildView.level + 1,
     );
@@ -73,7 +72,8 @@ class _AddFolderPageState extends State<AddFolderPage> {
   void initState() {
     super.initState();
     _controller = Modular.get<ManagerFoldersController>();
-    _drawerMenuController = Modular.get<DrawerMenuController>();
+    _reactiveListFolder =
+        Modular.get<DrawerMenuController>().shared.reactiveFolders;
 
     var fieldName = _generateDefaultNameFolder();
     folder = folder.copyWith(
@@ -128,6 +128,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                         top: 25.0,
                         left: 20.0,
                         right: 20.0,
+                        bottom: 8.0,
                       ),
                       margin: EdgeInsets.only(bottom: bottomPadding),
                       decoration: BoxDecoration(
@@ -140,7 +141,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            CustomTextField(
+                            CustomTextFieldWithHint(
                               controller: _textEditingFolder,
                               title: 'Criar Pasta',
                               hint: 'Nome da Pasta',
@@ -154,7 +155,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                                     if (name.length == 1) {
                                       canAdd = true;
                                     }
-                                    folder = folder.copyWith(name: name);
+                                    folder = folder.copyWith(name: name.trim());
                                   }
                                 });
                                 final formState = _formKey.currentState;
@@ -182,9 +183,19 @@ class _AddFolderPageState extends State<AddFolderPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   TextButton(
-                                    child: Text(
-                                      'Cancelar',
-                                      style: TextStyles.textButton(context),
+                                    style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    )),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                        vertical: 5.0,
+                                      ),
+                                      child: Text(
+                                        'Cancelar',
+                                        style: TextStyles.textButton(context),
+                                      ),
                                     ),
                                     onPressed: () {
                                       Modular.to.pop();
@@ -196,13 +207,23 @@ class _AddFolderPageState extends State<AddFolderPage> {
                                     color: ColorPalettes.blueGrey,
                                   ),
                                   TextButton(
-                                    child: Text(
-                                      'Adicionar',
-                                      style: TextStyles.textButton(context)
-                                          .copyWith(
-                                        color: canAdd
-                                            ? Theme.of(context).primaryColor
-                                            : ColorPalettes.grey,
+                                    style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    )),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                        vertical: 5.0,
+                                      ),
+                                      child: Text(
+                                        'Adicionar',
+                                        style: TextStyles.textButton(context)
+                                            .copyWith(
+                                          color: canAdd
+                                              ? Theme.of(context).primaryColor
+                                              : ColorPalettes.grey,
+                                        ),
                                       ),
                                     ),
                                     onPressed: canAdd

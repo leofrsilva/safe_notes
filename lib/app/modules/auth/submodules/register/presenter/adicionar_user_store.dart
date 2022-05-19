@@ -152,7 +152,7 @@ class AdicionarUserController {
             await _expireToken.generaterToken(usuario.toInfoUser());
 
             _appCore.setUsuario(usuario);
-            Modular.to.navigate('/dashboard/notes/');
+            Modular.to.navigate('/dashboard/mod-notes/');
           },
         );
       },
