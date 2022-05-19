@@ -7,6 +7,7 @@ class CustomTextFieldTitleNote extends StatelessWidget {
     Key? key,
     required this.expanded,
     this.childDetails,
+    this.controller,
     this.onChanged,
     this.onTapIcon,
     this.onTapFavorite,
@@ -17,6 +18,8 @@ class CustomTextFieldTitleNote extends StatelessWidget {
     this.turnsCurve = Curves.easeIn,
     this.duration = const Duration(milliseconds: 300),
   }) : super(key: key);
+
+  final TextEditingController? controller;
 
   final bool expanded;
   final Widget? childDetails;
@@ -126,6 +129,7 @@ class CustomTextFieldTitleNote extends StatelessWidget {
 
   Widget get _textField {
     return TextField(
+      controller: controller,
       onTap: onTapTextField,
       onChanged: onChanged,
       style: TextStyle(

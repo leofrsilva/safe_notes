@@ -26,6 +26,8 @@ class AddOrEditNotePage extends StatefulWidget {
 }
 
 class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
+  TextEditingController? _editingControllerTitle;
+  TextEditingController? _editingControllerBody;
   late AddOrEditNoteController _controller;
 
   bool _isExpanded = false;
@@ -108,6 +110,21 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
 
     _controller.noteModel = widget.note;
     _controller.folderId = widget.folder.id;
+    if (widget.mode == ModeNoteEnum.edit) {
+      _editingControllerTitle = TextEditingController(
+        text: widget.note.title,
+      );
+      _editingControllerBody = TextEditingController(
+        text: widget.note.body,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _editingControllerTitle?.dispose();
+    _editingControllerBody?.dispose();
+    super.dispose();
   }
 
   @override
@@ -129,6 +146,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
                 top: Sizes.heightStatusBar(context),
               ),
               child: CustomTextFieldTitleNote(
+                controller: _editingControllerTitle,
                 heightExpanded: widget.mode == ModeNoteEnum.add ? 135.0 : 160.0,
                 expanded: _isExpanded,
                 childDetails: infoNote,
@@ -150,7 +168,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
                 },
               ),
             ),
-            Container(
+            SizedBox(
               height: Sizes.height(context) * 0.4,
               child: RawScrollbar(
                 thickness: 5,
@@ -163,6 +181,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
                         Align(
                           alignment: Alignment.topCenter,
                           child: TextField(
+                            controller: _editingControllerBody,
                             focusNode: _focusNode,
                             maxLines: 500,
                             // maxLines: Sizes.height(context).toInt(),
@@ -201,6 +220,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
 
   Widget widgetAddTitle(BuildContext context) {
     return CustomTextFieldTitleNote(
+      controller: _editingControllerTitle,
       // heightExpanded: widget.mode == ModeNoteEnum.add ? 135.0 : 155.0,
       heightExpanded: 135.0,
       expanded: _isExpanded,
@@ -226,8 +246,8 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
 
   Widget widgetEditTitle(BuildContext context) {
     return CustomTextFieldTitleNote(
-      heightExpanded: 155.0,
-      // initialValue: ,
+      controller: _editingControllerTitle,
+      heightExpanded: 160.0,
       expanded: _isExpanded,
       childDetails: infoNote,
       onChanged: (text) {
