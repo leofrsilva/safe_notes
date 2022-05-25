@@ -28,12 +28,8 @@ class _AppWidgetState extends State<AppWidget> {
   Widget build(BuildContext context) {
     return ScopedBuilder<ThemeStore, Failure, bool>.transition(
       store: themeStore,
-      onLoading: (context) => Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
-            ColorPalettes.lightPrimary,
-          ),
-        ),
+      onLoading: (context) => Container(
+        color: ColorPalettes.secondy,
       ),
       onState: (context, isDark) {
         return MaterialApp.router(

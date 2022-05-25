@@ -26,6 +26,7 @@ class FolderController {
   set folder(FolderQtdChildView folder) {
     _folderParent.value = folder;
     drawerMenu.selectedMenuItem.value = folder.id;
+    drawerMenu.moduleFolderSaveFolderParent(folder);
   }
 
   FolderQtdChildView get folder => _folderParent.value;

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 import '../domain/usecases/i_note_usecases.dart';
+import 'enum/mode_note_enum.dart';
 
 class AddOrEditNoteController {
   final IAddNoteUsecase _addNoteUsecase;
@@ -14,9 +15,7 @@ class AddOrEditNoteController {
     this._addNoteUsecase,
     this._editNoteUsecase,
     this._deleteNoteEmptyUsecase,
-  ) {
-    _alreadySaved = false;
-  }
+  );
 
   Timer? _debounceTitle;
 
@@ -24,7 +23,7 @@ class AddOrEditNoteController {
     if (_debounceTitle?.isActive ?? false) _debounceTitle!.cancel();
     _debounceTitle = Timer(const Duration(milliseconds: 500), () {
       title = text.trim();
-      if (alreadySaved) {
+      if (mode == ModeNoteEnum.edit) {
         editNote(context);
       } else {
         addNote(context);
@@ -38,7 +37,7 @@ class AddOrEditNoteController {
     if (_debounceBody?.isActive ?? false) _debounceBody!.cancel();
     _debounceBody = Timer(const Duration(milliseconds: 500), () {
       body = text;
-      if (alreadySaved) {
+      if (mode == ModeNoteEnum.edit) {
         editNote(context);
       } else {
         addNote(context);
@@ -46,10 +45,17 @@ class AddOrEditNoteController {
     });
   }
 
-  late bool _alreadySaved;
-  bool get alreadySaved => _alreadySaved;
-
+  ModeNoteEnum mode = ModeNoteEnum.add;
   NoteModel noteModel = NoteModel.empty();
+
+  void changeFavorite(BuildContext context) {
+    noteModel = noteModel.copyWith(favorite: !noteModel.favorite);
+    if (mode == ModeNoteEnum.edit) {
+      editNote(context);
+    } else {
+      addNote(context);
+    }
+  }
 
   set folderId(int id) {
     noteModel = noteModel.copyWith(folderId: id);
@@ -64,26 +70,20 @@ class AddOrEditNoteController {
   }
 
   Future<void> addNote(BuildContext context) async {
-    print(noteModel.noteId);
-    print(noteModel.folderId);
-    // print(noteModel.);
-    print('**************************************');
-    print('**************************************');
-    print('**************************************');
     final either = await _addNoteUsecase.call(noteModel);
     either.fold(
       (failure) {
-        print(failure.errorMessage);
         SnackbarError.show(
           context,
           message: 'Error ao salvar a Nota!',
         );
       },
-      (_) => _alreadySaved = true,
+      (_) => mode = ModeNoteEnum.edit,
     );
   }
 
   Future<void> editNote(BuildContext context) async {
+    noteModel = noteModel.copyWith(dateModification: DateTime.now());
     final either = await _editNoteUsecase.call(noteModel);
     if (either.isLeft()) {
       SnackbarError.show(

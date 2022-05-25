@@ -22,5 +22,4 @@ class SharedReactiveLists {
   List<FolderQtdChildView> get listFolders => reactiveFolders.listFolder;
 
   ReactiveListNote get reactiveNotes => _listNotesStore.reactiveList;
-  List<NoteModel> get listNotes => reactiveNotes.listAllNote;
 }

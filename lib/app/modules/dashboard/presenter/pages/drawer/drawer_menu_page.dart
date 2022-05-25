@@ -159,13 +159,30 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                           icon: Icons.library_books_outlined,
                           onTap: () => onTapItemSelected(0),
                         ),
-                        ItemMenu(
-                          selected: 1 == value,
-                          text: 'Favotitos',
-                          sizeIcon: 28,
-                          icon: Icons.star_border_rounded,
-                          onTap: () => onTapItemSelected(1),
-                        ),
+                        AnimatedBuilder(
+                            animation:
+                                _drawerMenuController.shared.reactiveNotes,
+                            builder: (context, child) {
+                              return ItemMenu(
+                                selected: 1 == value,
+                                text: 'Favotitos',
+                                sizeIcon: 28,
+                                icon: Icons.star_border_rounded,
+                                trailing: Text(
+                                  _drawerMenuController.shared.reactiveNotes
+                                              .qtdFavorites !=
+                                          0
+                                      ? _drawerMenuController
+                                          .shared.reactiveNotes.qtdFavorites
+                                          .toString()
+                                      : '',
+                                  style: TextStyle(
+                                    color: ColorPalettes.secondy,
+                                  ),
+                                ),
+                                onTap: () => onTapItemSelected(1),
+                              );
+                            }),
                         ValueListenableBuilder<int>(
                           valueListenable: _drawerMenuController
                               .shared.reactiveFolders.deleted,

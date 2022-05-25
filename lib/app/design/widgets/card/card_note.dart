@@ -52,13 +52,15 @@ class CardNote extends StatelessWidget {
                 height: height,
                 width: width,
                 decoration: BoxDecoration(
-                  color: backgroundColor ?? ColorPalettes.white,
                   borderRadius: BorderRadius.circular(35.0),
                 ),
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                  vertical: 12.0,
+                ),
                 child: Text(
                   body,
-                  maxLines: 9,
+                  maxLines: 12,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.fade,
                   style: TextStyles.cardBodyNote,
@@ -70,7 +72,7 @@ class CardNote extends StatelessWidget {
             height: height * 0.30,
             width: width,
             alignment: Alignment.center,
-            padding: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.only(top: 2.0),
             child: Text(
               title.isEmpty
                   ? 'Nota de texto ${date.day}/${date.month.toString().padLeft(2, '0')}'
@@ -86,8 +88,8 @@ class CardNote extends StatelessWidget {
             alignment: Alignment.center,
             // padding: const EdgeInsets.only(top: 8.0),
             child: Text(
-              title.isEmpty
-                  ? '${date.hour}:${date.minute}'
+              date.day == DateTime.now().day
+                  ? '${date.hour}:${date.minute.toString().padLeft(2, '0')}'
                   : DateConvert.dateToString(date),
               maxLines: 1,
               textAlign: TextAlign.center,

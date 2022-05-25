@@ -43,7 +43,7 @@ class SplashController {
     return '/dashboard/mod-notes/';
   }
 
-  Future navigateToModule() async {
+  Future<void> navigateToModule() async {
     Modular.to.navigate(strPage);
     if (_folder != null) {
       await Modular.isModuleReady<FolderModule>().then((_) async {
@@ -75,7 +75,7 @@ class SplashController {
     navigateToModule();
   }
 
-  Future logout(BuildContext context) async {
+  Future<void> logout(BuildContext context) async {
     strPage = '/auth/getin/relogar';
     final either = await _leaveAuthUsecase.call();
     if (either.isLeft()) {

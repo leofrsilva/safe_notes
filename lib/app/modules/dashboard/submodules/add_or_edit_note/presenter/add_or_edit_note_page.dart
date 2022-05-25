@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
@@ -26,28 +27,38 @@ class AddOrEditNotePage extends StatefulWidget {
 }
 
 class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
-  TextEditingController? _editingControllerTitle;
   TextEditingController? _editingControllerBody;
+  late TextEditingController _editingControllerTitle;
   late AddOrEditNoteController _controller;
+  late FocusNode _focusNodeBody;
 
+  int _maxLines = 0;
   bool _isExpanded = false;
-  late FocusNode _focusNode;
+  bool isFocusBody(BuildContext context) {
+    return FocusScope.of(context).focusedChild == _focusNodeBody;
+  }
 
   void _setExpansion(bool shouldBeExpanded) {
     if (shouldBeExpanded != _isExpanded) {
       setState(() {
         _isExpanded = shouldBeExpanded;
+        genterateDetails();
       });
     }
   }
 
-  void toggleExpansion() {
+  void _toggleExpansion() {
     _setExpansion(!_isExpanded);
+  }
+
+  void removeFocusTitle() {
+    _toggleExpansion();
+    _focusNodeBody.requestFocus();
   }
 
   Widget? infoNote;
 
-  initialConfig() {
+  genterateDetails() {
     var infoFolder = Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,7 +88,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
             children: [
               Text(
                 'Última modificação: ' +
-                    widget.note.dateModification.toStrDateTime,
+                    _controller.noteModel.dateModification.toStrDateTime,
                 style: TextStyle(
                   fontSize: 11,
                   color: ColorPalettes.grey,
@@ -85,7 +96,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
               ),
               const SizedBox(height: 1.0),
               Text(
-                'Criado: ' + widget.note.dateCreate.toStrDate,
+                'Criado: ' + _controller.noteModel.dateCreate.toStrDate,
                 style: TextStyle(
                   fontSize: 11,
                   color: ColorPalettes.grey,
@@ -104,10 +115,10 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
   @override
   void initState() {
     super.initState();
-    initialConfig();
-    _focusNode = FocusNode()..requestFocus();
+    _focusNodeBody = FocusNode();
     _controller = Modular.get<AddOrEditNoteController>();
 
+    _controller.mode = widget.mode;
     _controller.noteModel = widget.note;
     _controller.folderId = widget.folder.id;
     if (widget.mode == ModeNoteEnum.edit) {
@@ -117,155 +128,137 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
       _editingControllerBody = TextEditingController(
         text: widget.note.body,
       );
+    } else {
+      _editingControllerTitle = TextEditingController();
+      _focusNodeBody.requestFocus();
     }
+    genterateDetails();
   }
 
   @override
   void dispose() {
-    _editingControllerTitle?.dispose();
+    _editingControllerTitle.dispose();
     _editingControllerBody?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    _maxLines = (Sizes.height(context) - Sizes.heightKeyboard(context)).toInt();
+    _maxLines = (_maxLines * 0.05).toInt();
+    _maxLines += (Sizes.heightKeyboard(context) > 0 ? -1 : 2);
+
     return WillPopScope(
       onWillPop: () async {
-        if (widget.mode == ModeNoteEnum.add) {
-          if (_controller.alreadySaved) {
-            await _controller.delete();
+        if (_isExpanded) {
+          removeFocusTitle();
+          return false;
+        } else {
+          if (isFocusBody(context)) {
+            _focusNodeBody.unfocus();
+            return false;
           }
+        }
+        if (widget.mode == ModeNoteEnum.add) {
+          await _controller.delete();
         }
         return true;
       },
       child: Scaffold(
-        body: Column(
+        body: Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: Sizes.heightStatusBar(context),
+            Container(
+              width: Sizes.width(context),
+              height: Sizes.height(context) -
+                  (50.0 + Sizes.heightStatusBar(context)),
+              margin: EdgeInsets.only(
+                top: 50.0 + Sizes.heightStatusBar(context),
               ),
-              child: CustomTextFieldTitleNote(
-                controller: _editingControllerTitle,
-                heightExpanded: widget.mode == ModeNoteEnum.add ? 135.0 : 160.0,
-                expanded: _isExpanded,
-                childDetails: infoNote,
-                onChanged: (text) {
-                  _controller.onChangedTitle(context, text);
-                },
-                onTapTextField: () {
-                  if (!_isExpanded) {
-                    toggleExpansion();
-                  }
-                },
-                onTapIcon: () {
-                  if (_isExpanded) {
-                    toggleExpansion();
-                    _focusNode.requestFocus();
-                  } else {
-                    Modular.to.pop();
-                  }
-                },
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  RawScrollbar(
+                    thickness: 8.0,
+                    //! isAlwaysShown: isFocusBody(context) ? true : false,
+                    thumbColor: ColorPalettes.secondy,
+                    radius: const Radius.circular(20),
+                    child: TextField(
+                      controller: _editingControllerBody,
+                      focusNode: _focusNodeBody,
+                      maxLines: _maxLines,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(4903),
+                      ],
+                      onChanged: (text) {
+                        _controller.onChangedBody(context, text);
+                      },
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(12.0),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  // SizedBox(height: Sizes.heightKeyboard(context))
+                ],
               ),
             ),
-            SizedBox(
-              height: Sizes.height(context) * 0.4,
-              child: RawScrollbar(
-                thickness: 5,
-                radius: const Radius.circular(20),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: TextField(
-                            controller: _editingControllerBody,
-                            focusNode: _focusNode,
-                            maxLines: 500,
-                            // maxLines: Sizes.height(context).toInt(),
-                            // maxLength: 500,
-                            onChanged: (text) {
-                              _controller.onChangedBody(context, text);
-                            },
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.all(12.0),
-                              // filled: true,
-                              // fillColor: Colors.black12,
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                        if (_isExpanded)
-                          ModalBarrier(
-                            dismissible: true,
-                            color: Colors.black12,
-                            onDismiss: () {
-                              toggleExpansion();
-                              _focusNode.requestFocus();
-                            },
-                          ),
-                      ],
-                    ),
-                  ],
+            if (_isExpanded)
+              GestureDetector(
+                onTap: () {
+                  removeFocusTitle();
+                },
+                child: Container(
+                  color: ColorPalettes.black26,
+                  width: Sizes.width(context),
+                  height: Sizes.height(context) -
+                      (50.0 + Sizes.heightStatusBar(context)),
+                  margin: EdgeInsets.only(
+                      top: 50.0 + Sizes.heightStatusBar(context)),
+                ),
+              ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: Sizes.heightStatusBar(context),
+                ),
+                child: CustomTextFieldTitleNote(
+                  initialFocus:
+                      _controller.mode == ModeNoteEnum.add, //* SetState mode
+                  isFavorite: _controller.noteModel.favorite,
+                  controller: _editingControllerTitle,
+                  heightNotExpanded: 50,
+                  heightExpanded:
+                      widget.mode == ModeNoteEnum.add ? 145.0 : 175.0,
+                  expanded: _isExpanded,
+                  childDetails: infoNote,
+                  onChanged: (text) {
+                    _controller.onChangedTitle(context, text);
+                  },
+                  onTapTextField: () {
+                    if (!_isExpanded) {
+                      _toggleExpansion();
+                    }
+                  },
+                  onTapIcon: () async {
+                    if (_isExpanded) {
+                      removeFocusTitle();
+                    } else {
+                      if (widget.mode == ModeNoteEnum.add) {
+                        await _controller.delete();
+                      }
+                      Modular.to.pop();
+                    }
+                  },
+                  onTapFavorite: () {
+                    setState(() => _controller.changeFavorite(context));
+                  },
                 ),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget widgetAddTitle(BuildContext context) {
-    return CustomTextFieldTitleNote(
-      controller: _editingControllerTitle,
-      // heightExpanded: widget.mode == ModeNoteEnum.add ? 135.0 : 155.0,
-      heightExpanded: 135.0,
-      expanded: _isExpanded,
-      childDetails: infoNote,
-      onChanged: (text) {
-        _controller.onChangedTitle(context, text);
-      },
-      onTapTextField: () {
-        if (!_isExpanded) {
-          toggleExpansion();
-        }
-      },
-      onTapIcon: () {
-        if (_isExpanded) {
-          toggleExpansion();
-          _focusNode.requestFocus();
-        } else {
-          Modular.to.pop();
-        }
-      },
-    );
-  }
-
-  Widget widgetEditTitle(BuildContext context) {
-    return CustomTextFieldTitleNote(
-      controller: _editingControllerTitle,
-      heightExpanded: 160.0,
-      expanded: _isExpanded,
-      childDetails: infoNote,
-      onChanged: (text) {
-        _controller.onChangedTitle(context, text);
-      },
-      onTapTextField: () {
-        if (!_isExpanded) {
-          toggleExpansion();
-        }
-      },
-      onTapIcon: () {
-        if (_isExpanded) {
-          toggleExpansion();
-          _focusNode.requestFocus();
-        } else {
-          Modular.to.pop();
-        }
-      },
     );
   }
 }

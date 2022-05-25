@@ -30,10 +30,16 @@ class ReactiveListNote extends IReactiveListNote {
 
   //* LISTS
   @override
-  List<NoteModel> get listAllNote {
-    value.sort((previous, posterior) {
-      return previous.dateModification.compareTo(posterior.dateModification);
-    });
+  List<NoteModel> listAllNote({bool orderByDesc = true}) {
+    if (orderByDesc) {
+      value.sort((previous, posterior) {
+        return posterior.dateModification.compareTo(previous.dateModification);
+      });
+    } else {
+      value.sort((previous, posterior) {
+        return previous.dateModification.compareTo(posterior.dateModification);
+      });
+    }
     return value.where((note) => note.isDeleted == false).toList();
   }
 
@@ -48,10 +54,16 @@ class ReactiveListNote extends IReactiveListNote {
   }
 
   @override
-  List<NoteModel> listNoteByFolder(int folderId) {
-    value.sort((previous, posterior) {
-      return previous.dateModification.compareTo(posterior.dateModification);
-    });
+  List<NoteModel> listNoteByFolder(int folderId, bool orderByDesc) {
+    if (orderByDesc) {
+      value.sort((previous, posterior) {
+        return posterior.dateModification.compareTo(previous.dateModification);
+      });
+    } else {
+      value.sort((previous, posterior) {
+        return previous.dateModification.compareTo(posterior.dateModification);
+      });
+    }
     return value
         .where((note) => note.isDeleted == false && note.folderId == folderId)
         .toList();

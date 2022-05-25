@@ -17,12 +17,13 @@ class ColorPalettes {
   static Color greyDark = const Color(0xFF333333);
   static Color red = Colors.red;
   static Color redLight = const Color(0xFFFF5E5E);
-  static Color yellow = Colors.yellow;
+  static Color yellow = const Color(0xFFB6A400);
   static Color green = Colors.green;
   static Color setActive = Colors.grey[500] ?? const Color(0xFF9E9E9E);
   static Color blueGrey = Colors.blueGrey;
   static Color black = const Color(0xFF000000);
   static Color black12 = Colors.black12;
+  static Color black26 = Colors.black26;
   static Color transparent = const Color(0x00000000);
 
   static Color fontColor = const Color.fromARGB(255, 82, 82, 82);

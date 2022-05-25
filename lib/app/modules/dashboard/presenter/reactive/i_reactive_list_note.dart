@@ -12,11 +12,11 @@ abstract class IReactiveListNote extends ValueNotifier<List<NoteModel>> {
   int get qtdFavorites;
 
   // LISTS
-  List<NoteModel> get listAllNote;
+  List<NoteModel> listAllNote({bool orderByDesc = true});
 
   List<NoteModel> get favorites;
 
-  List<NoteModel> listNoteByFolder(int folderId);
+  List<NoteModel> listNoteByFolder(int folderId, bool orderByDesc);
 
   // DELETED
   List<NoteModel> get listNoteDeleted;

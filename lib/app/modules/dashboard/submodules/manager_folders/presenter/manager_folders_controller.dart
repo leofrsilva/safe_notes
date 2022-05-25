@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
+import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../presenter/pages/drawer/drawer_menu_controller.dart';
 import '../../../presenter/reactive/reactive_list_folder.dart';
+import '../../folder/presenter/folder_controller.dart';
 import '../domain/usecases/i_manager_folders_usecase.dart';
 import 'pages/add_folder_page.dart';
 import 'pages/delete_folder_page.dart';
@@ -127,17 +129,20 @@ class ManagerFoldersController extends Disposable {
           message: 'Erro ao deletar Pasta!',
         );
       } else {
-        print(Modular.to.navigateHistory.first.name);
-        //  await Modular.isModuleReady<FolderModule>().then((_) async {
-        // await Future.delayed(
-        //   _drawerMenuController.durationNavigateFolder,
-        //   () {
-        //     final _controllerFolder = Modular.get<FolderController>();
-        //     _controllerFolder.folder = folder;
-        //     _drawerMenuController.moduleFolderSaveFolderParent(folder);
-        //   },
-        // );
-        // });
+        ParallelRoute? modFolder;
+        for (var module in Modular.to.navigateHistory) {
+          if (module.name.contains('/mod-folder')) {
+            modFolder = module;
+          }
+        }
+        if (modFolder != null) {
+          final controllerFolder = Modular.get<FolderController>();
+          final ids = folders.map<int>((folder) => folder.folderId).toList();
+          if (ids.contains(controllerFolder.folder.id)) {
+            controllerFolder.folderParent.value =
+                DefaultDatabase.folderQtdChildViewDefault;
+          }
+        }
       }
     });
   }

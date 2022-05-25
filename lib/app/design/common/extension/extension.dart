@@ -89,6 +89,6 @@ extension DateTimeExtension on DateTime {
     final h = hour;
     final min = minute;
 
-    return "$d de $strM de $y $h:$min";
+    return "$d de $strM de $y $h:${min.toString().padLeft(2, '0')}";
   }
 }
