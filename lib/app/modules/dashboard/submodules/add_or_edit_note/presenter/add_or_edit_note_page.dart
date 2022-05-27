@@ -31,6 +31,22 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
   late TextEditingController _editingControllerTitle;
   late AddOrEditNoteController _controller;
   late FocusNode _focusNodeBody;
+  
+  bool isVisibleFloatingButton = false;
+  toggleVisibleFloatingButton(bool value) {
+    if (isVisibleFloatingButton != value) {
+      setState(() => isVisibleFloatingButton = value);
+    }
+  }
+  
+  late ScrollController scrollController;
+  checkScrollInTop() {
+    if (scrollController.offset > 2) {
+      toggleVisibleFloatingButton(true);
+    } else {
+      toggleVisibleFloatingButton(false);
+    }
+  }
 
   int _maxLines = 0;
   bool _isExpanded = false;
@@ -257,6 +273,11 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
               ),
             ),
           ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingButtonForTop(
+          isVisible: isVisibleFloatingButton,
+          scrollController: scrollController,
         ),
       ),
     );
