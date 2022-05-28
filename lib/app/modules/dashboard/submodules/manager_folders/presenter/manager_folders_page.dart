@@ -37,7 +37,7 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         decoration: BoxDecoration(
-          color: ColorPalettes.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: SingleChildScrollView(
