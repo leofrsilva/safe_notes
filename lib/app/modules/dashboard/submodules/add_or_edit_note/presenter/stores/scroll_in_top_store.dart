@@ -20,6 +20,9 @@ class ScrollInTopStore extends Disposable {
   checkScrollInTop() {
     if (scrollController.offset > 2) {
       toggleVisibleFloatingButton(true);
+      Future.delayed(const Duration(milliseconds: 2500), () {
+        toggleVisibleFloatingButton(false);
+      });
     } else {
       toggleVisibleFloatingButton(false);
     }
