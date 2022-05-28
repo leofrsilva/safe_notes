@@ -12,6 +12,8 @@ class Themes {
     fontFamily: 'JosefinSans',
     // colorScheme: lightColorScheme,
     //
+    brightness: Brightness.light,
+    cardColor: ColorPalettes.white,
     backgroundColor: ColorPalettes.lightBG,
     primaryColor: ColorPalettes.lightPrimary,
     textSelectionTheme: TextSelectionThemeData(
@@ -46,7 +48,7 @@ class Themes {
     // textSelectionTheme: TextSelectionThemeData(
     //   cursorColor: ColorPalettes.darkAccent,
     // ),
-    scaffoldBackgroundColor: ColorPalettes.darkBG,
+    cardColor: ColorPalettes.black,
     backgroundColor: ColorPalettes.darkBG,
     appBarTheme: AppBarTheme(
       elevation: 0.0,
