@@ -161,33 +161,5 @@ class CustomTextFieldTitleNote extends StatelessWidget {
       ),
       border: InputBorder.none,
     );
-
-    return TextField(
-      controller: controller,
-      onTap: onTapTextField,
-      onChanged: onChanged,
-      // readOnly: true, //* CONTINUE ........
-      // style: TextStyle(
-      //   fontSize: 24,
-      //   // height: expanded ? null : 3.5,
-      //   overflow: TextOverflow.ellipsis,
-      //   fontFamily: 'JosefinSans',
-      //   fontWeight: FontWeight.w600,
-      //   color: ColorPalettes.blueGrey,
-      // ),
-      decoration: InputDecoration(
-        contentPadding:
-            expanded ? const EdgeInsets.fromLTRB(0, 16, 12, 10) : null,
-        // hintText: 'Título',
-        // hintStyle: TextStyle(
-        //   fontSize: 24,
-        //   height: expanded ? null : 2.5,
-        //   fontFamily: 'JosefinSans',
-        //   fontWeight: FontWeight.w600,
-        //   color: ColorPalettes.grey.withOpacity(0.2),
-        // ),
-        // border: InputBorder.none,
-      ),
-    );
   }
 }
