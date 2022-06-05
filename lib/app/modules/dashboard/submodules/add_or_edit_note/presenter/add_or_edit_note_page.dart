@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
+import 'package:safe_notes/app/design/widgets/floating_button/floating_button_for_top.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 import 'package:safe_notes/app/design/widgets/textfield/custom_textfield_title_note.dart';
 
 import 'add_or_edit_note_controller.dart';
 import 'enum/mode_note_enum.dart';
+import 'widgets/details_note_widget.dart';
 
 class AddOrEditNotePage extends StatefulWidget {
   final ModeNoteEnum mode;
@@ -33,83 +35,13 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
   late FocusNode _focusNodeBody;
 
   int _maxLines = 0;
-  bool _isExpanded = false;
   bool isFocusBody(BuildContext context) {
     return FocusScope.of(context).focusedChild == _focusNodeBody;
   }
 
-  void _setExpansion(bool shouldBeExpanded) {
-    if (shouldBeExpanded != _isExpanded) {
-      setState(() {
-        _isExpanded = shouldBeExpanded;
-        genterateDetails();
-      });
-    }
-  }
-
-  void _toggleExpansion() {
-    _setExpansion(!_isExpanded);
-  }
-
   void removeFocusTitle() {
-    _toggleExpansion();
+    _controller.expandedStore.toggleExpansion();
     _focusNodeBody.requestFocus();
-  }
-
-  Widget? infoNote;
-
-  genterateDetails() {
-    var infoFolder = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.folder_outlined,
-          color: Color(widget.folder.color),
-        ),
-        const SizedBox(width: 6.0),
-        Padding(
-          padding: const EdgeInsets.only(top: 4.0),
-          child: Text(
-            widget.folder.name,
-            style: TextStyles.cardTitleFolder,
-          ),
-        ),
-      ],
-    );
-    if (widget.mode == ModeNoteEnum.edit) {
-      infoNote = Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          infoFolder,
-          const SizedBox(height: 8.0),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Última modificação: ' +
-                    _controller.noteModel.dateModification.toStrDateTime,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: ColorPalettes.grey,
-                ),
-              ),
-              const SizedBox(height: 1.0),
-              Text(
-                'Criado: ' + _controller.noteModel.dateCreate.toStrDate,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: ColorPalettes.grey,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6.0),
-        ],
-      );
-    } else {
-      infoNote = infoFolder;
-    }
   }
 
   @override
@@ -132,7 +64,6 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
       _editingControllerTitle = TextEditingController();
       _focusNodeBody.requestFocus();
     }
-    genterateDetails();
   }
 
   @override
@@ -150,7 +81,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
 
     return WillPopScope(
       onWillPop: () async {
-        if (_isExpanded) {
+        if (_controller.expandedStore.expanded) {
           removeFocusTitle();
           return false;
         } else {
@@ -165,98 +96,114 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
         return true;
       },
       child: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              width: Sizes.width(context),
-              height: Sizes.height(context) -
-                  (50.0 + Sizes.heightStatusBar(context)),
-              margin: EdgeInsets.only(
-                top: 50.0 + Sizes.heightStatusBar(context),
-              ),
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  RawScrollbar(
-                    thickness: 8.0,
-                    //! isAlwaysShown: isFocusBody(context) ? true : false,
-                    thumbColor: ColorPalettes.secondy,
-                    radius: const Radius.circular(20),
-                    child: TextField(
-                      controller: _editingControllerBody,
-                      focusNode: _focusNodeBody,
-                      maxLines: _maxLines,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(4903),
-                      ],
-                      onChanged: (text) {
-                        _controller.onChangedBody(context, text);
-                      },
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.all(12.0),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  // SizedBox(height: Sizes.heightKeyboard(context))
-                ],
-              ),
-            ),
-            if (_isExpanded)
-              GestureDetector(
-                onTap: () {
-                  removeFocusTitle();
-                },
-                child: Container(
-                  color: ColorPalettes.black26,
+        body: ValueListenableBuilder<bool>(
+          valueListenable: _controller.expandedStore.isExpanded,
+          builder: (context, expanded, child) {
+            return Stack(
+              children: [
+                Container(
                   width: Sizes.width(context),
                   height: Sizes.height(context) -
                       (50.0 + Sizes.heightStatusBar(context)),
                   margin: EdgeInsets.only(
-                      top: 50.0 + Sizes.heightStatusBar(context)),
+                    top: 50.0 + Sizes.heightStatusBar(context),
+                  ),
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      RawScrollbar(
+                        thickness: 8.0,
+                        //! isAlwaysShown: isFocusBody(context) ? true : false,
+                        thumbColor: ColorPalettes.secondy,
+                        radius: const Radius.circular(20),
+                        child: TextField(
+                          controller: _editingControllerBody,
+                          focusNode: _focusNodeBody,
+                          maxLines: _maxLines,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(4903),
+                          ],
+                          onChanged: (text) {
+                            _controller.onChangedBody(context, text);
+                          },
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.all(12.0),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: Sizes.heightStatusBar(context),
+                if (expanded)
+                  GestureDetector(
+                    onTap: () => removeFocusTitle(),
+                    child: Container(
+                      color: ColorPalettes.black26,
+                      width: Sizes.width(context),
+                      height: Sizes.height(context) -
+                          (50.0 + Sizes.heightStatusBar(context)),
+                      margin: EdgeInsets.only(
+                          top: 50.0 + Sizes.heightStatusBar(context)),
+                    ),
+                  ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: Sizes.heightStatusBar(context),
+                    ),
+                    child: CustomTextFieldTitleNote(
+                      initialFocus: _controller.mode ==
+                          ModeNoteEnum.add, //* SetState mode
+                      isFavorite: _controller.noteModel.favorite,
+                      controller: _editingControllerTitle,
+                      heightNotExpanded: 50,
+                      heightExpanded:
+                          widget.mode == ModeNoteEnum.add ? 145.0 : 175.0,
+                      expanded: expanded,
+                      childDetails: DetailsNoteWidget(
+                        mode: widget.mode,
+                        folder: widget.folder,
+                        noteModel: _controller.noteModel,
+                      ),
+                      onChanged: (text) {
+                        _controller.onChangedTitle(context, text);
+                      },
+                      onTapTextField: () {
+                        if (!expanded) {
+                          _controller.expandedStore.toggleExpansion();
+                        }
+                      },
+                      onTapIcon: () async {
+                        if (expanded) {
+                          removeFocusTitle();
+                        } else {
+                          if (widget.mode == ModeNoteEnum.add) {
+                            await _controller.delete();
+                          }
+                          Modular.to.pop();
+                        }
+                      },
+                      onTapFavorite: () {
+                        setState(() => _controller.changeFavorite(context));
+                      },
+                    ),
+                  ),
                 ),
-                child: CustomTextFieldTitleNote(
-                  initialFocus:
-                      _controller.mode == ModeNoteEnum.add, //* SetState mode
-                  isFavorite: _controller.noteModel.favorite,
-                  controller: _editingControllerTitle,
-                  heightNotExpanded: 50,
-                  heightExpanded:
-                      widget.mode == ModeNoteEnum.add ? 145.0 : 175.0,
-                  expanded: _isExpanded,
-                  childDetails: infoNote,
-                  onChanged: (text) {
-                    _controller.onChangedTitle(context, text);
-                  },
-                  onTapTextField: () {
-                    if (!_isExpanded) {
-                      _toggleExpansion();
-                    }
-                  },
-                  onTapIcon: () async {
-                    if (_isExpanded) {
-                      removeFocusTitle();
-                    } else {
-                      if (widget.mode == ModeNoteEnum.add) {
-                        await _controller.delete();
-                      }
-                      Modular.to.pop();
-                    }
-                  },
-                  onTapFavorite: () {
-                    setState(() => _controller.changeFavorite(context));
-                  },
-                ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: ValueListenableBuilder<bool>(
+          valueListenable: _controller.scrollInTopStore.isVisibleFloatingButton,
+          builder: (context, value, child) {
+            return FloatingButtonForTop(
+              isVisible: value,
+              scrollController: _controller.scrollInTopStore.scrollController,
+            );
+          },
         ),
       ),
     );

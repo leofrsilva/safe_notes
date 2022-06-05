@@ -11,10 +11,15 @@ class AddOrEditNoteController {
   final IEditNoteUsecase _editNoteUsecase;
   final IDeleteNoteEmptyUsecase _deleteNoteEmptyUsecase;
 
+  final ExpandedStore expandedStore;
+  final ScrollInTopStore scrollInTopStore;
+
   AddOrEditNoteController(
     this._addNoteUsecase,
     this._editNoteUsecase,
     this._deleteNoteEmptyUsecase,
+    this.expandedStore,
+    this.scrollInTopStore,
   );
 
   Timer? _debounceTitle;

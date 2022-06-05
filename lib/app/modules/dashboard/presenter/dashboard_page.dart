@@ -40,7 +40,20 @@ class DashboardPage extends StatelessWidget {
                   }
                 },
                 child: ClipViewPort(
-                  child: const RouterOutlet(),
+                  child: Stack(
+                    children: [
+                      const RouterOutlet(),
+                      if (drawerMenuController.isShowDrawer.value)
+                        ModalBarrier(
+                          color: ColorPalettes.black12,
+                          onDismiss: () {
+                            if (drawerMenuController.isShowDrawer.value) {
+                              drawerMenuController.closeDrawer();
+                            }
+                          },
+                        ),
+                    ],
+                  ),
                   curve: drawerMenuController.curve,
                   duration: drawerMenuController.duration,
                   isShowDrawer: drawerMenuController.isShowDrawer.value,
