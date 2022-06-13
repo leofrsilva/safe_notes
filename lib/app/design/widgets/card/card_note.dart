@@ -8,9 +8,12 @@ class CardNote extends StatelessWidget {
   final Color? backgroundColor;
 
   final Function()? onTap;
+  final Function()? onLongPress;
+
   const CardNote({
     Key? key,
     this.onTap,
+    this.onLongPress,
     required this.title,
     required this.body,
     required this.date,
@@ -41,29 +44,33 @@ class CardNote extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          InkWell(
-            onTap: onTap,
-            child: Card(
-              elevation: 3.0,
-              shape: ContinuousRectangleBorder(
+          Card(
+            elevation: 3.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Container(
+              height: height,
+              width: width,
+              decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(35.0),
               ),
-              child: Container(
-                height: height,
-                width: width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(35.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                  vertical: 12.0,
-                ),
-                child: Text(
-                  body,
-                  maxLines: 12,
-                  textAlign: TextAlign.start,
-                  overflow: TextOverflow.fade,
-                  style: TextStyles.cardBodyNote,
+              child: InkWell(
+                onTap: onTap,
+                onLongPress: onLongPress,
+                borderRadius: BorderRadius.circular(15.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0,
+                    vertical: 12.0,
+                  ),
+                  child: Text(
+                    body,
+                    maxLines: 12,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.fade,
+                    style: TextStyles.cardBodyNote,
+                  ),
                 ),
               ),
             ),

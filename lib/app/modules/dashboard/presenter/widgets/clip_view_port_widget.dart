@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
-class ClipViewPort extends StatefulWidget {
+class ClipViewPortWidget extends StatefulWidget {
   final Widget child;
   final Curve curve;
   final Duration duration;
   final bool isShowDrawer;
 
-  const ClipViewPort({
+  const ClipViewPortWidget({
     Key? key,
     required this.child,
-    required this.curve,
     required this.duration,
     required this.isShowDrawer,
+    this.curve = Curves.easeOutSine,
   }) : super(key: key);
 
   @override
-  State<ClipViewPort> createState() => _ClipViewPortState();
+  State<ClipViewPortWidget> createState() => _ClipViewPortWidgetState();
 }
 
-class _ClipViewPortState extends State<ClipViewPort>
+class _ClipViewPortWidgetState extends State<ClipViewPortWidget>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -42,7 +42,7 @@ class _ClipViewPortState extends State<ClipViewPort>
   }
 
   @override
-  void didUpdateWidget(covariant ClipViewPort oldWidget) {
+  void didUpdateWidget(covariant ClipViewPortWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isShowDrawer) {
       _controller.forward();

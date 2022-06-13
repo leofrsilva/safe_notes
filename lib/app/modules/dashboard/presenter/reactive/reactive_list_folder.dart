@@ -162,6 +162,26 @@ class ReactiveListFolder extends ChangeNotifier implements IReactiveListFolder {
         .toList();
   }
 
+  List<FolderQtdChildView> _getParent(FolderQtdChildView folder) {
+    var folders = <FolderQtdChildView>[folder];
+    int parentId = folder.parentId ?? 0;
+
+    for (var folderChild in _listFoldersIsExpanded.keys) {
+      if (folderChild.id == parentId) {
+        folders.addAll(_getParent(folderChild));
+      }
+    }
+    return folders;
+  }
+
+  @override
+  List<FolderQtdChildView> listDescendants(FolderQtdChildView folder) {
+    var descendants = <FolderQtdChildView>[];
+
+    descendants.addAll(_getParent(folder));
+    return descendants;
+  }
+
   //* -- FUNCTION FOR NAME FOLDER
   @override
   int qtdNameFolder(int parentId, int level) {

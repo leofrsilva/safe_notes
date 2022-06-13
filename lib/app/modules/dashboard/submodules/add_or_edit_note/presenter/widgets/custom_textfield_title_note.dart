@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:safe_notes/app/design/common/style/styles.dart';
 import 'package:safe_notes/app/design/common/util/utils.dart';
+import 'package:safe_notes/app/design/widgets/textfield/text_overflow_field.dart';
 
-import 'text_overflow_field.dart';
+import '../../../../presenter/enum/mode_view_enum.dart';
 
 class CustomTextFieldTitleNote extends StatelessWidget {
   const CustomTextFieldTitleNote({
     Key? key,
-    required this.isFavorite,
+    required this.onPressedModelView,
+    required this.modeView,
     required this.expanded,
+    required this.isFavorite,
     this.childDetails,
     this.onChanged,
     this.onTapIcon,
@@ -22,6 +25,9 @@ class CustomTextFieldTitleNote extends StatelessWidget {
     this.turnsCurve = Curves.easeIn,
     this.duration = const Duration(milliseconds: 300),
   }) : super(key: key);
+
+  final ModeViewEnum modeView;
+  final Function()? onPressedModelView;
 
   final bool initialFocus;
   final TextEditingController controller;
@@ -48,6 +54,21 @@ class CustomTextFieldTitleNote extends StatelessWidget {
     Widget details = childDetails ?? Container();
     double top = (heightNotExpanded - (heightNotExpanded * 0.7)) / 2;
 
+    List<Widget> iconActions = [];
+    if (modeView == ModeViewEnum.reading) {
+      iconActions.add(IconButton(
+        color: ColorPalettes.grey,
+        icon: const Icon(Icons.menu_book_rounded),
+        onPressed: onPressedModelView,
+      ));
+    } else {
+      iconActions.add(IconButton(
+        color: ColorPalettes.grey,
+        icon: const Icon(Icons.edit_note),
+        onPressed: onPressedModelView,
+      ));
+    }
+
     return AnimatedContainer(
       curve: turnsCurve,
       duration: duration,
@@ -63,6 +84,20 @@ class CustomTextFieldTitleNote extends StatelessWidget {
       ),
       child: Stack(
         children: [
+          AnimatedOpacity(
+            opacity: expanded ? 0.0 : 1.0,
+            duration: duration,
+            child: Align(
+              alignment: Alignment.topRight,
+              child: SizedBox(
+                width: 50,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: iconActions,
+                ),
+              ),
+            ),
+          ),
           AnimatedOpacity(
             opacity: expanded ? 1.0 : 0.0,
             duration: duration,
@@ -136,7 +171,7 @@ class CustomTextFieldTitleNote extends StatelessWidget {
 
   Widget get _textField {
     return TextOverflowField(
-      canRequestFocus: initialFocus,
+      canRequestFocus: expanded ? initialFocus : null,
       height: heightNotExpanded,
       controller: controller,
       spaceTop: 4.0,

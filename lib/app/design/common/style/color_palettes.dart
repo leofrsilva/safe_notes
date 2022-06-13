@@ -11,6 +11,7 @@ class ColorPalettes {
   static Color darkBG = const Color(0xFF222831); //Color(0xff212121);
 
   static Color white = const Color(0xffffffff);
+  static Color white70 = Colors.white70;
   static Color whiteSemiTransparent = const Color(0xFFF7F6FD);
   static Color grey = Colors.grey;
   static Color greyBg = const Color(0xfff0f0f0);
@@ -23,7 +24,9 @@ class ColorPalettes {
   static Color blueGrey = Colors.blueGrey;
   static Color black = const Color(0xFF000000);
   static Color black12 = Colors.black12;
+  static Color black18 = const Color.fromARGB(55, 0, 0, 0);
   static Color black26 = Colors.black26;
+  static Color black54 = Colors.black54;
   static Color transparent = const Color(0x00000000);
 
   static Color fontColor = const Color.fromARGB(255, 82, 82, 82);

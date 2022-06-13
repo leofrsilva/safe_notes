@@ -2,11 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../presenter/pages/drawer/drawer_menu_controller.dart';
+import '../../../presenter/stores/selection_store.dart';
 
 class FolderController {
-  final DrawerMenuController drawerMenu;
+  final SelectionStore selection;
+  final DrawerMenuController _drawerMenu;
 
-  FolderController(this.drawerMenu) {
+  FolderController(
+    this._drawerMenu,
+    this.selection,
+  ) {
     _folderParent = ValueNotifier<FolderQtdChildView>(
       FolderQtdChildView(
         id: 0,
@@ -25,8 +30,8 @@ class FolderController {
 
   set folder(FolderQtdChildView folder) {
     _folderParent.value = folder;
-    drawerMenu.selectedMenuItem.value = folder.id;
-    drawerMenu.moduleFolderSaveFolderParent(folder);
+    _drawerMenu.selectedMenuItem.value = folder.id;
+    _drawerMenu.moduleFolderSaveFolderParent(folder);
   }
 
   FolderQtdChildView get folder => _folderParent.value;

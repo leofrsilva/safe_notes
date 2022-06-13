@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
+import '../../../presenter/enum/mode_note_enum.dart';
 import '../../../presenter/mixin/template_page_mixin.dart';
-import '../../../presenter/pages/drawer/drawer_menu_controller.dart';
-import '../../add_or_edit_note/presenter/enum/mode_note_enum.dart';
 import 'favorites_controller.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -56,6 +55,7 @@ class _FavoritesPageState extends State<FavoritesPage> with TemplatePageMixin {
                     .favorites
                     .isNotEmpty) {
                   return SingleChildScrollView(
+                    controller: super.scrollController,
                     child: Wrap(
                       alignment: WrapAlignment.start,
                       children: super

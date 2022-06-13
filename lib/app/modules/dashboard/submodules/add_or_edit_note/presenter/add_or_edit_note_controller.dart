@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
-import 'package:safe_notes/app/shared/database/models/note_model.dart';
+import '../../../presenter/enum/mode_note_enum.dart';
 import '../domain/usecases/i_note_usecases.dart';
-import 'enum/mode_note_enum.dart';
+import 'stores/expanded_store.dart';
+import 'stores/input_field_note_store.dart';
+import 'stores/scroll_in_top_store.dart';
 
 class AddOrEditNoteController {
   final IAddNoteUsecase _addNoteUsecase;
@@ -12,70 +14,58 @@ class AddOrEditNoteController {
   final IDeleteNoteEmptyUsecase _deleteNoteEmptyUsecase;
 
   final ExpandedStore expandedStore;
+  final InputFieldNoteStore noteFields;
   final ScrollInTopStore scrollInTopStore;
 
   AddOrEditNoteController(
     this._addNoteUsecase,
     this._editNoteUsecase,
     this._deleteNoteEmptyUsecase,
+    this.noteFields,
     this.expandedStore,
     this.scrollInTopStore,
   );
 
-  Timer? _debounceTitle;
-
-  onChangedTitle(BuildContext context, String text) {
-    if (_debounceTitle?.isActive ?? false) _debounceTitle!.cancel();
-    _debounceTitle = Timer(const Duration(milliseconds: 500), () {
-      title = text.trim();
-      if (mode == ModeNoteEnum.edit) {
-        editNote(context);
-      } else {
-        addNote(context);
-      }
-    });
-  }
-
-  Timer? _debounceBody;
-
-  onChangedBody(BuildContext context, String text) {
-    if (_debounceBody?.isActive ?? false) _debounceBody!.cancel();
-    _debounceBody = Timer(const Duration(milliseconds: 500), () {
-      body = text;
-      if (mode == ModeNoteEnum.edit) {
-        editNote(context);
-      } else {
-        addNote(context);
-      }
-    });
-  }
-
   ModeNoteEnum mode = ModeNoteEnum.add;
-  NoteModel noteModel = NoteModel.empty();
 
-  void changeFavorite(BuildContext context) {
-    noteModel = noteModel.copyWith(favorite: !noteModel.favorite);
-    if (mode == ModeNoteEnum.edit) {
-      editNote(context);
-    } else {
-      addNote(context);
-    }
+  changeFavorite(BuildContext context) {
+    noteFields.onChangeFavorite(() {
+      if (mode == ModeNoteEnum.edit) {
+        editNote(context);
+      } else {
+        addNote(context);
+      }
+    });
   }
 
-  set folderId(int id) {
-    noteModel = noteModel.copyWith(folderId: id);
+  changedTitle(BuildContext context, String text) {
+    noteFields.onChangedTitle(
+      text,
+      callback: () {
+        if (mode == ModeNoteEnum.edit) {
+          editNote(context);
+        } else {
+          addNote(context);
+        }
+      },
+    );
   }
 
-  set title(String title) {
-    noteModel = noteModel.copyWith(title: title);
-  }
-
-  set body(String body) {
-    noteModel = noteModel.copyWith(body: body);
+  changedBody(BuildContext context, String text) {
+    noteFields.onChangedBody(
+      text,
+      callback: () {
+        if (mode == ModeNoteEnum.edit) {
+          editNote(context);
+        } else {
+          addNote(context);
+        }
+      },
+    );
   }
 
   Future<void> addNote(BuildContext context) async {
-    final either = await _addNoteUsecase.call(noteModel);
+    final either = await _addNoteUsecase.call(noteFields.model);
     either.fold(
       (failure) {
         SnackbarError.show(
@@ -88,8 +78,8 @@ class AddOrEditNoteController {
   }
 
   Future<void> editNote(BuildContext context) async {
-    noteModel = noteModel.copyWith(dateModification: DateTime.now());
-    final either = await _editNoteUsecase.call(noteModel);
+    noteFields.nowDateModification();
+    final either = await _editNoteUsecase.call(noteFields.model);
     if (either.isLeft()) {
       SnackbarError.show(
         context,
@@ -98,13 +88,15 @@ class AddOrEditNoteController {
     }
   }
 
-  Future<void> delete() async {
-    if (noteModel.title.isEmpty && noteModel.body.isEmpty) {
-      final either = await _deleteNoteEmptyUsecase.call(noteModel);
-      either.fold(
-        (failure) {},
-        (_) {},
-      );
+  Future<void> delete(BuildContext context) async {
+    if (noteFields.model.title.isEmpty && noteFields.model.body.isEmpty) {
+      final either = await _deleteNoteEmptyUsecase.call(noteFields.model);
+      if (either.isLeft()) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao deletar Nota!',
+        );
+      }
     }
   }
 }

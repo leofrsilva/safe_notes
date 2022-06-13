@@ -1,4 +1,3 @@
-import 'package:safe_notes/app/shared/database/models/note_model.dart';
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../reactive/reactive_list_folder.dart';

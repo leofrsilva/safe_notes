@@ -16,7 +16,9 @@ abstract class IReactiveListNote extends ValueNotifier<List<NoteModel>> {
 
   List<NoteModel> get favorites;
 
-  List<NoteModel> listNoteByFolder(int folderId, bool orderByDesc);
+  List<NoteModel> listNoteByFolder(int folderId, {bool orderByDesc = true});
+
+  List<NoteModel> searchNote(String text);
 
   // DELETED
   List<NoteModel> get listNoteDeleted;

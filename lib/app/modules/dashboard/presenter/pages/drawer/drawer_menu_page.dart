@@ -7,7 +7,7 @@ import 'package:safe_notes/app/modules/dashboard/presenter/widgets/ladder_folder
 import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 
-import '../../../submodules/folder/folders_module.dart';
+import '../../../submodules/folder/folder_module.dart';
 import '../../../submodules/folder/presenter/folder_controller.dart';
 import '../../dashboard_controller.dart';
 import '../../../../../design/widgets/menu/button_manage_folders.dart';

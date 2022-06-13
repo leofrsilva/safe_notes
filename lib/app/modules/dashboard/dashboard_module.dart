@@ -22,7 +22,7 @@ import 'presenter/dashboard_page.dart';
 import 'presenter/stores/list_folders_store.dart';
 import 'presenter/stores/list_notes_store.dart';
 import 'submodules/add_or_edit_note/add_or_edit_note_module.dart';
-import 'submodules/folder/folders_module.dart';
+import 'submodules/folder/folder_module.dart';
 import 'submodules/manager_folders/manager_folders_module.dart';
 import 'submodules/favorites/favorites_module.dart';
 import 'submodules/lixeira/lixeira_module.dart';

@@ -5,7 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'pages/drawer/drawer_menu_page.dart';
 import 'pages/drawer/drawer_menu_controller.dart';
-import 'widgets/clip_view_port.dart';
+import 'widgets/clip_view_port_widget.dart';
 
 class DashboardPage extends StatelessWidget {
   DashboardPage({Key? key}) : super(key: key);
@@ -39,22 +39,33 @@ class DashboardPage extends StatelessWidget {
                     drawerMenuController.closeDrawer();
                   }
                 },
-                child: ClipViewPort(
+                child: ClipViewPortWidget(
                   child: Stack(
                     children: [
                       const RouterOutlet(),
-                      if (drawerMenuController.isShowDrawer.value)
-                        ModalBarrier(
-                          color: ColorPalettes.black12,
-                          onDismiss: () {
-                            if (drawerMenuController.isShowDrawer.value) {
-                              drawerMenuController.closeDrawer();
-                            }
-                          },
+                      AnimatedCrossFade(
+                        crossFadeState: drawerMenuController.isShowDrawer.value
+                            ? CrossFadeState.showSecond
+                            : CrossFadeState.showFirst,
+                        duration: drawerMenuController.duration,
+                        firstCurve: drawerMenuController.curve,
+                        secondCurve: drawerMenuController.curve,
+                        firstChild: Container(),
+                        secondChild: SizedBox(
+                          width: Sizes.width(context),
+                          height: Sizes.height(context),
+                          child: ModalBarrier(
+                            color: ColorPalettes.black26,
+                            onDismiss: () {
+                              if (drawerMenuController.isShowDrawer.value) {
+                                drawerMenuController.closeDrawer();
+                              }
+                            },
+                          ),
                         ),
+                      ),
                     ],
                   ),
-                  curve: drawerMenuController.curve,
                   duration: drawerMenuController.duration,
                   isShowDrawer: drawerMenuController.isShowDrawer.value,
                 ),

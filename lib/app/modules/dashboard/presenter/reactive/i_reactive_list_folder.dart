@@ -30,6 +30,8 @@ abstract class IReactiveListFolder {
 
   List<FolderQtdChildView> childrensFolder(int folderId);
 
+  List<FolderQtdChildView> listDescendants(FolderQtdChildView folder);
+
   // Function for Name Folder
   int qtdNameFolder(int parentId, int level);
 

@@ -54,7 +54,7 @@ class ReactiveListNote extends IReactiveListNote {
   }
 
   @override
-  List<NoteModel> listNoteByFolder(int folderId, bool orderByDesc) {
+  List<NoteModel> listNoteByFolder(int folderId, {bool orderByDesc = true}) {
     if (orderByDesc) {
       value.sort((previous, posterior) {
         return posterior.dateModification.compareTo(previous.dateModification);
@@ -66,6 +66,16 @@ class ReactiveListNote extends IReactiveListNote {
     }
     return value
         .where((note) => note.isDeleted == false && note.folderId == folderId)
+        .toList();
+  }
+
+  @override
+  List<NoteModel> searchNote(String text) {
+    if (text.isEmpty) return [];
+    return value
+        .where((note) =>
+            note.title.toLowerCase().contains(text.toLowerCase()) ||
+            note.body.toLowerCase().contains(text.toLowerCase()))
         .toList();
   }
 

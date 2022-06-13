@@ -11,15 +11,15 @@ class TextOverflowField extends StatefulWidget {
 
   final Curve? curve;
   final Duration duration;
-  final bool canRequestFocus;
   final TextEditingController controller;
 
   final TextStyle? style;
   final String? hintText;
   final TextStyle? hintStyle;
   final InputBorder? border;
-
   final Function(String)? onChanged;
+
+  final bool? canRequestFocus;
   final Function()? onTapTextField;
 
   const TextOverflowField({
@@ -36,11 +36,11 @@ class TextOverflowField extends StatefulWidget {
     this.hintStyle,
     this.border = InputBorder.none,
     //
-    this.onChanged,
     this.onTapTextField,
-    //
-    required this.controller,
     this.canRequestFocus = true,
+    //
+    this.onChanged,
+    required this.controller,
     this.duration = const Duration(milliseconds: 500),
     this.curve,
   }) : super(key: key);
@@ -54,7 +54,6 @@ class TextOverflowField extends StatefulWidget {
 class TextFieldOverflowState extends State<TextOverflowField> {
   bool _isFocus = false;
   late FocusNode _focusNodeTextField;
-  // late FocusNode _focusNodeContainer;
   late bool canRequestFocus;
 
   toggleFocus(bool value) {
@@ -64,35 +63,29 @@ class TextFieldOverflowState extends State<TextOverflowField> {
   }
 
   Widget _buildTextField(TextStyle style) {
-    return Focus(
-      // focusNode: _focusNodeContainer,
-      onFocusChange: (hasFocus) {
-        print('== Perdeu Focus do Container ==');
-      },
-      child: Container(
-        height: widget.height,
-        width: widget.minWidth,
-        padding: EdgeInsets.only(top: widget.spaceTop),
-        alignment: AlignmentDirectional.centerStart,
-        child: TextField(
-          style: style,
-          focusNode: _focusNodeTextField,
-          controller: widget.controller,
-          maxLines: widget.maxLines,
-          textAlign: TextAlign.start,
-          onChanged: widget.onChanged,
-          onTap: widget.onTapTextField,
-          decoration: InputDecoration(
-            isDense: true,
-            focusedBorder: InputBorder.none,
-            contentPadding: EdgeInsets.only(
-              left: widget.spaceLeft,
-              right: widget.spaceRight,
-            ),
-            hintText: widget.hintText,
-            hintStyle: widget.hintStyle,
-            border: widget.border,
+    return Container(
+      height: widget.height,
+      width: widget.minWidth,
+      padding: EdgeInsets.only(top: widget.spaceTop),
+      alignment: AlignmentDirectional.centerStart,
+      child: TextField(
+        style: style,
+        focusNode: _focusNodeTextField,
+        controller: widget.controller,
+        maxLines: widget.maxLines,
+        textAlign: TextAlign.start,
+        onChanged: widget.onChanged,
+        onTap: widget.onTapTextField,
+        decoration: InputDecoration(
+          isDense: true,
+          focusedBorder: InputBorder.none,
+          contentPadding: EdgeInsets.only(
+            left: widget.spaceLeft,
+            right: widget.spaceRight,
           ),
+          hintText: widget.hintText,
+          hintStyle: widget.hintStyle,
+          border: widget.border,
         ),
       ),
     );
@@ -149,7 +142,6 @@ class TextFieldOverflowState extends State<TextOverflowField> {
 
   void verifyFocus() {
     if (!(FocusScope.of(context).focusedChild == _focusNodeTextField)) {
-      print('-- Perdeu o Foco --');
       toggleFocus(false);
     }
   }
@@ -157,29 +149,26 @@ class TextFieldOverflowState extends State<TextOverflowField> {
   @override
   void initState() {
     super.initState();
-    // _focusNodeContainer = FocusNode();
     _focusNodeTextField = FocusNode();
     _focusNodeTextField.addListener(verifyFocus);
-    canRequestFocus = widget.canRequestFocus;
+    canRequestFocus = widget.canRequestFocus ?? true;
   }
 
   @override
   void didUpdateWidget(covariant TextOverflowField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    canRequestFocus = widget.canRequestFocus;
+    canRequestFocus = widget.canRequestFocus ?? true;
   }
 
   @override
   void dispose() {
     _focusNodeTextField.removeListener(verifyFocus);
     _focusNodeTextField.dispose();
-    // _focusNodeContainer.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    FocusScope.of(context).addListener(verifyFocus);
     var style = widget.style ?? DefaultTextStyle.of(context).style;
 
     return AnimatedCrossFade(
@@ -188,8 +177,11 @@ class TextFieldOverflowState extends State<TextOverflowField> {
       secondCurve: widget.curve ?? Curves.easeInOutExpo,
       firstChild: _buildTextField(style),
       secondChild: _overflowReplacement(style),
-      crossFadeState:
-          _isFocus ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+      crossFadeState: widget.canRequestFocus == null
+          ? CrossFadeState.showSecond
+          : _isFocus
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
     );
   }
 }

@@ -7,11 +7,13 @@ class CardFolder extends StatelessWidget {
   final Color? color;
   final Color background;
   final Function()? onTap;
+  final Function()? onLongPress;
 
   const CardFolder({
     Key? key,
     this.color,
     this.onTap,
+    this.onLongPress,
     required this.qtd,
     required this.title,
     required this.background,
@@ -28,6 +30,7 @@ class CardFolder extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Container(
         width: size * 0.925,
         height: size * 0.765,
@@ -57,7 +60,6 @@ class CardFolder extends StatelessWidget {
               top: -(size * 0.117),
               left: -(size * 0.035),
               child: Stack(
-                // alignment: Alignment.center,
                 children: [
                   Positioned(
                     left: 0.75,
