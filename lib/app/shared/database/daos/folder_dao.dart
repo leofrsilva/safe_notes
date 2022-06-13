@@ -1,7 +1,6 @@
 import 'package:floor/floor.dart';
 
 import '../entities/folder_entity.dart';
-import '../views/folder_qtd_child_view.dart';
 
 @dao
 abstract class FolderDAO {
@@ -18,7 +17,7 @@ abstract class FolderDAO {
   Future<FolderEntity?> findFolder(int folderId);
 
   @Query('SELECT * FROM FolderQtdChild ORDER BY id')
-  Stream<List<FolderQtdChildView>> getFoldersQtdChild();
+  Stream<List<FolderEntity>> getFoldersQtdChild();
 
   //
   @Query('SELECT * FROM Folder WHERE folder_parent = :folderId')

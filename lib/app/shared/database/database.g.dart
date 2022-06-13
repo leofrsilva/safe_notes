@@ -95,8 +95,6 @@ class _$AppDatabase extends AppDatabase {
             .execute('CREATE UNIQUE INDEX `index_Tag_name` ON `Tag` (`name`)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_Tag_color` ON `Tag` (`color`)');
-        await database.execute(
-            'CREATE VIEW IF NOT EXISTS `FolderQtdChild` AS     SELECT \n      F.id,\n      F.name,\n      F.level, \n      F.color,\n      F.is_deleted AS isDeleted,\n      F.folder_parent AS parentId,  \n      (SELECT COUNT(id) \n       FROM Folder \n       WHERE (level = F.level + 1) AND\n             (folder_parent = F.id) AND\n             (is_deleted = 0)\n      ) \n      +\n      (SELECT COUNT(id) \n       FROM Note \n       WHERE (folder_id = F.id) AND\n             (is_deleted = 0)\n      )\n      as qtd\n    FROM Folder F\n    GROUP BY id\n  ');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -188,19 +186,21 @@ class _$FolderDAO extends FolderDAO {
   }
 
   @override
-  Stream<List<FolderQtdChildView>> getFoldersQtdChild() {
+  Stream<List<FolderEntity>> getFoldersQtdChild() {
     return _queryAdapter.queryListStream(
         'SELECT * FROM FolderQtdChild ORDER BY id',
-        mapper: (Map<String, Object?> row) => FolderQtdChildView(
-            parentId: row['parentId'] as int?,
-            id: row['id'] as int,
-            qtd: row['qtd'] as int,
-            name: row['name'] as String,
+        mapper: (Map<String, Object?> row) => FolderEntity(
+            folderId: row['id'] as int,
+            folderParent: row['folder_parent'] as int?,
+            dateCreate: row['date_create'] as String,
+            dateModification: row['date_modification'] as String,
+            userId: row['user_id'] as String,
             level: row['level'] as int,
+            name: row['name'] as String,
             color: row['color'] as int,
-            isDeleted: row['isDeleted'] as int),
-        queryableName: 'FolderQtdChild',
-        isView: true);
+            isDeleted: row['is_deleted'] as int),
+        queryableName: 'Folder',
+        isView: false);
   }
 
   @override
@@ -392,8 +392,7 @@ class _$TagDAO extends TagDAO {
                   'id': item.id,
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
-                },
-            changeListener),
+                }),
         _tagEntityUpdateAdapter = UpdateAdapter(
             database,
             'Tag',
@@ -406,8 +405,7 @@ class _$TagDAO extends TagDAO {
                   'id': item.id,
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 

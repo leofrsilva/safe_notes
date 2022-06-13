@@ -1,5 +1,4 @@
 import 'package:safe_notes/app/design/common/common.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import 'models/folder_model.dart';
 
@@ -33,15 +32,5 @@ class DefaultDatabase {
         color: colorFolderDefault,
         dateCreate: DateTime.now(),
         dateModification: DateTime.now(),
-      );
-
-  static FolderQtdChildView get folderQtdChildViewDefault => FolderQtdChildView(
-        id: folderIdDefault,
-        qtd: 0,
-        level: 0,
-        isDeleted: 0,
-        name: 'Pastas',
-        color: colorFolderDefault,
-        parentId: null,
       );
 }
