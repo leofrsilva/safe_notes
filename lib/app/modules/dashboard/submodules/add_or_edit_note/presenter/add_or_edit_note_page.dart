@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/floating_button/floating_button_for_top.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../presenter/enum/mode_enum.dart';
 import 'add_or_edit_note_controller.dart';
@@ -15,7 +15,7 @@ class AddOrEditNotePage extends StatefulWidget {
   final ModeNoteEnum mode;
 
   final NoteModel note;
-  final FolderQtdChildView folder;
+  final FolderModel folder;
 
   const AddOrEditNotePage({
     Key? key,
@@ -64,7 +64,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
 
     _controller.mode = widget.mode;
     _controller.noteFields.model = widget.note;
-    _controller.noteFields.folderId = widget.folder.id;
+    _controller.noteFields.folderId = widget.folder.folderId;
 
     if (widget.mode == ModeNoteEnum.edit) {
       noAllowRequestFocus();

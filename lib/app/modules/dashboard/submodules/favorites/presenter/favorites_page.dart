@@ -29,7 +29,7 @@ class _FavoritesPageState extends State<FavoritesPage> with TemplatePageMixin {
   Widget get body => Padding(
         padding: const EdgeInsets.all(14.0),
         child: ScopedBuilder.transition(
-          store: super.drawerMenu.shared.listFoldersStore,
+          store: super.drawerMenu.listFieldsStore.listFoldersStore,
           onLoading: (context) => const Center(
             child: CircularProgressIndicator.adaptive(),
           ),
@@ -46,12 +46,12 @@ class _FavoritesPageState extends State<FavoritesPage> with TemplatePageMixin {
           },
           onState: (context, _) {
             return AnimatedBuilder(
-              animation: super.drawerMenu.shared.reactiveNotes,
+              animation: super.drawerMenu.listFieldsStore.reactive,
               builder: (context, child) {
                 if (super
                     .drawerMenu
-                    .shared
-                    .reactiveNotes
+                    .listFieldsStore
+                    .reactive
                     .favorites
                     .isNotEmpty) {
                   return SingleChildScrollView(
@@ -60,8 +60,8 @@ class _FavoritesPageState extends State<FavoritesPage> with TemplatePageMixin {
                       alignment: WrapAlignment.start,
                       children: super
                           .drawerMenu
-                          .shared
-                          .reactiveNotes
+                          .listFieldsStore
+                          .reactive
                           .favorites
                           .map((note) {
                         return CardNote(
@@ -76,8 +76,8 @@ class _FavoritesPageState extends State<FavoritesPage> with TemplatePageMixin {
                                 note,
                                 super
                                     .drawerMenu
-                                    .shared
-                                    .reactiveFolders
+                                    .listFieldsStore
+                                    .reactive
                                     .getFolder(note.folderId),
                               ],
                             );

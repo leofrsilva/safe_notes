@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
@@ -42,8 +41,7 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
           showSearch(
             context: context,
             delegate: CustomSearchDelegate(
-              reactiveListNote: super.drawerMenu.shared.reactiveNotes,
-              reactiveListFolder: super.drawerMenu.shared.reactiveFolders,
+              reactiveList: super.drawerMenu.listFieldsStore.reactive,
             ),
           );
         },
@@ -82,13 +80,13 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
               padding: const EdgeInsets.only(left: 20.0),
               child: CheckboxAllWidget(
                 selected: _controller.selection.checkQuantityNoteSelected(
-                  super.drawerMenu.shared.reactiveNotes.qtdNotes,
+                  super.drawerMenu.listFieldsStore.reactive.qtdNotes,
                 ),
                 onChanged: (value) {
                   value = value ?? false;
                   if (value) {
                     _controller.selection.addAllItemNoteToSelection(
-                      super.drawerMenu.shared.reactiveNotes.listAllNote(),
+                      super.drawerMenu.listFieldsStore.reactive.listAllNote(),
                     );
                   } else {
                     _controller.selection.clearNotes();
@@ -96,11 +94,11 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
                 },
                 onTap: () {
                   var value = _controller.selection.checkQuantityNoteSelected(
-                    super.drawerMenu.shared.reactiveNotes.qtdNotes,
+                    super.drawerMenu.listFieldsStore.reactive.qtdNotes,
                   );
                   if (value) {
                     _controller.selection.addAllItemNoteToSelection(
-                      super.drawerMenu.shared.reactiveNotes.listAllNote(),
+                      super.drawerMenu.listFieldsStore.reactive.listAllNote(),
                     );
                   } else {
                     _controller.selection.clearNotes();
@@ -135,7 +133,7 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14.0),
               child: ScopedBuilder.transition(
-                store: super.drawerMenu.shared.listFoldersStore,
+                store: super.drawerMenu.listFieldsStore.listFoldersStore,
                 onLoading: (context) => const Center(
                   child: CircularProgressIndicator.adaptive(),
                 ),
@@ -152,12 +150,12 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
                 },
                 onState: (context, _) {
                   return AnimatedBuilder(
-                    animation: super.drawerMenu.shared.reactiveNotes,
+                    animation: super.drawerMenu.listFieldsStore.reactive,
                     builder: (context, child) {
                       var listNotes = super
                           .drawerMenu
-                          .shared
-                          .reactiveNotes
+                          .listFieldsStore
+                          .reactive
                           .listAllNote(orderByDesc: ordeByDesc);
 
                       if (listNotes.isNotEmpty) {
@@ -175,8 +173,8 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
                                   ordeByDesc: ordeByDesc,
                                   listNotes: listNotes,
                                   noteSelecteds: noteSelecteds,
-                                  reactiveFolders:
-                                      super.drawerMenu.shared.reactiveFolders,
+                                  reactive:
+                                      super.drawerMenu.listFieldsStore.reactive,
                                   onPressedOrder: () {
                                     setState(() => ordeByDesc = !ordeByDesc);
                                   },
@@ -253,7 +251,7 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
             arguments: [
               ModeNoteEnum.add,
               NoteModel.empty(),
-              DefaultDatabase.folderQtdChildViewDefault,
+              DefaultDatabase.folderDefault
             ],
           );
         },

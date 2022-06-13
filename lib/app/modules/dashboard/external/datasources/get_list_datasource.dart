@@ -1,10 +1,10 @@
 import 'package:safe_notes/app/shared/database/daos/note_dao.dart';
+import 'package:safe_notes/app/shared/database/entities/folder_entity.dart';
 import 'package:safe_notes/app/shared/database/entities/note_entity.dart';
 import 'package:sqlite3/sqlite3.dart';
 // ignore: implementation_imports
 import 'package:sqflite_common/src/exception.dart' as exception;
 import 'package:safe_notes/app/shared/database/daos/folder_dao.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../domain/errors/folder_failures.dart';
 import '../../infra/datasources/i_get_list_datasource.dart';
@@ -18,21 +18,21 @@ class GetListDatasource extends IGetListDatasource {
   );
 
   @override
-  Stream<List<FolderQtdChildView>> getFoldersQtdChild() {
+  Stream<List<FolderEntity>> getFolders() {
     try {
-      final list = _folderDAO.getFoldersQtdChild();
+      final list = _folderDAO.getFolders();
       return list;
     } on SqliteException catch (error, stackTrace) {
       throw GetListFoldersSqliteError(
         stackTrace,
-        'GetListDatasource.getFoldersQtdChild',
+        'GetListDatasource.getFolders',
         error,
         error.message,
       );
     } on exception.SqfliteDatabaseException catch (error, stackTrace) {
       throw GetListFoldersSqliteError(
         stackTrace,
-        'GetListDatasource.getFoldersQtdChild',
+        'GetListDatasource.getFolders',
         error,
         error.message ?? '',
       );

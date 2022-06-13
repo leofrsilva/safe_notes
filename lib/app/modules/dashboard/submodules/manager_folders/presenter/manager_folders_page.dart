@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 
+import '../../../presenter/reactive/reactive_list.dart';
 import '../../../presenter/reactive/reactive_list_folder.dart';
 import 'manager_folders_controller.dart';
 import 'widgets/ladder_folder_manager.dart';
@@ -14,14 +15,14 @@ class ManagerFoldersPage extends StatefulWidget {
 }
 
 class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
-  late ReactiveListFolder _reactiveListFolder;
+  late ReactiveList _reactiveList;
   late ManagerFoldersController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = Modular.get<ManagerFoldersController>();
-    _reactiveListFolder = _controller.reactiveListFolder;
+    _reactiveList = _controller.reactiveList;
   }
 
   @override
@@ -45,10 +46,10 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               AnimatedBuilder(
-                animation: _reactiveListFolder,
+                animation: _reactiveList,
                 builder: (context, child) {
                   return LadderFolderManager(
-                    listFolders: _reactiveListFolder.listFolder,
+                    listFolders: _reactiveList.listFolder,
                   );
                 },
               ),
@@ -63,7 +64,7 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
               ),
               InkWell(
                 onTap: () => _controller.callAddSubFolderPage(
-                    context, _reactiveListFolder.listFolder.first),
+                    context, _reactiveList.listFolder.first),
                 child: Container(
                   height: 48,
                   decoration: BoxDecoration(

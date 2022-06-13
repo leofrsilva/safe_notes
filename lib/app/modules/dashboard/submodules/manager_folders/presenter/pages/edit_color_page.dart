@@ -3,16 +3,15 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
-import '../../../../../../shared/database/views/folder_qtd_child_view.dart';
 import '../manager_folders_controller.dart';
 import '../widgets/grid_selection_color.dart';
 
 class EditColorPage extends StatefulWidget {
-  final FolderQtdChildView folderQtdChildView;
+  final FolderModel folderModel;
 
   const EditColorPage({
     Key? key,
-    required this.folderQtdChildView,
+    required this.folderModel,
   }) : super(key: key);
 
   @override
@@ -29,12 +28,12 @@ class _EditColorPageState extends State<EditColorPage> {
     super.initState();
     _controller = Modular.get<ManagerFoldersController>();
     folder = folder.copyWith(
-      folderId: widget.folderQtdChildView.id,
+      folderId: widget.folderModel.folderId,
       userId: _controller.userUId,
-      name: widget.folderQtdChildView.name,
-      level: widget.folderQtdChildView.level,
-      color: widget.folderQtdChildView.color,
-      folderParent: widget.folderQtdChildView.parentId,
+      name: widget.folderModel.name,
+      level: widget.folderModel.level,
+      color: widget.folderModel.color,
+      folderParent: widget.folderModel.folderParent,
     );
   }
 

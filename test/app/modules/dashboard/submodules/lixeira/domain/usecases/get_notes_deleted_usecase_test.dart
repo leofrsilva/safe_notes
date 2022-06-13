@@ -15,7 +15,7 @@ void main() {
       'get notes deleted usecase GetNotesDeletedUsecase.Call | retorna uma Lista de NoteModel',
       () async {
     when(() => repository.getNotesDeleted()).thenAnswer(
-      (_) async => Right(listNote),
+      (_) async => Right(listNotes),
     );
 
     final usecase = GetNotesDeletedUsecase(repository);

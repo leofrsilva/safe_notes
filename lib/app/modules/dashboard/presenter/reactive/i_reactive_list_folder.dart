@@ -1,5 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 abstract class IReactiveListFolder {
   // Buffer
@@ -8,12 +7,12 @@ abstract class IReactiveListFolder {
   Map<int, bool> get getBufferExpanded;
 
   // Deleted
-  ValueNotifier<int> get deleted;
+  int get deleted;
 
-  List<FolderQtdChildView> get listFolderDeleted;
+  List<FolderModel> get listFolderDeleted;
 
   // Expanded
-  addAllFolder(List<FolderQtdChildView> folders);
+  addAllFolder(List<FolderModel> folders);
 
   expanded({required int folderId});
 
@@ -22,18 +21,18 @@ abstract class IReactiveListFolder {
   bool checkFolderIsExpanded(int id);
 
   // List Folder
-  FolderQtdChildView getFolder(int id);
+  FolderModel getFolder(int id);
 
   int qtdChildrenFolder(int folderId);
 
-  List<FolderQtdChildView> get listFolder;
+  List<FolderModel> get listFolder;
 
-  List<FolderQtdChildView> childrensFolder(int folderId);
+  List<FolderModel> childrensFolder(int folderId);
 
-  List<FolderQtdChildView> listDescendants(FolderQtdChildView folder);
+  List<FolderModel> listDescendants(FolderModel folder);
 
   // Function for Name Folder
   int qtdNameFolder(int parentId, int level);
 
-  bool checkNameAlreadyExists(FolderQtdChildView folderer);
+  bool checkNameAlreadyExists(FolderModel folderer);
 }

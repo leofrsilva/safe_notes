@@ -1,6 +1,6 @@
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
-List<FolderModel> listfolder = [
+List<FolderModel> listFolders = [
   folder,
   folder1,
   folder11,

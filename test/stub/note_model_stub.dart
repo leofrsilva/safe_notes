@@ -2,7 +2,7 @@ import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
 import 'folder_model_stub.dart';
 
-List<NoteModel> listNote = [
+List<NoteModel> listNotes = [
   note1,
   note2,
   note3,

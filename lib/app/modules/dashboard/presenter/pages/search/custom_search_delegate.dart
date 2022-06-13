@@ -4,15 +4,12 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 
 import '../../enum/mode_note_enum.dart';
-import '../../reactive/reactive_list_folder.dart';
-import '../../reactive/reactive_list_note.dart';
+import '../../reactive/reactive_list.dart';
 
 class CustomSearchDelegate extends SearchDelegate<String?> {
-  final ReactiveListNote reactiveListNote;
-  final ReactiveListFolder reactiveListFolder;
+  final ReactiveList reactiveList;
   CustomSearchDelegate({
-    required this.reactiveListNote,
-    required this.reactiveListFolder,
+    required this.reactiveList,
   });
 
   @override
@@ -49,7 +46,7 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
       child: SingleChildScrollView(
         child: Wrap(
           alignment: WrapAlignment.start,
-          children: reactiveListNote.searchNote(query).map((note) {
+          children: reactiveList.searchNote(query).map((note) {
             return CardNote(
               title: note.title,
               body: note.body,
@@ -60,7 +57,7 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
                   arguments: [
                     ModeNoteEnum.edit,
                     note,
-                    reactiveListFolder.getFolder(note.folderId),
+                    reactiveList.getFolder(note.folderId),
                   ],
                 );
               },
@@ -73,7 +70,7 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final listNotes = reactiveListNote.searchNote(query);
+    final listNotes = reactiveList.searchNote(query);
 
     if (listNotes.isEmpty) {
       return const Center(
@@ -89,7 +86,7 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
       child: SingleChildScrollView(
         child: Wrap(
           alignment: WrapAlignment.start,
-          children: reactiveListNote.searchNote(query).map((note) {
+          children: reactiveList.searchNote(query).map((note) {
             return CardNote(
               title: note.title,
               body: note.body,
@@ -100,7 +97,7 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
                   arguments: [
                     ModeNoteEnum.edit,
                     note,
-                    reactiveListFolder.getFolder(note.folderId),
+                    reactiveList.getFolder(note.folderId),
                   ],
                 );
               },

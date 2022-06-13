@@ -16,8 +16,8 @@ abstract class FolderDAO {
   @Query('SELECT * FROM Folder WHERE id = :folderId')
   Future<FolderEntity?> findFolder(int folderId);
 
-  @Query('SELECT * FROM FolderQtdChild ORDER BY id')
-  Stream<List<FolderEntity>> getFoldersQtdChild();
+  @Query('SELECT * FROM Folder ORDER BY id')
+  Stream<List<FolderEntity>> getFolders();
 
   //
   @Query('SELECT * FROM Folder WHERE folder_parent = :folderId')

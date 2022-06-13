@@ -15,7 +15,7 @@ void main() {
       'get list notes usecase GetListNotesUsecase.Call | retorna uma Stream de Lista de NoteModel',
       () {
     when(() => repository.getNotes()).thenAnswer(
-      (_) => Right(Stream.value(listNote)),
+      (_) => Right(Stream.value(listNotes)),
     );
 
     final usecase = GetListNotesUsecase(repository);

@@ -2,37 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../manager_folders_controller.dart';
 
 // ignore: must_be_immutable
 class DeleteFolderPage extends StatelessWidget {
-  final List<FolderQtdChildView> listFolderQtdChildView;
+  final List<FolderModel> listFolderModel;
   final _controller = Modular.get<ManagerFoldersController>();
-
-  FolderModel folder = FolderModel.empty();
 
   DeleteFolderPage({
     Key? key,
-    required this.listFolderQtdChildView,
+    required this.listFolderModel,
   }) : super(key: key);
 
   confirmDelete(BuildContext context) {
-    List<FolderModel> listModel =
-        listFolderQtdChildView.map((folderQtdChildView) {
+    FolderModel folder = FolderModel.empty();
+
+    List<FolderModel> listModel = listFolderModel.map((folderModel) {
       return folder.copyWith(
         isDeleted: true,
-        folderId: folderQtdChildView.id,
+        folderId: folderModel.folderId,
         userId: _controller.userUId,
-        name: folderQtdChildView.name,
-        level: folderQtdChildView.level,
-        color: folderQtdChildView.color,
-        folderParent: folderQtdChildView.parentId,
+        name: folderModel.name,
+        level: folderModel.level,
+        color: folderModel.color,
+        folderParent: folderModel.folderParent,
       );
     }).toList();
 
-    if (listFolderQtdChildView.length == 1) {
+    if (listFolderModel.length == 1) {
       _controller.deleteFolder(context, listModel);
     }
     Modular.to.pop();
@@ -82,9 +80,9 @@ class DeleteFolderPage extends StatelessWidget {
                               style: TextStyles.fieldStyle.copyWith(
                                 color: ColorPalettes.blueGrey,
                               ),
-                              text: 'Mover ${listFolderQtdChildView.length} ',
+                              text: 'Mover ${listFolderModel.length} ',
                               children: [
-                                if (listFolderQtdChildView.length > 1)
+                                if (listFolderModel.length > 1)
                                   const TextSpan(text: 'pastas para a Lixeira?')
                                 else
                                   const TextSpan(text: 'pasta para a Lixeira?'),

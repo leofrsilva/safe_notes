@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import '../../../presenter/pages/drawer/drawer_menu_controller.dart';
 import '../../../presenter/stores/selection_store.dart';
@@ -12,27 +12,30 @@ class FolderController {
     this._drawerMenu,
     this.selection,
   ) {
-    _folderParent = ValueNotifier<FolderQtdChildView>(
-      FolderQtdChildView(
-        id: 0,
-        qtd: 0,
+    _folderParent = ValueNotifier<FolderModel>(
+      FolderModel(
+        folderId: 0,
+        userId: '',
         name: '',
         level: 0,
         color: 0,
-        isDeleted: 0,
+        isDeleted: false,
+        folderParent: null,
+        dateCreate: DateTime.now(),
+        dateModification: DateTime.now(),
       ),
     );
   }
 
-  late ValueNotifier<FolderQtdChildView> _folderParent;
+  late ValueNotifier<FolderModel> _folderParent;
 
-  ValueNotifier<FolderQtdChildView> get folderParent => _folderParent;
+  ValueNotifier<FolderModel> get folderParent => _folderParent;
 
-  set folder(FolderQtdChildView folder) {
+  set folder(FolderModel folder) {
     _folderParent.value = folder;
-    _drawerMenu.selectedMenuItem.value = folder.id;
+    _drawerMenu.selectedMenuItem.value = folder.folderId;
     _drawerMenu.moduleFolderSaveFolderParent(folder);
   }
 
-  FolderQtdChildView get folder => _folderParent.value;
+  FolderModel get folder => _folderParent.value;
 }

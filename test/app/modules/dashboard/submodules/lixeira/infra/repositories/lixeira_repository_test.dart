@@ -13,7 +13,7 @@ void main() {
   group('lixeira repository getNotesDeleted | ', () {
     test('retorna uma Lista de NoteModel', () async {
       when(() => datasource.getNotesDeleted()).thenAnswer(
-        (_) async => listNote.map((model) => model.entity).toList(),
+        (_) async => listNotes.map((model) => model.entity).toList(),
       );
 
       final repository = LixeiraRepository(datasource);

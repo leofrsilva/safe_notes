@@ -74,6 +74,7 @@ class CustomTextFieldTitleNote extends StatelessWidget {
       duration: duration,
       height: expanded ? heightExpanded : heightNotExpanded,
       decoration: BoxDecoration(
+        // color:  ColorPalettes.transparent,
         color: Theme.of(context).backgroundColor,
         border: Border(
           bottom: BorderSide(
@@ -84,32 +85,6 @@ class CustomTextFieldTitleNote extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          AnimatedOpacity(
-            opacity: expanded ? 0.0 : 1.0,
-            duration: duration,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: SizedBox(
-                width: 50,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: iconActions,
-                ),
-              ),
-            ),
-          ),
-          AnimatedOpacity(
-            opacity: expanded ? 1.0 : 0.0,
-            duration: duration,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: iconFavorite(),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: iconArrow(context),
-          ),
           AnimatedPositioned(
             duration: duration,
             top: expanded ? 45 : top,
@@ -136,6 +111,32 @@ class CustomTextFieldTitleNote extends StatelessWidget {
               ],
             ),
           ),
+          AnimatedOpacity(
+            opacity: expanded ? 0.0 : 1.0,
+            duration: duration,
+            child: Align(
+              alignment: Alignment.topRight,
+              child: SizedBox(
+                width: 50,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: iconActions,
+                ),
+              ),
+            ),
+          ),
+          AnimatedOpacity(
+            opacity: expanded ? 1.0 : 0.0,
+            duration: duration,
+            child: Align(
+              alignment: Alignment.topRight,
+              child: iconFavorite(),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: iconArrow(context),
+          ),
         ],
       ),
     );
@@ -154,19 +155,36 @@ class CustomTextFieldTitleNote extends StatelessWidget {
   }
 
   Widget iconArrow(BuildContext context) {
-    return IconButton(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-      icon: AnimatedRotation(
-        turns: expanded ? 0.25 : 0.0,
-        duration: duration,
-        child: Icon(
-          Icons.keyboard_arrow_left,
-          color: turnsColor ?? Theme.of(context).primaryColor,
-          size: 32,
+    return InkWell(
+      onTap: onTapIcon,
+      borderRadius: BorderRadius.circular(50),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+        child: AnimatedRotation(
+          turns: expanded ? 0.25 : 0.0,
+          duration: duration,
+          child: Icon(
+            Icons.keyboard_arrow_left,
+            color: turnsColor ?? Theme.of(context).primaryColor,
+            size: 32,
+          ),
         ),
       ),
-      onPressed: onTapIcon,
     );
+    // return IconButton(
+    //   visualDensity: VisualDensity.compact,
+    //   padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+    //   icon: AnimatedRotation(
+    //     turns: expanded ? 0.25 : 0.0,
+    //     duration: duration,
+    //     child: Icon(
+    //       Icons.keyboard_arrow_left,
+    //       color: turnsColor ?? Theme.of(context).primaryColor,
+    //       size: 32,
+    //     ),
+    //   ),
+    //   onPressed: onTapIcon,
+    // );
   }
 
   Widget get _textField {

@@ -4,19 +4,19 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
-import '../../../../presenter/pages/drawer/drawer_menu_controller.dart';
-import '../../../../presenter/reactive/i_reactive_list_folder.dart';
+import '../../../../presenter/reactive/i_reactive_list.dart';
 import '../manager_folders_controller.dart';
 import '../widgets/grid_selection_color.dart';
 
 class AddFolderPage extends StatefulWidget {
-  final FolderQtdChildView folderQtdChildView;
+  final IReactiveList reactiveList;
+  final FolderModel folderModel;
 
   const AddFolderPage({
     Key? key,
-    required this.folderQtdChildView,
+    required this.reactiveList,
+    required this.folderModel,
   }) : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class AddFolderPage extends StatefulWidget {
 }
 
 class _AddFolderPageState extends State<AddFolderPage> {
-  late IReactiveListFolder _reactiveListFolder;
+  late IReactiveList _reactiveList;
   late TextEditingController _textEditingFolder;
   late ManagerFoldersController _controller;
   late GlobalKey<FormState> _formKey;
@@ -37,12 +37,12 @@ class _AddFolderPageState extends State<AddFolderPage> {
 
   String? validatorName(String? name) {
     if (name != null) {
-      var folderQtdChildView = widget.folderQtdChildView.copyWith(
+      var folderModel = widget.folderModel.copyWith(
         name: name,
-        level: widget.folderQtdChildView.level + 1,
-        parentId: widget.folderQtdChildView.id,
+        level: widget.folderModel.level + 1,
+        folderParent: widget.folderModel.folderId,
       );
-      if (_reactiveListFolder.checkNameAlreadyExists(folderQtdChildView)) {
+      if (_reactiveList.checkNameAlreadyExists(folderModel)) {
         return 'Já existe uma pasta com esse nome.';
       }
     }
@@ -50,9 +50,9 @@ class _AddFolderPageState extends State<AddFolderPage> {
   }
 
   String _generateDefaultNameFolder() {
-    int qtd = _reactiveListFolder.qtdNameFolder(
-      widget.folderQtdChildView.id,
-      widget.folderQtdChildView.level + 1,
+    int qtd = _reactiveList.qtdNameFolder(
+      widget.folderModel.folderId,
+      widget.folderModel.level + 1,
     );
     var name = 'Pasta ' + qtd.toString();
     return name;
@@ -72,16 +72,15 @@ class _AddFolderPageState extends State<AddFolderPage> {
   void initState() {
     super.initState();
     _controller = Modular.get<ManagerFoldersController>();
-    _reactiveListFolder =
-        Modular.get<DrawerMenuController>().shared.reactiveFolders;
+    _reactiveList = widget.reactiveList;
 
     var fieldName = _generateDefaultNameFolder();
     folder = folder.copyWith(
       name: fieldName,
       userId: _controller.userUId,
       color: DefaultDatabase.colorFolderDefault,
-      level: widget.folderQtdChildView.level + 1,
-      folderParent: widget.folderQtdChildView.id,
+      level: widget.folderModel.level + 1,
+      folderParent: widget.folderModel.folderId,
     );
     _textEditingFolder = TextEditingController(text: fieldName);
 

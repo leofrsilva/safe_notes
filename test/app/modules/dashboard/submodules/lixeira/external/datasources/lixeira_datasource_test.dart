@@ -24,7 +24,7 @@ void main() {
     noteDAO = database.noteDao;
     datasource = LixeiraDatasource(noteDAO);
 
-    for (var folder in listfolder) {
+    for (var folder in listFolders) {
       folderDAO.insertFolder(folder.entity);
     }
   });
@@ -38,7 +38,7 @@ void main() {
       await folderDAO.updateFolders([
         folder3.copyWith(isDeleted: true).entity,
       ]);
-      for (var note in listNote) {
+      for (var note in listNotes) {
         await noteDAO.insertNote(note.copyWith(isDeleted: true).entity);
       }
 

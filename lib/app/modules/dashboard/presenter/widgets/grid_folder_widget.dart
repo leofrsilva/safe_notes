@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
+import '../reactive/reactive_list.dart';
 import '../stores/selection_store.dart';
 
 class GridFolderWidget extends StatelessWidget {
   final bool selectable;
   final SelectionStore selection;
-  final List<FolderQtdChildView> listFolders;
-  final List<FolderQtdChildView> folderSelecteds;
+  final ReactiveList reactive;
 
-  final Function()? onTap;
+  final List<FolderModel> listFolders;
+  final List<FolderModel> folderSelecteds;
+
+  final Function(FolderModel) onTap;
   final Function() onLongPressCardFolder;
 
   const GridFolderWidget({
     Key? key,
     required this.selectable,
     required this.selection,
+    required this.reactive,
     required this.listFolders,
     required this.folderSelecteds,
     required this.onLongPressCardFolder,
-    this.onTap,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -34,7 +38,8 @@ class GridFolderWidget extends StatelessWidget {
         children: listFolders.map((folder) {
           if (selectable) {
             return CardFolderEditable(
-              qtd: folder.qtd,
+              qtd: 0,
+              // qtd: folder.qtd, //!//!ERROR
               title: folder.name,
               background: Color(folder.color),
               selected: folderSelecteds.contains(folder),
@@ -47,10 +52,10 @@ class GridFolderWidget extends StatelessWidget {
             );
           }
           return CardFolder(
-            qtd: folder.qtd,
+            qtd: reactive.numberChildrenInFolder(folder),
             title: folder.name,
             background: Color(folder.color),
-            onTap: onTap,
+            onTap: () => onTap(folder),
             onLongPress: () {
               onLongPressCardFolder.call();
               selection.toggleSelectable(true);

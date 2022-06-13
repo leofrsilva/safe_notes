@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
-import 'package:safe_notes/app/shared/database/views/list_folder_qtd_child_view.dart';
+import 'package:safe_notes/app/shared/database/models/folder_list_model.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import '../../../../presenter/pages/drawer/drawer_menu_controller.dart';
+import '../../../../presenter/reactive/reactive_list.dart';
 import '../../../../presenter/reactive/reactive_list_folder.dart';
 import '../manager_folders_controller.dart';
 
@@ -17,7 +18,7 @@ enum ActionFolder {
 }
 
 class LadderFolderManager extends StatefulWidget {
-  final List<FolderQtdChildView> listFolders;
+  final List<FolderModel> listFolders;
   const LadderFolderManager({
     Key? key,
     required this.listFolders,
@@ -29,11 +30,11 @@ class LadderFolderManager extends StatefulWidget {
 
 class _LadderFolderManagerState extends State<LadderFolderManager> {
   late ManagerFoldersController _managerFoldersController;
-  late ReactiveListFolder _reactiveListFolder;
+  late ReactiveList _reactiveList;
 
   bool modeEdit = false;
   List<int> listSelected = [];
-  ListFolderQtdChildView? folderers;
+  FolderListModel? folderers;
 
   void reorganization() {
     widget.listFolders.sort((previous, posterior) {
@@ -41,34 +42,34 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
     });
 
     if (widget.listFolders.isNotEmpty) {
-      folderers = ListFolderQtdChildView(current: widget.listFolders.first);
+      folderers = FolderListModel(current: widget.listFolders.first);
       insertChildrens(folderers!);
     }
   }
 
-  void insertChildrens(ListFolderQtdChildView listFolderQtdChildView) {
-    FolderQtdChildView currentFolder;
-    int parentId = listFolderQtdChildView.current.id;
-    int childLevel = listFolderQtdChildView.current.level + 1;
+  void insertChildrens(FolderListModel listFolderModel) {
+    FolderModel currentFolder;
+    int parentId = listFolderModel.current.folderId;
+    int childLevel = listFolderModel.current.level + 1;
 
     for (int i = 0; i < widget.listFolders.length; i++) {
       currentFolder = widget.listFolders[i];
 
       if (currentFolder.level == childLevel &&
-          currentFolder.parentId == parentId) {
-        var child = ListFolderQtdChildView(current: currentFolder);
+          currentFolder.folderParent == parentId) {
+        var child = FolderListModel(current: currentFolder);
         insertChildrens(child);
-        listFolderQtdChildView.childrens.add(child);
+        listFolderModel.childrens.add(child);
       }
     }
   }
 
   bool isExpanded(int folderId) {
-    return _reactiveListFolder.checkFolderIsExpanded(folderId);
+    return _reactiveList.checkFolderIsExpanded(folderId);
   }
 
   String qtdChildrenFolder(int folderId) {
-    int qtd = _reactiveListFolder.qtdChildrenFolder(folderId);
+    int qtd = _reactiveList.qtdChildrenFolder(folderId);
     if (qtd == 0) return '';
     return qtd.toString();
   }
@@ -77,8 +78,8 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
   void initState() {
     super.initState();
     _managerFoldersController = Modular.get<ManagerFoldersController>();
-    _reactiveListFolder =
-        Modular.get<DrawerMenuController>().shared.reactiveFolders;
+    _reactiveList =
+        Modular.get<DrawerMenuController>().listFieldsStore.reactive;
     reorganization();
   }
 
@@ -105,7 +106,7 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
       child: FolderExpansionTileWithPopup(
         keyPopUp: popupKey,
         initiallyExpanded: isExpanded(
-          folderers!.current.id,
+          folderers!.current.folderId,
         ),
         title: folderers!.current.name,
         fontColor: ColorPalettes.blueGrey,
@@ -114,7 +115,7 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         turnsColor: ColorPalettes.secondy.withOpacity(0.5),
         selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
         trailing: Text(
-          qtdChildrenFolder(folderers!.current.id),
+          qtdChildrenFolder(folderers!.current.folderId),
           style: TextStyle(
             color: ColorPalettes.secondy,
           ),
@@ -122,9 +123,9 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         children: generaterWidgetsFolders(context, folderers!.childrens),
         onExpansionChanged: (bool isExpanded) {
           if (isExpanded) {
-            _reactiveListFolder.expanded(folderId: folderers!.current.id);
+            _reactiveList.expanded(folderId: folderers!.current.folderId);
           } else {
-            _reactiveListFolder.notExpanded(folderId: folderers!.current.id);
+            _reactiveList.notExpanded(folderId: folderers!.current.folderId);
           }
         },
         //? onLongPress: () => setState(() => modeEdit = true),
@@ -154,7 +155,7 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
 
   List<Widget> generaterWidgetsFolders(
     BuildContext context,
-    List<ListFolderQtdChildView> listFolderChildrens,
+    List<FolderListModel> listFolderChildrens,
   ) {
     double padding = 4.0;
     List<Widget> list = [];
@@ -168,11 +169,13 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
       var popupKey = GlobalKey();
       list.add(
         CustomExpansionTileWithPopup(
-          selected: listSelected.contains(folderChild.current.id),
+          selected: listSelected.contains(
+            folderChild.current.folderId,
+          ),
           modeEdit: modeEdit,
           keyPopUp: popupKey,
           initiallyExpanded: isExpanded(
-            folderChild.current.id,
+            folderChild.current.folderId,
           ),
           spaceStart: padding,
           backgroundColor: ColorPalettes.transparent,
@@ -193,7 +196,9 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
             ),
           ),
           trailing: Text(
-            qtdChildrenFolder(folderChild.current.id),
+            qtdChildrenFolder(
+              folderChild.current.folderId,
+            ),
             style: TextStyle(
               color: ColorPalettes.secondy,
             ),
@@ -201,9 +206,9 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
           children: generaterWidgetsFolders(context, folderChild.childrens),
           onExpansionChanged: (bool isExpanded) {
             if (isExpanded) {
-              _reactiveListFolder.expanded(folderId: folderChild.current.id);
+              _reactiveList.expanded(folderId: folderChild.current.folderId);
             } else {
-              _reactiveListFolder.notExpanded(folderId: folderChild.current.id);
+              _reactiveList.notExpanded(folderId: folderChild.current.folderId);
             }
           },
           //? onLongPress: () {
@@ -215,20 +220,21 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
           onChangedCheck: (check) {
             if (check != null) {
               if (check) {
-                listSelected.remove(folderChild.current.id);
+                listSelected.remove(folderChild.current.folderId);
               } else {
-                listSelected.add(folderChild.current.id);
+                listSelected.add(folderChild.current.folderId);
               }
             }
           },
           onPressed: () async {
             if (modeEdit) {
-              var selected = listSelected.contains(folderChild.current.id);
+              var selected =
+                  listSelected.contains(folderChild.current.folderId);
               setState(() {
                 if (selected) {
-                  listSelected.remove(folderChild.current.id);
+                  listSelected.remove(folderChild.current.folderId);
                 } else {
-                  listSelected.add(folderChild.current.id);
+                  listSelected.add(folderChild.current.folderId);
                 }
               });
             } else {

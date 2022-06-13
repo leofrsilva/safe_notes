@@ -4,17 +4,19 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
-import '../../../../../../shared/database/views/folder_qtd_child_view.dart';
 import '../../../../presenter/pages/drawer/drawer_menu_controller.dart';
+import '../../../../presenter/reactive/i_reactive_list.dart';
 import '../../../../presenter/reactive/i_reactive_list_folder.dart';
 import '../manager_folders_controller.dart';
 
 class EditNamePage extends StatefulWidget {
-  final FolderQtdChildView folderQtdChildView;
+  final FolderModel folderModel;
+  final IReactiveList reactiveList;
 
   const EditNamePage({
     Key? key,
-    required this.folderQtdChildView,
+    required this.reactiveList,
+    required this.folderModel,
   }) : super(key: key);
 
   @override
@@ -23,8 +25,8 @@ class EditNamePage extends StatefulWidget {
 
 class _EditNamePageState extends State<EditNamePage> {
   late TextEditingController _textEditingFolder;
-  late IReactiveListFolder _reactiveListFolder;
   late ManagerFoldersController _controller;
+  late IReactiveList _reactiveList;
   late GlobalKey<FormState> _formKey;
   late FocusNode _focusNode;
 
@@ -35,8 +37,8 @@ class _EditNamePageState extends State<EditNamePage> {
 
   String? validatorName(String? name) {
     if (name != null) {
-      var folderQtdChildView = widget.folderQtdChildView.copyWith(name: name);
-      if (_reactiveListFolder.checkNameAlreadyExists(folderQtdChildView)) {
+      var folderModel = widget.folderModel.copyWith(name: name);
+      if (_reactiveList.checkNameAlreadyExists(folderModel)) {
         return 'Já existe uma pasta com esse nome.';
       }
     }
@@ -57,15 +59,15 @@ class _EditNamePageState extends State<EditNamePage> {
   void initState() {
     super.initState();
     _controller = Modular.get<ManagerFoldersController>();
-    _reactiveListFolder =
-        Modular.get<DrawerMenuController>().shared.reactiveFolders;
+    _reactiveList = widget.reactiveList;
+
     folder = folder.copyWith(
-      folderId: widget.folderQtdChildView.id,
+      folderId: widget.folderModel.folderId,
       userId: _controller.userUId,
-      name: widget.folderQtdChildView.name,
-      level: widget.folderQtdChildView.level,
-      color: widget.folderQtdChildView.color,
-      folderParent: widget.folderQtdChildView.parentId,
+      name: widget.folderModel.name,
+      level: widget.folderModel.level,
+      color: widget.folderModel.color,
+      folderParent: widget.folderModel.folderParent,
     );
     _textEditingFolder = TextEditingController(text: folder.name);
 
@@ -136,8 +138,7 @@ class _EditNamePageState extends State<EditNamePage> {
                                   if (name.isEmpty) {
                                     canAdd = false;
                                   } else if (name.isNotEmpty) {
-                                    if (name ==
-                                        widget.folderQtdChildView.name) {
+                                    if (name == widget.folderModel.name) {
                                       canAdd = false;
                                     } else if (name.length > 1) {
                                       canAdd = true;

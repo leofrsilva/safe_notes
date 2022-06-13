@@ -4,9 +4,9 @@ import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../presenter/pages/drawer/drawer_menu_controller.dart';
+import '../../../presenter/reactive/reactive_list.dart';
 import '../../../presenter/reactive/reactive_list_folder.dart';
 import '../../folder/presenter/folder_controller.dart';
 import '../domain/usecases/i_manager_folders_usecase.dart';
@@ -22,8 +22,8 @@ class ManagerFoldersController extends Disposable {
   final IDeleteFolderUsecase _deleteFolderUsecase;
   final DrawerMenuController _drawerMenuController;
 
-  ReactiveListFolder get reactiveListFolder =>
-      _drawerMenuController.shared.reactiveFolders;
+  ReactiveList get reactiveList =>
+      _drawerMenuController.listFieldsStore.reactive;
 
   ManagerFoldersController(
     this._appCore,
@@ -37,7 +37,7 @@ class ManagerFoldersController extends Disposable {
 
   callAddSubFolderPage(
     BuildContext context,
-    FolderQtdChildView folderQtdChildView,
+    FolderModel folderModel,
   ) {
     showDialog(
       context: context,
@@ -45,7 +45,8 @@ class ManagerFoldersController extends Disposable {
       barrierColor: Colors.black26,
       builder: (context) {
         return AddFolderPage(
-          folderQtdChildView: folderQtdChildView,
+          folderModel: folderModel,
+          reactiveList: reactiveList,
         );
       },
     );
@@ -53,7 +54,7 @@ class ManagerFoldersController extends Disposable {
 
   callEditNameFolderPage(
     BuildContext context,
-    FolderQtdChildView folderQtdChildView,
+    FolderModel folderModel,
   ) {
     showDialog(
       context: context,
@@ -61,7 +62,8 @@ class ManagerFoldersController extends Disposable {
       barrierColor: Colors.black26,
       builder: (context) {
         return EditNamePage(
-          folderQtdChildView: folderQtdChildView,
+          folderModel: folderModel,
+          reactiveList: reactiveList,
         );
       },
     );
@@ -69,7 +71,7 @@ class ManagerFoldersController extends Disposable {
 
   callEditColorFolderPage(
     BuildContext context,
-    FolderQtdChildView folderQtdChildView,
+    FolderModel folderModel,
   ) {
     showDialog(
       context: context,
@@ -77,20 +79,23 @@ class ManagerFoldersController extends Disposable {
       barrierColor: Colors.black26,
       builder: (context) {
         return EditColorPage(
-          folderQtdChildView: folderQtdChildView,
+          folderModel: folderModel,
         );
       },
     );
   }
 
-  callDeleteFolderPage(BuildContext context, List<FolderQtdChildView> folders) {
+  callDeleteFolderPage(
+    BuildContext context,
+    List<FolderModel> folders,
+  ) {
     showDialog(
       context: context,
       barrierDismissible: true,
       barrierColor: Colors.black26,
       builder: (context) {
         return DeleteFolderPage(
-          listFolderQtdChildView: folders,
+          listFolderModel: folders,
         );
       },
     );
@@ -104,7 +109,7 @@ class ManagerFoldersController extends Disposable {
           message: 'Erro ao registar Pasta!',
         );
       } else {
-        _drawerMenuController.shared.reactiveFolders
+        _drawerMenuController.listFieldsStore.reactive
             .expanded(folderId: folder.folderParent ?? 0);
       }
     });
@@ -138,9 +143,8 @@ class ManagerFoldersController extends Disposable {
         if (modFolder != null) {
           final controllerFolder = Modular.get<FolderController>();
           final ids = folders.map<int>((folder) => folder.folderId).toList();
-          if (ids.contains(controllerFolder.folder.id)) {
-            controllerFolder.folderParent.value =
-                DefaultDatabase.folderQtdChildViewDefault;
+          if (ids.contains(controllerFolder.folder.folderId)) {
+            controllerFolder.folderParent.value = DefaultDatabase.folderDefault;
           }
         }
       }
@@ -148,11 +152,11 @@ class ManagerFoldersController extends Disposable {
   }
 
   Future saveBuffer(Map<int, bool> mapBufferExpanded) async {
-    _drawerMenuController.shared.listFoldersStore.saveBuffer(mapBufferExpanded);
+    _drawerMenuController.listFieldsStore.saveBuffer(mapBufferExpanded);
   }
 
   @override
   void dispose() async {
-    await saveBuffer(reactiveListFolder.getBufferExpanded);
+    await saveBuffer(reactiveList.getBufferExpanded);
   }
 }

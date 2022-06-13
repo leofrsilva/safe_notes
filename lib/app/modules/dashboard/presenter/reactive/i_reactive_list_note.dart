@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
-abstract class IReactiveListNote extends ValueNotifier<List<NoteModel>> {
-  IReactiveListNote(List<NoteModel> value) : super(value);
-
+abstract class IReactiveListNote {
   addAllNotes(List<NoteModel> notes);
 
   // COUNTS

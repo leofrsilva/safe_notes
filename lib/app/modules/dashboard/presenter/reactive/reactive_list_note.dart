@@ -3,27 +3,27 @@ import 'package:safe_notes/app/shared/database/models/note_model.dart';
 import 'i_reactive_list_note.dart';
 
 class ReactiveListNote extends IReactiveListNote {
-  ReactiveListNote({List<NoteModel>? value}) : super(value ?? []);
+  List<NoteModel> _value = [];
 
   void _removeAllFolder() {
-    value.clear();
+    _value.clear();
   }
 
   @override
   void addAllNotes(List<NoteModel> notes) {
     _removeAllFolder();
-    value = notes;
+    _value = notes;
   }
 
   //* COUNTS
   @override
   int get qtdNotes {
-    return value.where((note) => note.isDeleted == false).length;
+    return _value.where((note) => note.isDeleted == false).length;
   }
 
   @override
   int get qtdFavorites {
-    return value
+    return _value
         .where((note) => note.isDeleted == false && note.favorite == true)
         .length;
   }
@@ -32,23 +32,23 @@ class ReactiveListNote extends IReactiveListNote {
   @override
   List<NoteModel> listAllNote({bool orderByDesc = true}) {
     if (orderByDesc) {
-      value.sort((previous, posterior) {
+      _value.sort((previous, posterior) {
         return posterior.dateModification.compareTo(previous.dateModification);
       });
     } else {
-      value.sort((previous, posterior) {
+      _value.sort((previous, posterior) {
         return previous.dateModification.compareTo(posterior.dateModification);
       });
     }
-    return value.where((note) => note.isDeleted == false).toList();
+    return _value.where((note) => note.isDeleted == false).toList();
   }
 
   @override
   List<NoteModel> get favorites {
-    value.sort((previous, posterior) {
+    _value.sort((previous, posterior) {
       return previous.dateModification.compareTo(posterior.dateModification);
     });
-    return value
+    return _value
         .where((note) => note.isDeleted == false && note.favorite == true)
         .toList();
   }
@@ -56,15 +56,15 @@ class ReactiveListNote extends IReactiveListNote {
   @override
   List<NoteModel> listNoteByFolder(int folderId, {bool orderByDesc = true}) {
     if (orderByDesc) {
-      value.sort((previous, posterior) {
+      _value.sort((previous, posterior) {
         return posterior.dateModification.compareTo(previous.dateModification);
       });
     } else {
-      value.sort((previous, posterior) {
+      _value.sort((previous, posterior) {
         return previous.dateModification.compareTo(posterior.dateModification);
       });
     }
-    return value
+    return _value
         .where((note) => note.isDeleted == false && note.folderId == folderId)
         .toList();
   }
@@ -72,7 +72,7 @@ class ReactiveListNote extends IReactiveListNote {
   @override
   List<NoteModel> searchNote(String text) {
     if (text.isEmpty) return [];
-    return value
+    return _value
         .where((note) =>
             note.title.toLowerCase().contains(text.toLowerCase()) ||
             note.body.toLowerCase().contains(text.toLowerCase()))
@@ -82,18 +82,18 @@ class ReactiveListNote extends IReactiveListNote {
   //* DELETED
   @override
   List<NoteModel> get listNoteDeleted {
-    value.sort((previous, posterior) {
+    _value.sort((previous, posterior) {
       return previous.dateModification.compareTo(posterior.dateModification);
     });
-    return value.where((note) => note.isDeleted == true).toList();
+    return _value.where((note) => note.isDeleted == true).toList();
   }
 
   @override
   List<NoteModel> listNoteByFolderDeleted(int folderId) {
-    value.sort((previous, posterior) {
+    _value.sort((previous, posterior) {
       return previous.dateModification.compareTo(posterior.dateModification);
     });
-    return value
+    return _value
         .where((note) => note.isDeleted == true && note.folderId == folderId)
         .toList();
   }

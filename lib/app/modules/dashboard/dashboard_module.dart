@@ -19,6 +19,7 @@ import 'infra/repositories/get_list_repository.dart';
 import 'presenter/pages/drawer/drawer_menu_controller.dart';
 import 'presenter/dashboard_controller.dart';
 import 'presenter/dashboard_page.dart';
+import 'presenter/stores/list_fields_store.dart';
 import 'presenter/stores/list_folders_store.dart';
 import 'presenter/stores/list_notes_store.dart';
 import 'submodules/add_or_edit_note/add_or_edit_note_module.dart';
@@ -65,18 +66,22 @@ class DashboardModule extends Module {
               i<ILeaveAuthUsecase>(),
             )),
         //
-        Bind.singleton<ListFoldersStore>(
-          (i) => ListFoldersStore(
-            i<IGetListFoldersUsecase>(),
-            i<FolderBufferExpandedStore>(),
-          ),
-        ),
         Bind.singleton<ListNotesStore>(
           (i) => ListNotesStore(i<IGetListNotesUsecase>()),
         ),
+        Bind.singleton<ListFoldersStore>(
+          (i) => ListFoldersStore(i<IGetListFoldersUsecase>()),
+        ),
+        Bind.singleton<ListFieldsStore>(
+          (i) => ListFieldsStore(
+            i<ListNotesStore>(),
+            i<ListFoldersStore>(),
+            i<FolderBufferExpandedStore>(),
+          ),
+        ),
+        //
         Bind.singleton((i) => DrawerMenuController(
-              i<ListFoldersStore>(),
-              i<ListNotesStore>(),
+              i<ListFieldsStore>(),
               i<ManagerRouteNavigatorStore>(),
             )),
       ];

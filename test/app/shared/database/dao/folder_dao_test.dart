@@ -3,7 +3,6 @@ import 'package:safe_notes/app/shared/database/daos/folder_dao.dart';
 import 'package:safe_notes/app/shared/database/database.dart';
 import 'package:safe_notes/app/shared/database/entities/folder_entity.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../../stub/folder_model_stub.dart';
 
@@ -66,15 +65,15 @@ void main() {
     expect(entity, isA<FolderEntity>());
   });
 
-  test('folder dao getFoldersQtdChild', () async {
+  test('folder dao getFolders', () async {
     var folder = folder4;
     await folderDAO.insertFolder(folder.entity);
 
-    final streamList = folderDAO.getFoldersQtdChild();
+    final streamList = folderDAO.getFolders();
 
     final list = await streamList.first;
 
-    expect(streamList, isA<Stream<List<FolderQtdChildView>>>());
-    expect(list, isA<List<FolderQtdChildView>>());
+    expect(streamList, isA<Stream<List<FolderEntity>>>());
+    expect(list, isA<List<FolderEntity>>());
   });
 }

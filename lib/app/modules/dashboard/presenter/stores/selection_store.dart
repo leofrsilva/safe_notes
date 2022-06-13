@@ -1,6 +1,6 @@
 import 'package:rx_notifier/rx_notifier.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 class SelectionStore {
   final _selectable = RxNotifier<bool>(false);
@@ -15,15 +15,14 @@ class SelectionStore {
   //* --------------------------------------------------------------------
   //* -- Folders
   //* --------------------------------------------------------------------
-  final _selectedFolderItems = RxNotifier<List<FolderQtdChildView>>([]);
-  RxNotifier<List<FolderQtdChildView>> get selectedFolderItems =>
-      _selectedFolderItems;
+  final _selectedFolderItems = RxNotifier<List<FolderModel>>([]);
+  RxNotifier<List<FolderModel>> get selectedFolderItems => _selectedFolderItems;
 
   bool checkQuantityFolderSelected(int qtd) {
     return _selectedFolderItems.value.length == qtd;
   }
 
-  addAllItemFolderToSelection(List<FolderQtdChildView> folders) {
+  addAllItemFolderToSelection(List<FolderModel> folders) {
     _selectedFolderItems.value.clear();
     _selectedFolderItems.value.addAll(folders);
     var selecteds = _selectedFolderItems.value.toList();
@@ -31,7 +30,7 @@ class SelectionStore {
     _selectedFolderItems.value = selecteds;
   }
 
-  addItemFolderToSelection(FolderQtdChildView folder) {
+  addItemFolderToSelection(FolderModel folder) {
     if (!_selectedFolderItems.value.contains(folder)) {
       _selectedFolderItems.value.add(folder);
       var selecteds = _selectedFolderItems.value.toList();
@@ -41,7 +40,7 @@ class SelectionStore {
     }
   }
 
-  removeItemFolderSelection(FolderQtdChildView folder) {
+  removeItemFolderSelection(FolderModel folder) {
     _selectedFolderItems.value.remove(folder);
     var selecteds = _selectedFolderItems.value.toList();
 

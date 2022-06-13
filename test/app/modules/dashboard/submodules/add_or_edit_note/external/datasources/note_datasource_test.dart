@@ -20,7 +20,7 @@ void main() {
   setUpAll(() async {
     database = await $FloorAppDatabase.inMemoryDatabaseBuilder().build();
     folderDAO = database.folderDao;
-    for (var folder in listfolder) {
+    for (var folder in listFolders) {
       await folderDAO.insertFolder(folder.entity);
     }
 

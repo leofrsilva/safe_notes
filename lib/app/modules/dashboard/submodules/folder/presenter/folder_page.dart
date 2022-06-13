@@ -3,8 +3,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../presenter/enum/mode_note_enum.dart';
 import '../../../presenter/mixin/template_page_mixin.dart';
@@ -43,12 +43,11 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
         bool selectable = _controller.selection.selectable.value;
         List<NoteModel> noteSelecteds =
             _controller.selection.selectedNoteItems.value;
-        List<FolderQtdChildView> folderSelecteds =
+        List<FolderModel> folderSelecteds =
             _controller.selection.selectedFolderItems.value;
 
         // Reactive
-        var reactiveNotes = super.drawerMenu.shared.reactiveNotes;
-        var reactiveFolders = super.drawerMenu.shared.reactiveFolders;
+        var reactive = super.drawerMenu.listFieldsStore.reactive;
 
         if (selectable) {
           String title = '';
@@ -62,12 +61,11 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
             title: Text(title),
             leading: Padding(
               padding: const EdgeInsets.only(left: 20.0),
-              child: ValueListenableBuilder<FolderQtdChildView>(
+              child: ValueListenableBuilder<FolderModel>(
                   valueListenable: _controller.folderParent,
                   builder: (context, folder, child) {
-                    var listNotes = reactiveNotes.listNoteByFolder(folder.id);
-                    var listFolders =
-                        reactiveFolders.childrensFolder(folder.id);
+                    var listNotes = reactive.listNoteByFolder(folder.folderId);
+                    var listFolders = reactive.childrensFolder(folder.folderId);
                     bool selectedAllNotes = _controller.selection
                         .checkQuantityNoteSelected(listNotes.length);
                     bool selectedAllFolders = _controller.selection
@@ -109,11 +107,12 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
           );
         }
         return AppBar(
-            title: ValueListenableBuilder<FolderQtdChildView>(
-                valueListenable: _controller.folderParent,
-                builder: (context, folder, child) {
-                  return Text(folder.name);
-                }),
+            title: ValueListenableBuilder<FolderModel>(
+              valueListenable: _controller.folderParent,
+              builder: (context, folder, child) {
+                return Text(folder.name);
+              },
+            ),
             leading: ValueListenableBuilder<bool>(
               valueListenable: super.drawerMenu.isShowDrawer,
               builder: (context, value, child) {
@@ -140,9 +139,7 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
                   showSearch(
                     context: context,
                     delegate: CustomSearchDelegate(
-                      reactiveListNote: super.drawerMenu.shared.reactiveNotes,
-                      reactiveListFolder:
-                          super.drawerMenu.shared.reactiveFolders,
+                      reactiveList: super.drawerMenu.listFieldsStore.reactive,
                     ),
                   );
                 },
@@ -165,8 +162,9 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
           bool selectable = _controller.selection.selectable.value;
           List<NoteModel> noteSelecteds =
               _controller.selection.selectedNoteItems.value;
-          List<FolderQtdChildView> folderSelecteds =
+          List<FolderModel> folderSelecteds =
               _controller.selection.selectedFolderItems.value;
+          final reactive = super.drawerMenu.listFieldsStore.reactive;
 
           return WillPopScope(
             onWillPop: () async {
@@ -176,19 +174,24 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
                 _controller.selection.clearNotes();
                 super.enableFloatingButtonAdd();
                 return false;
+              } else {
+                final sequencesFolder =
+                    reactive.listDescendants(_controller.folder);
+                if (sequencesFolder.length > 1) {
+                  sequencesFolder.removeLast();
+                  _controller.folder = sequencesFolder.last;
+                  return false;
+                }
               }
               return true;
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: ValueListenableBuilder<FolderQtdChildView>(
+              child: ValueListenableBuilder<FolderModel>(
                 valueListenable: _controller.folderParent,
                 builder: (context, folder, child) {
-                  final reactiveFolders =
-                      super.drawerMenu.shared.reactiveFolders;
-                  final reactiveNotes = super.drawerMenu.shared.reactiveNotes;
-                  final sequencesFolder =
-                      reactiveFolders.listDescendants(folder).reversed;
+                  final sequencesFolder = reactive.listDescendants(folder);
+                  sequencesFolder.removeAt(0);
 
                   return ScrollConfiguration(
                     behavior: NoGlowBehavior(),
@@ -196,34 +199,38 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
                       children: [
                         const SizedBox(height: 22.0),
                         // SEQUENCE OF FOLDER
-                        if (folder.id !=
-                            DefaultDatabase.folderQtdChildViewDefault.id)
+                        if (folder.folderId != DefaultDatabase.folderIdDefault)
                           IgnorePointer(
                             ignoring: selectable,
                             child: SequenceFolderWidget(
                               folder: folder,
                               sequencesFolder: sequencesFolder.toList(),
+                              onTapFolder: (FolderModel seqFolder) {
+                                _controller.folder = seqFolder;
+                              },
                               onTapSourceFolder: () {
                                 _controller.folder =
-                                    DefaultDatabase.folderQtdChildViewDefault;
+                                    DefaultDatabase.folderDefault;
                               },
                             ),
                           ),
                         const SizedBox(height: 2.0),
-
                         // FOLDERS
                         AnimatedBuilder(
-                          animation: reactiveFolders,
+                          animation: reactive,
                           builder: (context, child) {
                             final listFolders =
-                                reactiveFolders.childrensFolder(folder.id);
+                                reactive.childrensFolder(folder.folderId);
 
                             return GridFolderWidget(
-                              selectable: selectable,
                               selection: _controller.selection,
+                              selectable: selectable,
+                              reactive: reactive,
                               listFolders: listFolders,
                               folderSelecteds: folderSelecteds,
-                              onTap: () => _controller.folder = folder,
+                              onTap: (FolderModel folderChild) {
+                                _controller.folder = folderChild;
+                              },
                               onLongPressCardFolder: () {
                                 super.disableFloatingButtonAdd();
                               },
@@ -234,10 +241,10 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
                         const SizedBox(height: 5.0),
                         // NOTES
                         AnimatedBuilder(
-                          animation: reactiveNotes,
+                          animation: reactive,
                           builder: (context, child) {
-                            final listNotes = reactiveNotes.listNoteByFolder(
-                              folder.id,
+                            final listNotes = reactive.listNoteByFolder(
+                              folder.folderId,
                               orderByDesc: ordeByDesc,
                             );
 
@@ -247,8 +254,8 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
                               ordeByDesc: ordeByDesc,
                               listNotes: listNotes,
                               noteSelecteds: noteSelecteds,
-                              reactiveFolders:
-                                  super.drawerMenu.shared.reactiveFolders,
+                              reactive:
+                                  super.drawerMenu.listFieldsStore.reactive,
                               onPressedOrder: () {
                                 setState(() => ordeByDesc = !ordeByDesc);
                               },
@@ -273,7 +280,7 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
     return RxBuilder(builder: (context) {
       List<NoteModel> noteSelecteds =
           _controller.selection.selectedNoteItems.value;
-      List<FolderQtdChildView> folderSelecteds =
+      List<FolderModel> folderSelecteds =
           _controller.selection.selectedFolderItems.value;
 
       if (noteSelecteds.isNotEmpty || folderSelecteds.isNotEmpty) {

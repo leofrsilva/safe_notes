@@ -186,9 +186,8 @@ class _$FolderDAO extends FolderDAO {
   }
 
   @override
-  Stream<List<FolderEntity>> getFoldersQtdChild() {
-    return _queryAdapter.queryListStream(
-        'SELECT * FROM FolderQtdChild ORDER BY id',
+  Stream<List<FolderEntity>> getFolders() {
+    return _queryAdapter.queryListStream('SELECT * FROM Folder ORDER BY id',
         mapper: (Map<String, Object?> row) => FolderEntity(
             folderId: row['id'] as int,
             folderParent: row['folder_parent'] as int?,

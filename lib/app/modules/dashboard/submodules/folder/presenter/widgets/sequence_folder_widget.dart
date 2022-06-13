@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
-import 'package:safe_notes/app/shared/database/default.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 class SequenceFolderWidget extends StatelessWidget {
-  final FolderQtdChildView folder;
+  final FolderModel folder;
   final Function()? onTapSourceFolder;
-  final List<FolderQtdChildView> sequencesFolder;
+  final Function(FolderModel) onTapFolder;
+  final List<FolderModel> sequencesFolder;
 
   const SequenceFolderWidget({
     Key? key,
     required this.folder,
     this.onTapSourceFolder,
+    required this.onTapFolder,
     required this.sequencesFolder,
   }) : super(key: key);
 
@@ -70,25 +71,28 @@ class SequenceFolderWidget extends StatelessWidget {
                           ],
                         );
                       }
-                      return Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0,
+                      return GestureDetector(
+                        onTap: () => onTapFolder(folderSeq),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                              ),
+                              child: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: ColorPalettes.grey,
+                                size: 16,
+                              ),
                             ),
-                            child: Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: ColorPalettes.grey,
-                              size: 16,
+                            Text(
+                              folderSeq.name,
+                              style: TextStyle(
+                                color: ColorPalettes.grey,
+                              ),
                             ),
-                          ),
-                          Text(
-                            folderSeq.name,
-                            style: TextStyle(
-                              color: ColorPalettes.grey,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     }).toList(),
                   ),

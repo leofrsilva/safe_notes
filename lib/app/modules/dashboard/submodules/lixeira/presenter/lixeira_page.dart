@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../presenter/mixin/template_page_mixin.dart';
 import 'lixeira_controller.dart';
@@ -33,16 +32,17 @@ class _LixeiraPageState extends State<LixeiraPage> with TemplatePageMixin {
         behavior: NoGlowBehavior(),
         child: ListView(
           children: [
-            ValueListenableBuilder<int>(
-              valueListenable: super.drawerMenu.shared.reactiveFolders.deleted,
-              builder: (context, _, __) {
-                final foldersDeleted =
-                    super.drawerMenu.shared.reactiveFolders.listFolderDeleted;
+            AnimatedBuilder(
+              animation: super.drawerMenu.listFieldsStore.reactive,
+              builder: (context, child) {
+                final reactive = super.drawerMenu.listFieldsStore.reactive;
+                final foldersDeleted = reactive.listFolderDeleted;
+
                 return Wrap(
                   alignment: WrapAlignment.start,
                   children: foldersDeleted.map((folder) {
                     return CardFolder(
-                      qtd: folder.qtd,
+                      qtd: reactive.numberChildrenInFolder(folder),
                       title: folder.name,
                       background: Color(folder.color),
                     );

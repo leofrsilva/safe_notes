@@ -5,17 +5,17 @@ import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
 import '../enum/mode_note_enum.dart';
-import '../reactive/reactive_list_folder.dart';
+import '../reactive/reactive_list.dart';
 import '../stores/selection_store.dart';
 
 class GridNoteWidget extends StatelessWidget {
   final bool selectable;
   final SelectionStore selection;
+  final ReactiveList reactive;
 
   final bool ordeByDesc;
   final List<NoteModel> listNotes;
   final List<NoteModel> noteSelecteds;
-  final ReactiveListFolder reactiveFolders;
 
   final Function() onPressedOrder;
   final Function() onLongPressCardFolder;
@@ -24,10 +24,10 @@ class GridNoteWidget extends StatelessWidget {
     Key? key,
     required this.selectable,
     required this.selection,
+    required this.reactive,
     required this.ordeByDesc,
     required this.listNotes,
     required this.noteSelecteds,
-    required this.reactiveFolders,
     required this.onLongPressCardFolder,
     required this.onPressedOrder,
   }) : super(key: key);
@@ -103,7 +103,7 @@ class GridNoteWidget extends StatelessWidget {
                   arguments: [
                     ModeNoteEnum.edit,
                     note,
-                    reactiveFolders.getFolder(note.folderId),
+                    reactive.getFolder(note.folderId),
                   ],
                 );
               },

@@ -3,22 +3,18 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:safe_notes/app/design/common/util/sizes.dart';
 import 'package:safe_notes/app/modules/setting/presenter/controllers/manager_route_navigator_store.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
-import '../../stores/list_folders_store.dart';
-import '../../stores/list_notes_store.dart';
-import 'shared/shared_reactive_lists.dart';
+import '../../stores/list_fields_store.dart';
 
 class DrawerMenuController extends Disposable {
-  late SharedReactiveLists shared;
-
-  final ListFoldersStore _listFoldersStore;
-  final ListNotesStore _listNotesStore;
+  final ListFieldsStore _listFieldsStore;
+  ListFieldsStore get listFieldsStore => _listFieldsStore;
 
   final ManagerRouteNavigatorStore _managerRouteNavigatorStore;
   final durationNavigateFolder = const Duration(milliseconds: 150);
 
-  void moduleFolderSaveFolderParent(FolderQtdChildView folder) {
+  void moduleFolderSaveFolderParent(FolderModel folder) {
     _managerRouteNavigatorStore.saveFolderParent(folder.toJson());
   }
 
@@ -45,17 +41,11 @@ class DrawerMenuController extends Disposable {
   }
 
   DrawerMenuController(
-    this._listFoldersStore,
-    this._listNotesStore,
+    this._listFieldsStore,
     this._managerRouteNavigatorStore,
   ) {
-    shared = SharedReactiveLists(
-      _listFoldersStore,
-      _listNotesStore,
-    );
-
-    _listFoldersStore.getListFolders();
-    _listNotesStore.getListNotes();
+    listFieldsStore.listNotesStore.getListNotes(listFieldsStore.setNotes);
+    listFieldsStore.listFoldersStore.getListFolders(listFieldsStore.setFolders);
 
     Modular.to.addListener(onChangeRoute);
   }

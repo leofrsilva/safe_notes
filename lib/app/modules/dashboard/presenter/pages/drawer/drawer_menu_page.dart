@@ -4,7 +4,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/menu/item_menu.dart';
 import 'package:safe_notes/app/modules/dashboard/presenter/widgets/ladder_folder.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 
 import '../../../submodules/folder/folder_module.dart';
@@ -41,7 +41,7 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
     );
   }
 
-  onTapItemFolder(FolderQtdChildView folder) async {
+  onTapItemFolder(FolderModel folder) async {
     _drawerMenuController.closeDrawer();
     await Future.delayed(
       _drawerMenuController.duration,
@@ -63,8 +63,8 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
 
   Widget buildListFolders() {
     return ScopedBuilder<ListFoldersStore, Failure,
-        Stream<List<FolderQtdChildView>>>.transition(
-      store: _drawerMenuController.shared.listFoldersStore,
+        Stream<List<FolderModel>>>.transition(
+      store: _drawerMenuController.listFieldsStore.listFoldersStore,
       onLoading: (context) => const Center(
         child: CircularProgressIndicator.adaptive(),
       ),
@@ -81,7 +81,7 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
       },
       onState: (context, state) {
         return AnimatedBuilder(
-          animation: _drawerMenuController.shared.reactiveFolders,
+          animation: _drawerMenuController.listFieldsStore.reactive,
           builder: (context, child) {
             return Container();
           },
@@ -159,9 +159,10 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                           icon: Icons.library_books_outlined,
                           onTap: () => onTapItemSelected(0),
                         ),
+                        // FAVORITE
                         AnimatedBuilder(
                             animation:
-                                _drawerMenuController.shared.reactiveNotes,
+                                _drawerMenuController.listFieldsStore.reactive,
                             builder: (context, child) {
                               return ItemMenu(
                                 selected: 1 == value,
@@ -169,11 +170,11 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                                 sizeIcon: 28,
                                 icon: Icons.star_border_rounded,
                                 trailing: Text(
-                                  _drawerMenuController.shared.reactiveNotes
+                                  _drawerMenuController.listFieldsStore.reactive
                                               .qtdFavorites !=
                                           0
                                       ? _drawerMenuController
-                                          .shared.reactiveNotes.qtdFavorites
+                                          .listFieldsStore.reactive.qtdFavorites
                                           .toString()
                                       : '',
                                   style: TextStyle(
@@ -183,46 +184,38 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                                 onTap: () => onTapItemSelected(1),
                               );
                             }),
-                        ValueListenableBuilder<int>(
-                          valueListenable: _drawerMenuController
-                              .shared.reactiveFolders.deleted,
-                          builder: (context, qtd, child) {
-                            return ItemMenu(
-                              selected: 2 == value,
-                              text: 'Lixeira',
-                              sizeIcon: 28,
-                              icon: Icons.delete_outline,
-                              trailing: Text(
-                                qtd != 0 ? qtd.toString() : '',
-                                style: TextStyle(
-                                  color: ColorPalettes.secondy,
+                        // DELETED
+                        AnimatedBuilder(
+                            animation:
+                                _drawerMenuController.listFieldsStore.reactive,
+                            builder: (context, child) {
+                              int qtd = _drawerMenuController
+                                  .listFieldsStore.reactive.deleted;
+                              return ItemMenu(
+                                selected: 2 == value,
+                                text: 'Lixeira',
+                                sizeIcon: 28,
+                                icon: Icons.delete_outline,
+                                trailing: Text(
+                                  qtd != 0 ? qtd.toString() : '',
+                                  style: TextStyle(
+                                    color: ColorPalettes.secondy,
+                                  ),
                                 ),
-                              ),
-                              onTap: () => onTapItemSelected(2),
-                            );
-                          },
-                        ),
-                        // ItemMenu(
-                        //   text: 'Perfil',
-                        //   icon: Icons.account_circle_outlined,
-                        //   onTap: () async {
-                        //     _drawerMenuController.closeDrawer();
-                        //     await Future.delayed(
-                        //       _drawerMenuController.duration,
-                        //       () => Modular.to.pushNamed('/dashboard/perfil'),
-                        //     );
-                        //   },
-                        // ),
+                                onTap: () => onTapItemSelected(2),
+                              );
+                            }),
+                        //
                         Divider(color: Theme.of(context).backgroundColor),
-                        // buildListFolders(),
+                        //
                         AnimatedBuilder(
                           animation:
-                              _drawerMenuController.shared.reactiveFolders,
+                              _drawerMenuController.listFieldsStore.reactive,
                           builder: (context, child) {
                             return LadderFolder(
                               selected: value,
-                              listFolders:
-                                  _drawerMenuController.shared.listFolders,
+                              listFolders: _drawerMenuController
+                                  .listFieldsStore.reactive.listFolder,
                               onTapFolder: onTapItemFolder,
                             );
                           },

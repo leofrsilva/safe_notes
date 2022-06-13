@@ -3,9 +3,9 @@ import 'package:fpdart/fpdart.dart';
 import 'package:safe_notes/app/app_core.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/modules/dashboard/submodules/folder/presenter/folder_controller.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/token/i_expire_token.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 import 'package:safe_notes/app/shared/leave/domain/usecases/i_leave_auth_usecase.dart';
 import 'package:safe_notes/app/modules/dashboard/submodules/folder/folder_module.dart';
 import 'package:safe_notes/app/modules/setting/presenter/controllers/manager_route_navigator_store.dart';
@@ -28,7 +28,7 @@ class SplashController {
     this._managerRouteNavigatorStore,
   );
 
-  FolderQtdChildView? _folder;
+  FolderModel? _folder;
   String strPage = '/auth/getin/';
 
   Future<String> redirectRoute() async {
@@ -36,7 +36,7 @@ class SplashController {
     if (page.isNotEmpty) {
       var infoFolder = await _managerRouteNavigatorStore.getFolderParent();
       if (infoFolder.isNotEmpty) {
-        _folder = FolderQtdChildView.fromJson(infoFolder);
+        _folder = FolderModel.fromJson(infoFolder);
       }
       return page;
     }

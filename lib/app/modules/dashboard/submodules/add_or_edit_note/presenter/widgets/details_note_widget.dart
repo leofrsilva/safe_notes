@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:safe_notes/app/design/common/common.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
-import 'package:safe_notes/app/shared/database/views/folder_qtd_child_view.dart';
 
 import '../../../../presenter/enum/mode_note_enum.dart';
 
 class DetailsNoteWidget extends StatelessWidget {
   final ModeNoteEnum mode;
   final NoteModel noteModel;
-  final FolderQtdChildView folder;
+  final FolderModel folder;
 
   const DetailsNoteWidget({
     Key? key,

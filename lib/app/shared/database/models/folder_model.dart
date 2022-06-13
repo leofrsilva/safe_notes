@@ -89,6 +89,24 @@ class FolderModel {
     );
   }
 
+  static List<FolderModel> fromListEntity(List<FolderEntity> entities) {
+    return entities.map((entity) => FolderModel.fromEntity(entity)).toList();
+  }
+
+  factory FolderModel.fromJson(Map<String, dynamic> json) {
+    return FolderModel(
+      folderId: json['id'],
+      folderParent: json['folder_parent'],
+      userId: json['user_id'],
+      level: json['level'],
+      name: json['name'],
+      color: json['color'],
+      isDeleted: json['is_deleted'] as bool,
+      dateCreate: DateTime.parse(json['date_create']),
+      dateModification: DateTime.parse(json['date_modification'].toString()),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': folderId,
@@ -98,8 +116,8 @@ class FolderModel {
       'name': name,
       'color': color,
       'is_deleted': isDeleted,
-      'date_create': dateCreate,
-      'date_modification': dateModification,
+      'date_create': dateCreate.toString(),
+      'date_modification': dateModification.toString(),
     };
   }
 }

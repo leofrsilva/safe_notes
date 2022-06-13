@@ -26,13 +26,13 @@ void main() {
 
   group('delete folder datasource deleteAllFolderExcept |', () {
     test('Delete all Except Default Folder', () async {
-      for (var folderer in listfolder) {
+      for (var folderer in listFolders) {
         folderDAO.insertFolder(folderer.entity);
       }
 
-      await datasource.deleteAllFolderExcept(listfolder.first.folderId);
+      await datasource.deleteAllFolderExcept(listFolders.first.folderId);
 
-      final stream = folderDAO.getFoldersQtdChild();
+      final stream = folderDAO.getFolders();
       final listFolder = await stream.first;
 
       expect(listFolder.length, equals(1));
@@ -42,11 +42,11 @@ void main() {
       final folderDAOMock = FolderDAOMock();
       final datasouceMock = DeleteFolderDatasource(folderDAOMock);
 
-      when(() => folderDAOMock.deleteAllExcept(listfolder.first.folderId))
+      when(() => folderDAOMock.deleteAllExcept(listFolders.first.folderId))
           .thenThrow(SqliteExceptionMock());
 
       expect(
-        () => datasouceMock.deleteAllFolderExcept(listfolder.first.folderId),
+        () => datasouceMock.deleteAllFolderExcept(listFolders.first.folderId),
         throwsA(isA<DeleteAllFolderExceptSqliteError>()),
       );
     });
