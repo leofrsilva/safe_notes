@@ -1,12 +1,19 @@
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../domain/usecases/note/i_note_usecases.dart';
+import '../../presenter/stores/selection_store.dart';
 import 'presenter/favorites_controller.dart';
 import 'presenter/favorites_page.dart';
 
 class FavoritesModule extends Module {
   @override
   List<Bind<Object>> get binds => [
-        Bind.lazySingleton<FavoritesController>((i) => FavoritesController()),
+        Bind.lazySingleton<SelectionStore>((i) => SelectionStore()),
+        Bind.lazySingleton<FavoritesController>((i) => FavoritesController(
+              i<SelectionStore>(),
+              i<IEditNoteUsecase>(),
+              i<IDeleteNoteUsecase>(),
+            )),
       ];
 
   @override

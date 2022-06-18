@@ -27,6 +27,7 @@ class CardNoteEditable extends StatelessWidget {
             CardNote(
               title: note.title,
               body: note.body,
+              favorite: note.favorite,
               date: note.dateModification,
               onLongPress: onLongPress,
               onTap: () {

@@ -3,7 +3,7 @@ import 'package:safe_notes/app/shared/database/models/note_model.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 
 import '../repositories/i_get_list_repository.dart';
-import 'i_folder_usecase.dart';
+import 'i_get_list_usecase.dart';
 
 class GetListNotesUsecase extends IGetListNotesUsecase {
   final IGetListRepository _repository;

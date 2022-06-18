@@ -19,6 +19,11 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
     return countNotes + countFolders;
   }
 
+  @override
+  int get numberItemsDeleted {
+    return qtdFolderdeleted + qtdNoteDeleted;
+  }
+
   //* ----------------------------------------------
   //* FOLDER
   //* ----------------------------------------------
@@ -36,7 +41,7 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
 
   //? -- LIST DELETED
   @override
-  int get deleted => _reactiveFolders.deleted;
+  int get qtdFolderdeleted => _reactiveFolders.qtdFolderdeleted;
 
   @override
   List<FolderModel> get listFolderDeleted {
@@ -147,6 +152,11 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
   }
 
   //* DELETED
+  @override
+  int get qtdNoteDeleted {
+    return _reactiveNotes.qtdNoteDeleted;
+  }
+
   @override
   List<NoteModel> get listNoteDeleted {
     return _reactiveNotes.listNoteDeleted;

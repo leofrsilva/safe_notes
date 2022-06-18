@@ -53,18 +53,20 @@ class _FullScreenLoaderState extends State<_FullScreenLoader>
       decoration: const BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.5)),
       child: Stack(
         children: [
-          const Center(
+          Center(
             child: Icon(
               Icons.lock,
               size: 28,
+              color: Theme.of(context).backgroundColor,
             ),
           ),
           Center(
             child: AnimatedBuilder(
               animation: animationController,
-              child: const Icon(
+              child: Icon(
                 Icons.refresh_rounded,
                 size: 85,
+                color: Theme.of(context).backgroundColor,
               ),
               builder: (context, _widget) {
                 return Transform.rotate(

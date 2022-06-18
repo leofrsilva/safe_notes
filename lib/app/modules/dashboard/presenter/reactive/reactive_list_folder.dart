@@ -45,7 +45,7 @@ class ReactiveListFolder implements IReactiveListFolder {
 
   //* -- LIST DELETED
   @override
-  int get deleted => _deleted.qtd;
+  int get qtdFolderdeleted => _deleted.qtd;
 
   @override
   List<FolderModel> get listFolderDeleted {
@@ -225,14 +225,12 @@ class ReactiveListFolder implements IReactiveListFolder {
 
 class _DeletedFolders {
   final _listFolders = <FolderModel>[];
-  int _qtd = 0;
 
-  int get qtd => _qtd;
+  int get qtd => listFolderDeleted.length;
 
   set countDeleted(List<FolderModel> folders) {
     _listFolders.clear();
     _listFolders.addAll(folders);
-    _qtd = listFolderDeleted.length;
   }
 
   FolderModel _findSuperParent(FolderModel currentFolder) {
@@ -259,12 +257,14 @@ class _DeletedFolders {
     List<FolderModel> list = [];
     for (var folder in _listFolders) {
       if (folder.level > 0 && folder.isDeleted == true) {
+        // print(folder.name);
         var superParent = _findSuperParent(folder);
         if (!list.contains(superParent)) {
           list.add(_findSuperParent(folder));
         }
       }
     }
+    print(list.length);
     return list;
   }
 }

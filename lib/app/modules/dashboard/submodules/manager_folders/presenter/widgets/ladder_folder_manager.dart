@@ -7,7 +7,6 @@ import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import '../../../../presenter/pages/drawer/drawer_menu_controller.dart';
 import '../../../../presenter/reactive/reactive_list.dart';
-import '../../../../presenter/reactive/reactive_list_folder.dart';
 import '../manager_folders_controller.dart';
 
 enum ActionFolder {

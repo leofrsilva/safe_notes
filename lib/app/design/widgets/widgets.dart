@@ -18,6 +18,9 @@ export 'glow_behavior/no_glow_behavior.dart';
 
 export 'floating_button/floating_button_for_top.dart';
 
+export 'snackbar/snackbar_error.dart';
+export 'snackbar/snackbar_warning.dart';
+
 export 'card/card_note.dart';
 export 'card/card_note_editable.dart';
 export 'card/card_folder.dart';

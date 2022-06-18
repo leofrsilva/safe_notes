@@ -1,35 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
-import '../enum/mode_note_enum.dart';
-import '../reactive/reactive_list.dart';
 import '../stores/selection_store.dart';
 
 class GridNoteWidget extends StatelessWidget {
   final bool selectable;
   final SelectionStore selection;
-  final ReactiveList reactive;
+  final bool haveOrdenation;
 
   final bool ordeByDesc;
   final List<NoteModel> listNotes;
   final List<NoteModel> noteSelecteds;
 
-  final Function() onPressedOrder;
+  final Function(NoteModel) onTap;
+  final Function()? onPressedOrder;
   final Function() onLongPressCardFolder;
 
   const GridNoteWidget({
     Key? key,
     required this.selectable,
     required this.selection,
-    required this.reactive,
     required this.ordeByDesc,
     required this.listNotes,
     required this.noteSelecteds,
     required this.onLongPressCardFolder,
-    required this.onPressedOrder,
+    required this.onTap,
+    this.onPressedOrder,
+    this.haveOrdenation = true,
   }) : super(key: key);
 
   @override
@@ -37,7 +36,7 @@ class GridNoteWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (listNotes.isNotEmpty)
+        if (listNotes.isNotEmpty && haveOrdenation)
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: Row(
@@ -91,22 +90,14 @@ class GridNoteWidget extends StatelessWidget {
             return CardNote(
               title: note.title,
               body: note.body,
+              favorite: note.favorite,
               date: note.dateModification,
               onLongPress: () {
                 onLongPressCardFolder.call();
                 selection.toggleSelectable(true);
                 selection.addItemNoteToSelection(note);
               },
-              onTap: () {
-                Modular.to.pushNamed(
-                  '/dashboard/add-or-edit-note/',
-                  arguments: [
-                    ModeNoteEnum.edit,
-                    note,
-                    reactive.getFolder(note.folderId),
-                  ],
-                );
-              },
+              onTap: () => onTap(note),
             );
           }).toList(),
         ),

@@ -8,14 +8,16 @@ import '../../../../presenter/enum/mode_view_enum.dart';
 class CustomTextFieldTitleNote extends StatelessWidget {
   const CustomTextFieldTitleNote({
     Key? key,
-    required this.onPressedModelView,
     required this.modeView,
     required this.expanded,
     required this.isFavorite,
+    this.widthActions = 50,
+    this.actions,
     this.childDetails,
     this.onChanged,
     this.onTapIcon,
     this.onTapFavorite,
+    this.onPressedModelView,
     this.turnsColor,
     this.onTapTextField,
     this.heightExpanded = 135,
@@ -35,6 +37,8 @@ class CustomTextFieldTitleNote extends StatelessWidget {
   final bool expanded;
   final bool isFavorite;
   final Widget? childDetails;
+  final List<Widget>? actions;
+  final double widthActions;
 
   final double heightExpanded;
   final double heightNotExpanded;
@@ -54,19 +58,21 @@ class CustomTextFieldTitleNote extends StatelessWidget {
     Widget details = childDetails ?? Container();
     double top = (heightNotExpanded - (heightNotExpanded * 0.7)) / 2;
 
-    List<Widget> iconActions = [];
-    if (modeView == ModeViewEnum.reading) {
-      iconActions.add(IconButton(
-        color: ColorPalettes.grey,
-        icon: const Icon(Icons.menu_book_rounded),
-        onPressed: onPressedModelView,
-      ));
-    } else {
-      iconActions.add(IconButton(
-        color: ColorPalettes.grey,
-        icon: const Icon(Icons.edit_note),
-        onPressed: onPressedModelView,
-      ));
+    List<Widget> iconActions = actions ?? [];
+    if (onPressedModelView != null) {
+      if (modeView == ModeViewEnum.reading) {
+        iconActions.add(IconButton(
+          color: ColorPalettes.grey,
+          icon: const Icon(Icons.menu_book_rounded),
+          onPressed: onPressedModelView,
+        ));
+      } else {
+        iconActions.add(IconButton(
+          color: ColorPalettes.grey,
+          icon: const Icon(Icons.edit_note),
+          onPressed: onPressedModelView,
+        ));
+      }
     }
 
     return AnimatedContainer(
@@ -99,9 +105,9 @@ class CustomTextFieldTitleNote extends StatelessWidget {
                   transform: Matrix4.translationValues(0, 0, 0)
                     ..scale(expanded ? 1.0 : 0.7),
                   height: heightNotExpanded,
-                  width: Sizes.width(context) - (50.0 / 2),
+                  width: Sizes.width(context) - (widthActions - 25.0),
                   alignment: Alignment.center,
-                  child: _textField,
+                  child: _textField(context),
                 ),
                 AnimatedOpacity(
                   opacity: expanded ? 1.0 : 0.0,
@@ -117,7 +123,7 @@ class CustomTextFieldTitleNote extends StatelessWidget {
             child: Align(
               alignment: Alignment.topRight,
               child: SizedBox(
-                width: 50,
+                width: widthActions,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: iconActions,
@@ -187,8 +193,9 @@ class CustomTextFieldTitleNote extends StatelessWidget {
     // );
   }
 
-  Widget get _textField {
+  Widget _textField(BuildContext context) {
     return TextOverflowField(
+      minWidth: Sizes.width(context) - (widthActions - 25.0),
       canRequestFocus: expanded ? initialFocus : null,
       height: heightNotExpanded,
       controller: controller,

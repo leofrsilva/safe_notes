@@ -4,9 +4,7 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
-import '../../../../presenter/pages/drawer/drawer_menu_controller.dart';
 import '../../../../presenter/reactive/i_reactive_list.dart';
-import '../../../../presenter/reactive/i_reactive_list_folder.dart';
 import '../manager_folders_controller.dart';
 
 class EditNamePage extends StatefulWidget {

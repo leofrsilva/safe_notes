@@ -5,6 +5,7 @@ class CardNote extends StatelessWidget {
   final String body;
   final String title;
   final DateTime date;
+  final bool favorite;
   final Color? backgroundColor;
 
   final Function()? onTap;
@@ -18,6 +19,7 @@ class CardNote extends StatelessWidget {
     required this.body,
     required this.date,
     this.backgroundColor,
+    this.favorite = false,
   }) : super(key: key);
 
   @override
@@ -93,14 +95,33 @@ class CardNote extends StatelessWidget {
           Container(
             width: width,
             alignment: Alignment.center,
-            // padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              date.day == DateTime.now().day
-                  ? '${date.hour}:${date.minute.toString().padLeft(2, '0')}'
-                  : DateConvert.dateToString(date),
-              maxLines: 1,
-              textAlign: TextAlign.center,
-              style: TextStyles.cardDateNote,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 3.0),
+                  child: Text(
+                    date.day == DateTime.now().day
+                        ? '${date.hour}:${date.minute.toString().padLeft(2, '0')}'
+                        : DateConvert.dateToString(date),
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: TextStyles.cardDateNote,
+                  ),
+                ),
+                if (favorite)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 6.0,
+                    ),
+                    child: Icon(
+                      Icons.star_rounded,
+                      color: ColorPalettes.yellow,
+                      size: 14,
+                    ),
+                  ),
+              ],
             ),
           ),
         ],

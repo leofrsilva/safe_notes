@@ -81,9 +81,14 @@ class ReactiveListNote extends IReactiveListNote {
 
   //* DELETED
   @override
+  int get qtdNoteDeleted {
+    return _value.where((note) => note.isDeleted == true).toList().length;
+  }
+
+  @override
   List<NoteModel> get listNoteDeleted {
     _value.sort((previous, posterior) {
-      return previous.dateModification.compareTo(posterior.dateModification);
+      return posterior.dateModification.compareTo(previous.dateModification);
     });
     return _value.where((note) => note.isDeleted == true).toList();
   }
@@ -91,7 +96,7 @@ class ReactiveListNote extends IReactiveListNote {
   @override
   List<NoteModel> listNoteByFolderDeleted(int folderId) {
     _value.sort((previous, posterior) {
-      return previous.dateModification.compareTo(posterior.dateModification);
+      return posterior.dateModification.compareTo(previous.dateModification);
     });
     return _value
         .where((note) => note.isDeleted == true && note.folderId == folderId)

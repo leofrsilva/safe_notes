@@ -8,6 +8,7 @@ import '../../reactive/reactive_list.dart';
 
 class CustomSearchDelegate extends SearchDelegate<String?> {
   final ReactiveList reactiveList;
+
   CustomSearchDelegate({
     required this.reactiveList,
   });
@@ -50,6 +51,7 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
             return CardNote(
               title: note.title,
               body: note.body,
+              favorite: note.favorite,
               date: note.dateModification,
               onTap: () {
                 Modular.to.pushNamed(
@@ -90,6 +92,7 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
             return CardNote(
               title: note.title,
               body: note.body,
+              favorite: note.favorite,
               date: note.dateModification,
               onTap: () {
                 Modular.to.pushNamed(

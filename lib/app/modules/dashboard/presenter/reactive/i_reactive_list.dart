@@ -5,4 +5,5 @@ import 'i_reactive_list_note.dart';
 
 abstract class IReactiveList implements IReactiveListFolder, IReactiveListNote {
   int numberChildrenInFolder(FolderModel folder);
+  int get numberItemsDeleted;
 }

@@ -38,8 +38,7 @@ class GridFolderWidget extends StatelessWidget {
         children: listFolders.map((folder) {
           if (selectable) {
             return CardFolderEditable(
-              qtd: 0,
-              // qtd: folder.qtd, //!//!ERROR
+              qtd: reactive.numberChildrenInFolder(folder),
               title: folder.name,
               background: Color(folder.color),
               selected: folderSelecteds.contains(folder),

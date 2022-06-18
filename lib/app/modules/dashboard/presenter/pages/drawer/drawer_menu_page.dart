@@ -86,20 +86,6 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
             return Container();
           },
         );
-        // return StreamBuilder<List<FolderQtdChildView>>(
-        //   stream: state,
-        //   builder: ((context, snapshot) {
-        //     if (snapshot.hasData) {
-        //       if (snapshot.connectionState == ConnectionState.done ||
-        //           snapshot.connectionState == ConnectionState.active) {
-        //         final listFolders = snapshot.data ?? [];
-        //         _drawerMenuController.loadListFoldersIsExpanded(listFolders);
-        //         return LadderFolder(listFolders: listFolders);
-        //       }
-        //     }
-        //     return Container();
-        //   }),
-        // );
       },
     );
   }
@@ -153,44 +139,59 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                             ],
                           ),
                         ),
-                        ItemMenu(
-                          selected: 0 == value,
-                          text: 'Todas as notas',
-                          icon: Icons.library_books_outlined,
-                          onTap: () => onTapItemSelected(0),
-                        ),
-                        // FAVORITE
                         AnimatedBuilder(
                             animation:
                                 _drawerMenuController.listFieldsStore.reactive,
                             builder: (context, child) {
+                              int qtd = _drawerMenuController
+                                  .listFieldsStore.reactive.qtdNotes;
                               return ItemMenu(
+                                selected: 0 == value,
+                                text: 'Todas as notas',
+                                icon: Icons.library_books_outlined,
+                                trailing: Text(
+                                  qtd.toString(),
+                                  style: TextStyle(
+                                    color: ColorPalettes.secondy,
+                                  ),
+                                ),
+                                onTap: () => onTapItemSelected(0),
+                              );
+                            }),
+                        // FAVORITE
+                        AnimatedBuilder(
+                          animation:
+                              _drawerMenuController.listFieldsStore.reactive,
+                          builder: (context, child) {
+                            Widget menuItem = Container();
+                            int qtd = _drawerMenuController
+                                .listFieldsStore.reactive.qtdFavorites;
+
+                            if (qtd != 0) {
+                              menuItem = ItemMenu(
                                 selected: 1 == value,
                                 text: 'Favotitos',
                                 sizeIcon: 28,
                                 icon: Icons.star_border_rounded,
                                 trailing: Text(
-                                  _drawerMenuController.listFieldsStore.reactive
-                                              .qtdFavorites !=
-                                          0
-                                      ? _drawerMenuController
-                                          .listFieldsStore.reactive.qtdFavorites
-                                          .toString()
-                                      : '',
+                                  qtd.toString(),
                                   style: TextStyle(
                                     color: ColorPalettes.secondy,
                                   ),
                                 ),
                                 onTap: () => onTapItemSelected(1),
                               );
-                            }),
+                            }
+                            return menuItem;
+                          },
+                        ),
                         // DELETED
                         AnimatedBuilder(
                             animation:
                                 _drawerMenuController.listFieldsStore.reactive,
                             builder: (context, child) {
                               int qtd = _drawerMenuController
-                                  .listFieldsStore.reactive.deleted;
+                                  .listFieldsStore.reactive.numberItemsDeleted;
                               return ItemMenu(
                                 selected: 2 == value,
                                 text: 'Lixeira',

@@ -3,7 +3,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 
 import '../../../presenter/reactive/reactive_list.dart';
-import '../../../presenter/reactive/reactive_list_folder.dart';
 import 'manager_folders_controller.dart';
 import 'widgets/ladder_folder_manager.dart';
 
@@ -100,65 +99,7 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
             ],
           ),
         ),
-
-        // child: AnimatedBuilder(
-        //   animation: _drawerMenuController.listFolders.reactiveListFolder,
-        //   builder: (context, child) {
-        //     final reactiveListFolder =
-        //         _drawerMenuController.listFolders.reactiveListFolder;
-        //     return LadderFolder(
-        //       listFolders: _reactiveListFolder.list,
-        //     );
-        //   },
-        // ),
-        /////
-        // child: StreamBuilder<List<FolderQtdChildView>>(
-        //   stream: _drawerMenuController.listFolders.selectState.value,
-        //   builder: ((context, snapshot) {
-        //     if (snapshot.hasData) {
-        //       if (snapshot.connectionState == ConnectionState.done ||
-        //           snapshot.connectionState == ConnectionState.active) {
-        //         final listFolders = snapshot.data ?? [];
-        //         return LadderFolder(listFolders: listFolders);
-        //       }
-        //     }
-        //     return Container();
-        //   }),
-        // ),
       ),
-      // child: ScopedBuilder<ListFoldersStore, Failure,
-      //     Stream<List<FolderQtdChildView>>>.transition(
-      //   store: _drawerMenuController.listFolders,
-      //   onLoading: (context) => const Center(
-      //     child: CircularProgressIndicator.adaptive(),
-      //   ),
-      //   onError: (context, _) {
-      //     return const Center(
-      //       child: Text(
-      //         'Erro ao Carregar as Pastas',
-      //         style: TextStyle(
-      //           fontFamily: 'JosefinSans',
-      //           fontWeight: FontWeight.w600,
-      //         ),
-      //       ),
-      //     );
-      //   },
-      //   onState: (context, state) {
-      //     return StreamBuilder<List<FolderQtdChildView>>(
-      //       stream: state,
-      //       builder: ((context, snapshot) {
-      //         if (snapshot.hasData) {
-      //           if (snapshot.connectionState == ConnectionState.done ||
-      //               snapshot.connectionState == ConnectionState.active) {
-      //             final listFolders = snapshot.data ?? [];
-      //             return LadderFolder(listFolders: listFolders);
-      //           }
-      //         }
-      //         return Container();
-      //       }),
-      //     );
-      //   },
-      // ),
     );
   }
 }

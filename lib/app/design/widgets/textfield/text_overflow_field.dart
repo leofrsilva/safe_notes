@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextOverflowField extends StatefulWidget {
-  final double? minWidth;
+  final double minWidth;
   final int? maxLines;
 
   final double height;
@@ -24,7 +24,7 @@ class TextOverflowField extends StatefulWidget {
 
   const TextOverflowField({
     Key? key,
-    this.minWidth,
+    required this.minWidth,
     this.maxLines = 1,
     this.height = 30.0,
     this.spaceTop = 0.0,
@@ -92,10 +92,12 @@ class TextFieldOverflowState extends State<TextOverflowField> {
   }
 
   Widget _overflowReplacement(TextStyle style) {
-    style = widget.data.isEmpty ? widget.hintStyle ?? style : style;
-    var data = widget.data.isEmpty ? widget.hintText ?? '' : widget.data;
-
-    final words = data.split(' ');
+    int qtdCaracter = (widget.minWidth / 13).floor();
+    String text = widget.data.trim();
+    if (widget.data.length > qtdCaracter) {
+      text = text.substring(0, qtdCaracter);
+      text += '...';
+    }
 
     return GestureDetector(
       onTap: () {
@@ -104,37 +106,30 @@ class TextFieldOverflowState extends State<TextOverflowField> {
         Future.delayed(widget.duration, () {
           if (canRequestFocus) {
             _focusNodeTextField.requestFocus();
-          } else {
-            // _focusNodeContainer.requestFocus();
           }
+          // else {
+          // _focusNodeContainer.requestFocus();
+          // }
         });
       },
       child: Container(
         height: widget.height,
-        width: widget.minWidth ?? double.infinity,
+        width: widget.minWidth,
         alignment: AlignmentDirectional.centerStart,
         padding: EdgeInsets.only(
           top: widget.spaceTop,
           left: widget.spaceLeft,
-          right: widget.spaceRight,
+          // right: widget.spaceRight,
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: words.map((word) {
-            if (word == words.last) {
-              return Expanded(
-                child: Text(
-                  word,
-                  style: style.copyWith(
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              );
-            }
-            return Text('$word ', style: style);
-          }).toList(),
+          children: [
+            Expanded(
+              child: Text(
+                text,
+                style: style,
+              ),
+            ),
+          ],
         ),
       ),
     );

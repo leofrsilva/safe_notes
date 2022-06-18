@@ -7,7 +7,7 @@ abstract class IReactiveListFolder {
   Map<int, bool> get getBufferExpanded;
 
   // Deleted
-  int get deleted;
+  int get qtdFolderdeleted;
 
   List<FolderModel> get listFolderDeleted;
 

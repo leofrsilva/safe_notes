@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:safe_notes/app/modules/dashboard/domain/errors/folder_failures.dart';
+import 'package:safe_notes/app/modules/dashboard/domain/errors/get_list_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/infra/repositories/get_list_repository.dart';
 import 'package:safe_notes/app/shared/database/entities/folder_entity.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';

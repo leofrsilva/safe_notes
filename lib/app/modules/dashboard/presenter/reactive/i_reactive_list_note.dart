@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
 abstract class IReactiveListNote {
@@ -19,6 +18,8 @@ abstract class IReactiveListNote {
   List<NoteModel> searchNote(String text);
 
   // DELETED
+  int get qtdNoteDeleted;
+
   List<NoteModel> get listNoteDeleted;
 
   List<NoteModel> listNoteByFolderDeleted(int folderId);

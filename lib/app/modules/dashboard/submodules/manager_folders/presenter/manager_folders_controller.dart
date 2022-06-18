@@ -5,11 +5,10 @@ import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
+import '../../../domain/usecases/folder/i_folder_usecase.dart';
 import '../../../presenter/pages/drawer/drawer_menu_controller.dart';
 import '../../../presenter/reactive/reactive_list.dart';
-import '../../../presenter/reactive/reactive_list_folder.dart';
 import '../../folder/presenter/folder_controller.dart';
-import '../domain/usecases/i_manager_folders_usecase.dart';
 import 'pages/add_folder_page.dart';
 import 'pages/delete_folder_page.dart';
 import 'pages/edit_color_page.dart';

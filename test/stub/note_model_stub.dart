@@ -52,3 +52,36 @@ final note4 = NoteModel(
   dateCreate: DateTime.now(),
   dateModification: DateTime.now(),
 );
+
+final note5 = NoteModel(
+  folderId: folder41.folderId,
+  noteId: 105,
+  body: 'Body 5',
+  title: 'Title 5',
+  favorite: false,
+  isDeleted: false,
+  dateCreate: DateTime.now(),
+  dateModification: DateTime.now(),
+);
+
+final note6 = NoteModel(
+  folderId: folder41.folderId,
+  noteId: 106,
+  body: 'Body 6',
+  title: 'Title 6',
+  favorite: false,
+  isDeleted: false,
+  dateCreate: DateTime.now(),
+  dateModification: DateTime.now(),
+);
+
+final note7 = NoteModel(
+  folderId: folder41.folderId,
+  noteId: 107,
+  body: 'Body 7',
+  title: 'Title 7',
+  favorite: false,
+  isDeleted: false,
+  dateCreate: DateTime.now(),
+  dateModification: DateTime.now(),
+);

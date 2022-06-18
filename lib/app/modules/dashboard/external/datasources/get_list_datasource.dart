@@ -6,7 +6,7 @@ import 'package:sqlite3/sqlite3.dart';
 import 'package:sqflite_common/src/exception.dart' as exception;
 import 'package:safe_notes/app/shared/database/daos/folder_dao.dart';
 
-import '../../domain/errors/folder_failures.dart';
+import '../../domain/errors/get_list_failures.dart';
 import '../../infra/datasources/i_get_list_datasource.dart';
 
 class GetListDatasource extends IGetListDatasource {

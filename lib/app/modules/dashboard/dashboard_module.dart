@@ -9,13 +9,33 @@ import 'package:safe_notes/app/shared/token/expire_token.dart';
 
 import 'package:safe_notes/app/shared/leave/leave.dart';
 
+import 'domain/repositories/i_folder_repository.dart';
 import 'domain/repositories/i_get_list_repository.dart';
+import 'domain/repositories/i_note_repository.dart';
+import 'domain/usecases/folder/add_folder_usecase.dart';
+import 'domain/usecases/folder/delete_folder_persistent_usecase.dart';
+import 'domain/usecases/folder/delete_folder_usecase.dart';
+import 'domain/usecases/folder/edit_folder_usecase.dart';
+import 'domain/usecases/folder/i_folder_usecase.dart';
+import 'domain/usecases/folder/restore_folder_usecase.dart';
 import 'domain/usecases/get_list_folders_usecase.dart';
 import 'domain/usecases/get_list_notes_usecase.dart';
-import 'domain/usecases/i_folder_usecase.dart';
+import 'domain/usecases/i_get_list_usecase.dart';
+import 'domain/usecases/note/add_note_usecase.dart';
+import 'domain/usecases/note/delete_note_persistent_usecase.dart';
+import 'domain/usecases/note/delete_note_usecase.dart';
+import 'domain/usecases/note/edit_note_usecase.dart';
+import 'domain/usecases/note/i_note_usecases.dart';
+import 'domain/usecases/note/restore_note_usecase.dart';
+import 'external/datasources/folder_datasource.dart';
 import 'external/datasources/get_list_datasource.dart';
+import 'external/datasources/note_datasource.dart';
+import 'infra/datasources/i_folder_datasource.dart';
 import 'infra/datasources/i_get_list_datasource.dart';
+import 'infra/datasources/i_note_datasource.dart';
+import 'infra/repositories/folder_repository.dart';
 import 'infra/repositories/get_list_repository.dart';
+import 'infra/repositories/note_repository.dart';
 import 'presenter/pages/drawer/drawer_menu_controller.dart';
 import 'presenter/dashboard_controller.dart';
 import 'presenter/dashboard_page.dart';
@@ -33,6 +53,50 @@ class DashboardModule extends Module {
   @override
   List<Bind<Object>> get binds => [
         //? FOLDER
+        Bind.lazySingleton<IFolderDatasource>((i) => FolderDatasource(
+              i<AppDatabase>().folderDao,
+              i<AppDatabase>().noteDao,
+            )),
+        Bind.lazySingleton<IFolderRepository>(
+            (i) => FolderRepository(i<IFolderDatasource>())),
+        //
+        Bind.lazySingleton<IAddFolderUsecase>(
+            (i) => AddFolderUsecase(i<IFolderRepository>())),
+        Bind.lazySingleton<IEditFolderUsecase>(
+            (i) => EditFolderUsecase(i<IFolderRepository>())),
+        Bind.lazySingleton<IDeleteFolderUsecase>(
+            (i) => DeleteFolderUsecase(i<IFolderRepository>())),
+        Bind.lazySingleton<IRestoreFolderUsecase>(
+            (i) => RestoreFolderUsecase(i<IFolderRepository>())),
+        Bind.lazySingleton<IDeleteFolderPersistentUsecase>(
+            (i) => DeleteFolderPersistentUsecase(i<IFolderRepository>())),
+        //?
+        //? NOTE
+        Bind.lazySingleton<INoteDatasource>((i) => NoteDatasource(
+              i<AppDatabase>().noteDao,
+            )),
+        Bind.lazySingleton<INoteRepository>((i) => NoteRepository(
+              i<INoteDatasource>(),
+            )),
+        //
+        Bind.lazySingleton<IAddNoteUsecase>((i) => AddNoteUsecase(
+              i<INoteRepository>(),
+            )),
+        Bind.lazySingleton<IEditNoteUsecase>((i) => EditNoteUsecase(
+              i<INoteRepository>(),
+            )),
+        Bind.lazySingleton<IRestoreNoteUsecase>((i) => RestoreNoteUsecase(
+              i<INoteRepository>(),
+            )),
+        Bind.lazySingleton<IDeleteNoteUsecase>((i) => DeleteNoteUsecase(
+              i<INoteRepository>(),
+            )),
+        Bind.lazySingleton<IDeleteNotePersistentUsecase>(
+            (i) => DeleteNotePersistentUsecase(
+                  i<INoteRepository>(),
+                )),
+        //?
+        //? GET LIST
         Bind.lazySingleton<IGetListDatasource>((i) => GetListDatasource(
               i<AppDatabase>().folderDao,
               i<AppDatabase>().noteDao,
@@ -46,6 +110,7 @@ class DashboardModule extends Module {
         Bind.lazySingleton<IGetListNotesUsecase>((i) => GetListNotesUsecase(
               i<IGetListRepository>(),
             )),
+        //?
         //? LEAVE
         Bind.lazySingleton<ILeaveDatasource>(
           (i) => LeaveDatasource(

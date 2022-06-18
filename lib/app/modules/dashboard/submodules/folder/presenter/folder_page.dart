@@ -10,6 +10,8 @@ import '../../../presenter/enum/mode_note_enum.dart';
 import '../../../presenter/mixin/template_page_mixin.dart';
 import '../../../presenter/pages/search/custom_search_delegate.dart';
 import '../../../presenter/widgets/checkbox_all_widget.dart';
+import '../../../presenter/widgets/confirm_deletion_widget.dart';
+import '../../../presenter/widgets/popup_more_button_widget.dart';
 import 'folder_controller.dart';
 import '../../../presenter/widgets/grid_folder_widget.dart';
 import '../../../presenter/widgets/grid_note_widget.dart';
@@ -26,6 +28,13 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
   bool ordeByDesc = true;
 
   late FolderController _controller;
+
+  _exitModeSelection() {
+    _controller.selection.toggleSelectable(false);
+    _controller.selection.clearFolder();
+    _controller.selection.clearNotes();
+    super.enableFloatingButtonAdd();
+  }
 
   @override
   void initState() {
@@ -169,10 +178,7 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
           return WillPopScope(
             onWillPop: () async {
               if (selectable) {
-                _controller.selection.toggleSelectable(false);
-                _controller.selection.clearFolder();
-                _controller.selection.clearNotes();
-                super.enableFloatingButtonAdd();
+                _exitModeSelection();
                 return false;
               } else {
                 final sequencesFolder =
@@ -254,13 +260,25 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
                               ordeByDesc: ordeByDesc,
                               listNotes: listNotes,
                               noteSelecteds: noteSelecteds,
-                              reactive:
-                                  super.drawerMenu.listFieldsStore.reactive,
                               onPressedOrder: () {
                                 setState(() => ordeByDesc = !ordeByDesc);
                               },
                               onLongPressCardFolder: () {
                                 super.disableFloatingButtonAdd();
+                              },
+                              onTap: (note) {
+                                Modular.to.pushNamed(
+                                  '/dashboard/add-or-edit-note/',
+                                  arguments: [
+                                    ModeNoteEnum.edit,
+                                    note,
+                                    super
+                                        .drawerMenu
+                                        .listFieldsStore
+                                        .reactive
+                                        .getFolder(note.folderId),
+                                  ],
+                                );
                               },
                             );
                           },
@@ -298,20 +316,53 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
                 child: CustomButtonIcon(
                   icon: Icons.delete_outline_rounded,
                   text: 'Excluir',
-                  onPressed: () {},
+                  onPressed: () {
+                    String title = _controller.questionTitleDelete(
+                      folderSelecteds,
+                      noteSelecteds,
+                    );
+
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      barrierColor: Colors.black26,
+                      builder: (context) {
+                        return ConfirmDeletionWidget(
+                          title: title,
+                          onConfirmation: () {
+                            _exitModeSelection();
+
+                            if (noteSelecteds.isNotEmpty) {
+                              _controller.deleteNote(context, noteSelecteds);
+                            }
+                            if (folderSelecteds.isNotEmpty) {
+                              _controller.deleteFolder(
+                                  context, folderSelecteds);
+                            }
+                          },
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  start: 8.0,
-                  end: 16.0,
+              if (folderSelecteds.isEmpty)
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 8.0,
+                    end: 16.0,
+                  ),
+                  child: PopupMoreButtonWidget(
+                    noteSelecteds: noteSelecteds,
+                    listMoreButton: _controller.moreButton,
+                    onSelected: (String result) {
+                      if (result == _controller.moreButton.first) {
+                        _controller.editFavorite(context, noteSelecteds);
+                        _exitModeSelection();
+                      }
+                    },
+                  ),
                 ),
-                child: CustomButtonIcon(
-                  icon: Icons.more_vert,
-                  text: 'Mais',
-                  onPressed: () {},
-                ),
-              ),
             ],
           ),
         );
@@ -322,6 +373,7 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
 
   @override
   Widget get floatingButtonAdd => FloatingActionButton(
+        tooltip: 'Adic.',
         child: const Icon(
           Icons.note_add_outlined,
           size: 30,

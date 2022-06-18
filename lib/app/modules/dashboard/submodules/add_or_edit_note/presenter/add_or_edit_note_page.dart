@@ -137,6 +137,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
                     child: TextField(
                       scrollController:
                           _controller.scrollInTopStore.scrollController,
+                      textCapitalization: TextCapitalization.sentences,
                       controller: _editingControllerBody,
                       focusNode: _focusNodeBody,
                       maxLines: _maxLines,

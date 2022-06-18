@@ -151,6 +151,22 @@ class _$FolderDAO extends FolderDAO {
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
                 },
+            changeListener),
+        _folderEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'Folder',
+            ['id'],
+            (FolderEntity item) => <String, Object?>{
+                  'folder_parent': item.folderParent,
+                  'user_id': item.userId,
+                  'level': item.level,
+                  'color': item.color,
+                  'name': item.name,
+                  'is_deleted': item.isDeleted,
+                  'id': item.id,
+                  'date_create': item.dateCreate,
+                  'date_modification': item.dateModification
+                },
             changeListener);
 
   final sqflite.DatabaseExecutor database;
@@ -162,6 +178,8 @@ class _$FolderDAO extends FolderDAO {
   final InsertionAdapter<FolderEntity> _folderEntityInsertionAdapter;
 
   final UpdateAdapter<FolderEntity> _folderEntityUpdateAdapter;
+
+  final DeletionAdapter<FolderEntity> _folderEntityDeletionAdapter;
 
   @override
   Future<void> deleteAllExcept(int folderId) async {
@@ -229,6 +247,11 @@ class _$FolderDAO extends FolderDAO {
   Future<int> updateFolders(List<FolderEntity> records) {
     return _folderEntityUpdateAdapter.updateListAndReturnChangedRows(
         records, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> deletePersistentFolders(List<FolderEntity> records) {
+    return _folderEntityDeletionAdapter.deleteListAndReturnChangedRows(records);
   }
 }
 
@@ -312,6 +335,22 @@ class _$NoteDAO extends NoteDAO {
   }
 
   @override
+  Future<List<NoteEntity>> getNotesByFolder(int folderId) async {
+    return _queryAdapter.queryList('SELECT * FROM Note WHERE folder_id = ?1',
+        mapper: (Map<String, Object?> row) => NoteEntity(
+            noteId: row['id'] as int,
+            dateCreate: row['date_create'] as String,
+            dateModification: row['date_modification'] as String,
+            title: row['title'] as String,
+            body: row['body'] as String,
+            favorite: row['favorite'] as int,
+            isDeleted: row['is_deleted'] as int,
+            folderId: row['folder_id'] as int,
+            tagId: row['tag_id'] as int?),
+        arguments: [folderId]);
+  }
+
+  @override
   Future<void> deleteNote(int noteId) async {
     await _queryAdapter.queryNoReturn(
         'UPDATE Note SET is_deleted = 1 WHERE id = ?1',
@@ -326,25 +365,9 @@ class _$NoteDAO extends NoteDAO {
   }
 
   @override
-  Future<List<NoteEntity>> getNotesDeleted() async {
-    return _queryAdapter.queryList(
-        'SELECT        Note.id,       Note.title,       Note.body,       Note.tag_id,       Note.favorite,       Note.folder_id,       Note.is_deleted,       Note.date_create,       Note.date_modification     FROM Note INNER JOIN Folder                on (Note.folder_id = Folder.id                AND Folder.is_deleted = 0)     WHERE Note.is_deleted = 1',
-        mapper: (Map<String, Object?> row) => NoteEntity(
-            noteId: row['id'] as int,
-            dateCreate: row['date_create'] as String,
-            dateModification: row['date_modification'] as String,
-            title: row['title'] as String,
-            body: row['body'] as String,
-            favorite: row['favorite'] as int,
-            isDeleted: row['is_deleted'] as int,
-            folderId: row['folder_id'] as int,
-            tagId: row['tag_id'] as int?));
-  }
-
-  @override
   Stream<List<NoteEntity>> getNotes() {
     return _queryAdapter.queryListStream(
-        'SELECT Note.id,            Note.title,            Note.body,            Note.tag_id,            Note.favorite,            Note.folder_id,            Note.is_deleted,            Note.date_create,            Note.date_modification     FROM Note INNER JOIN Folder                on (Note.folder_id = Folder.id                AND Folder.is_deleted = 0)     WHERE Note.is_deleted = 0',
+        'SELECT Note.id,            Note.title,            Note.body,            Note.tag_id,            Note.favorite,            Note.folder_id,            Note.is_deleted,            Note.date_create,            Note.date_modification     FROM Note INNER JOIN Folder                on (Note.folder_id = Folder.id                AND Folder.is_deleted = 0)',
         mapper: (Map<String, Object?> row) => NoteEntity(
             noteId: row['id'] as int,
             dateCreate: row['date_create'] as String,
@@ -372,8 +395,8 @@ class _$NoteDAO extends NoteDAO {
   }
 
   @override
-  Future<void> deletePersistentNote(NoteEntity person) async {
-    await _noteEntityDeletionAdapter.delete(person);
+  Future<int> deletePersistentNotes(List<NoteEntity> records) {
+    return _noteEntityDeletionAdapter.deleteListAndReturnChangedRows(records);
   }
 }
 
