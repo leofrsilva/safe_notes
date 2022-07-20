@@ -11,6 +11,7 @@ import 'modules/setting/setting_module.dart';
 import 'modules/splash/splash_module.dart';
 import 'shared/database/database.dart';
 import 'app_core.dart';
+import 'shared/encrypt/data_encrypt.dart';
 
 class AppModule extends Module {
   @override
@@ -33,6 +34,8 @@ class AppModule extends Module {
     Bind.singleton<SettingController>((i) => SettingController(
           i<ThemeStore>(),
         )),
+    //
+    Bind.singleton<DataEncrypt>((i) => DataEncrypt()),
   ];
 
   @override
