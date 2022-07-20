@@ -1,19 +1,22 @@
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/extension/extension.dart';
+import 'package:safe_notes/app/shared/encrypt/data_encrypt.dart';
 
 import '../entities/tag_entity.dart';
 
 class TagModel {
-  final TagEntity _entity;
+  late DataEncrypt _encrypt;
 
+  late TagEntity _entity;
   TagEntity get entity => _entity;
 
   int get tagId => _entity.id;
 
   int get color => _entity.color;
 
-  String get name => _entity.name;
+  String get name => _encrypt.decode(_entity.name);
 
-  String get description => _entity.description ?? '';
+  String get description => _encrypt.decode(_entity.description ?? '');
 
   bool get isDeleted => _entity.isDeleted.toBool!;
 
@@ -21,14 +24,15 @@ class TagModel {
 
   DateTime get dateModification => _entity.dateModification.toDateTime;
 
-  TagModel.fromEntity(this._entity);
-
   static int get _generaterId {
     return DateTime.now().millisecondsSinceEpoch;
   }
 
+  TagModel.fromEntity(this._entity) : _encrypt = Modular.get<DataEncrypt>();
+
   TagModel.empty()
-      : _entity = TagEntity(
+      : _encrypt = Modular.get<DataEncrypt>(),
+        _entity = TagEntity(
           tagId: _generaterId,
           name: '',
           color: 0,
@@ -45,15 +49,18 @@ class TagModel {
     required int color,
     required bool isDeleted,
     String? description,
-  }) : _entity = TagEntity(
-          tagId: tagId == 0 ? _generaterId : tagId,
-          name: name,
-          color: color,
-          description: description,
-          isDeleted: isDeleted.toInt,
-          dateCreate: dateCreate.toString(),
-          dateModification: dateModification.toString(),
-        );
+  }) {
+    _encrypt = Modular.get<DataEncrypt>();
+    _entity = TagEntity(
+      tagId: tagId == 0 ? _generaterId : tagId,
+      name: _encrypt.encode(name),
+      color: color,
+      description: _encrypt.encode(description ?? ''),
+      isDeleted: isDeleted.toInt,
+      dateCreate: dateCreate.toString(),
+      dateModification: dateModification.toString(),
+    );
+  }
 
   TagModel copyWith({
     int? tagId,

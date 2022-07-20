@@ -1,9 +1,9 @@
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../domain/usecases/note/i_note_usecases.dart';
-import 'presenter/notes_controller.dart';
-import 'presenter/notes_page.dart';
 import '../../presenter/stores/selection_store.dart';
+import 'notes_controller.dart';
+import 'notes_page.dart';
 
 class NotesModule extends Module {
   @override

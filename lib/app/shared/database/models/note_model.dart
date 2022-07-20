@@ -1,13 +1,14 @@
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/extension/extension.dart';
+import 'package:safe_notes/app/shared/encrypt/data_encrypt.dart';
 
 import '../entities/note_entity.dart';
 
 class NoteModel {
-  final NoteEntity _entity;
+  late DataEncrypt _encrypt;
 
+  late NoteEntity _entity;
   NoteEntity get entity => _entity;
-
-  NoteModel.fromEntity(this._entity);
 
   int get folderId => _entity.folderId;
 
@@ -15,9 +16,9 @@ class NoteModel {
 
   int get noteId => _entity.id;
 
-  String get body => _entity.body;
+  String get body => _encrypt.decode(_entity.body);
 
-  String get title => _entity.title;
+  String get title => _encrypt.decode(_entity.title);
 
   bool get favorite => _entity.favorite.toBool!;
 
@@ -50,8 +51,11 @@ class NoteModel {
     return DateTime.now().millisecondsSinceEpoch;
   }
 
+  NoteModel.fromEntity(this._entity) : _encrypt = Modular.get<DataEncrypt>();
+
   NoteModel.empty()
-      : _entity = NoteEntity(
+      : _encrypt = Modular.get<DataEncrypt>(),
+        _entity = NoteEntity(
           noteId: _generaterId,
           folderId: 0,
           body: '',
@@ -73,18 +77,21 @@ class NoteModel {
     required bool isDeleted,
     DateTime? dateDeletion,
     int? tagId,
-  }) : _entity = NoteEntity(
-          folderId: folderId == 0 ? _generaterId : folderId,
-          tagId: tagId,
-          noteId: noteId,
-          body: body,
-          title: title,
-          favorite: favorite.toInt,
-          isDeleted: isDeleted.toInt,
-          dateDeletion: dateDeletion?.toString(),
-          dateCreate: dateCreate.toString(),
-          dateModification: dateModification.toString(),
-        );
+  }) {
+    _encrypt = Modular.get<DataEncrypt>();
+    _entity = NoteEntity(
+      folderId: folderId == 0 ? _generaterId : folderId,
+      tagId: tagId,
+      noteId: noteId,
+      body: _encrypt.encode(body),
+      title: _encrypt.encode(title),
+      favorite: favorite.toInt,
+      isDeleted: isDeleted.toInt,
+      dateDeletion: dateDeletion?.toString(),
+      dateCreate: dateCreate.toString(),
+      dateModification: dateModification.toString(),
+    );
+  }
 
   NoteModel copyWith({
     int? noteId,

@@ -1,7 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/extension/extension.dart';
+import 'package:safe_notes/app/shared/encrypt/data_encrypt.dart';
 
-import '../../encrypt/data_encrypt.dart';
 import '../entities/folder_entity.dart';
 
 class FolderModel {

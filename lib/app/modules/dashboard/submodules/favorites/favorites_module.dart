@@ -2,8 +2,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../domain/usecases/note/i_note_usecases.dart';
 import '../../presenter/stores/selection_store.dart';
-import 'presenter/favorites_controller.dart';
-import 'presenter/favorites_page.dart';
+import 'favorites_controller.dart';
+import 'favorites_page.dart';
 
 class FavoritesModule extends Module {
   @override

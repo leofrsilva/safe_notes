@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
-import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
-import '../../../presenter/enum/mode_note_enum.dart';
-import '../../../presenter/mixin/template_page_mixin.dart';
-import '../../../presenter/widgets/checkbox_all_widget.dart';
-import '../../../presenter/widgets/confirm_deletion_widget.dart';
-import '../../../presenter/widgets/grid_note_widget.dart';
-import '../../../presenter/widgets/popup_more_button_widget.dart';
-import 'notes_controller.dart';
-import '../../../presenter/pages/search/custom_search_delegate.dart';
+import '../../presenter/enum/mode_note_enum.dart';
+import '../../presenter/mixin/template_page_mixin.dart';
+import '../../presenter/pages/search/custom_search_delegate.dart';
+import '../../presenter/widgets/checkbox_all_widget.dart';
+import '../../presenter/widgets/confirm_deletion_widget.dart';
+import '../../presenter/widgets/grid_note_widget.dart';
+import '../../presenter/widgets/popup_more_button_widget.dart';
+import 'favorites_controller.dart';
 
-class NotesPage extends StatefulWidget {
-  const NotesPage({Key? key}) : super(key: key);
+class FavoritesPage extends StatefulWidget {
+  const FavoritesPage({Key? key}) : super(key: key);
 
   @override
-  State<NotesPage> createState() => _NotesPageState();
+  State<FavoritesPage> createState() => _FavoritesPageState();
 }
 
-class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
-  late NotesController _controller;
+class _FavoritesPageState extends State<FavoritesPage> with TemplatePageMixin {
+  late FavoritesController _controller;
 
   bool ordeByDesc = true;
 
@@ -32,13 +32,13 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _controller = Modular.get<NotesController>();
-  }
+  String get title => 'Favoritos';
 
   @override
-  String get title => 'Todas as notas';
+  void initState() {
+    super.initState();
+    _controller = Modular.get<FavoritesController>();
+  }
 
   @override
   List<Widget> get actionsIcon {
@@ -122,79 +122,102 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
   }
 
   @override
-  Widget get body => RxBuilder(
-        builder: (context) {
-          bool selectable = _controller.selection.selectable.value;
-          List<NoteModel> noteSelecteds =
-              _controller.selection.selectedNoteItems.value;
+  Widget get body => RxBuilder(builder: (context) {
+        bool selectable = _controller.selection.selectable.value;
+        List<NoteModel> noteSelecteds =
+            _controller.selection.selectedNoteItems.value;
 
-          return WillPopScope(
-            onWillPop: () async {
-              if (selectable) {
-                _exitModeSelection();
-                return false;
-              }
-              return true;
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: AnimatedBuilder(
-                animation: super.drawerMenu.listFieldsStore.reactive,
-                builder: (context, child) {
-                  var listNotes = super
-                      .drawerMenu
-                      .listFieldsStore
-                      .reactive
-                      .listAllNote(orderByDesc: ordeByDesc);
+        return WillPopScope(
+          onWillPop: () async {
+            if (selectable) {
+              _exitModeSelection();
+              return false;
+            }
+            return true;
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14.0),
+            child: AnimatedBuilder(
+              animation: super.drawerMenu.listFieldsStore.reactive,
+              builder: (context, child) {
+                var listFavorites =
+                    super.drawerMenu.listFieldsStore.reactive.favorites;
 
-                  if (listNotes.isNotEmpty) {
-                    return Container(
-                      constraints: const BoxConstraints.expand(),
-                      child: ScrollConfiguration(
-                        behavior: NoGlowBehavior(),
-                        child: SingleChildScrollView(
-                          controller: super.scrollController,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 75.0),
-                            child: GridNoteWidget(
-                              selectable: selectable,
-                              selection: _controller.selection,
-                              ordeByDesc: ordeByDesc,
-                              listNotes: listNotes,
-                              noteSelecteds: noteSelecteds,
-                              onPressedOrder: () {
-                                setState(() => ordeByDesc = !ordeByDesc);
-                              },
-                              onLongPressCardFolder: () {
-                                super.disableFloatingButtonAdd();
-                              },
-                              onTap: (note) {
-                                Modular.to.pushNamed(
-                                  '/dashboard/add-or-edit-note/',
-                                  arguments: [
-                                    ModeNoteEnum.edit,
-                                    note,
-                                    super
-                                        .drawerMenu
-                                        .listFieldsStore
-                                        .reactive
-                                        .getFolder(note.folderId),
-                                  ],
-                                );
-                              },
+                if (listFavorites.isEmpty) {
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    Modular.to.navigate('/dashboard/mod-notes/');
+                  });
+
+                  return Center(
+                    child: SizedBox(
+                      width: Sizes.width(context) * 0.65,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Nenhuma Anotação',
+                            style: TextStyle(
+                              color: ColorPalettes.blueGrey,
+                              fontSize: 20,
                             ),
                           ),
-                        ),
+                          const SizedBox(height: 10.0),
+                          Text(
+                            'Toque no botão Adicionar para criar uma nota.',
+                            maxLines: 2,
+                            style: TextStyle(
+                              color: ColorPalettes.grey,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  }
-                  return Container();
-                },
-              ),
+                    ),
+                  );
+                }
+
+                return ScrollConfiguration(
+                  behavior: NoGlowBehavior(),
+                  child: SingleChildScrollView(
+                    controller: super.scrollController,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 75.0),
+                      child: GridNoteWidget(
+                        selectable: selectable,
+                        selection: _controller.selection,
+                        ordeByDesc: ordeByDesc,
+                        listNotes: listFavorites,
+                        noteSelecteds: noteSelecteds,
+                        onPressedOrder: () {
+                          setState(() => ordeByDesc = !ordeByDesc);
+                        },
+                        onLongPressCardFolder: () {
+                          super.disableFloatingButtonAdd();
+                        },
+                        onTap: (note) {
+                          Modular.to.pushNamed(
+                            '/dashboard/add-or-edit-note/',
+                            arguments: [
+                              ModeNoteEnum.edit,
+                              note,
+                              super
+                                  .drawerMenu
+                                  .listFieldsStore
+                                  .reactive
+                                  .getFolder(note.folderId),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      );
+          ),
+        );
+      });
 
   @override
   Widget? get bottomNavigationBar {
@@ -222,7 +245,7 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
                   text: 'Excluir',
                   onPressed: () {
                     String title = 'Mover ${noteSelecteds.length} ';
-                    if (noteSelecteds.length > 1) {
+                    if (noteSelecteds.length > 2) {
                       title += 'notas para a lixeira';
                     } else {
                       title += 'nota para a lixeira';
@@ -267,23 +290,4 @@ class _NotesPageState extends State<NotesPage> with TemplatePageMixin {
       return const SizedBox(height: 0.0);
     });
   }
-
-  @override
-  Widget get floatingButtonAdd => FloatingActionButton(
-        tooltip: 'Adic.',
-        child: const Icon(
-          Icons.note_add_outlined,
-          size: 30,
-        ),
-        onPressed: () {
-          Modular.to.pushNamed(
-            '/dashboard/add-or-edit-note/',
-            arguments: [
-              ModeNoteEnum.add,
-              NoteModel.empty(),
-              DefaultDatabase.folderDefault
-            ],
-          );
-        },
-      );
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
-import '../../../domain/usecases/note/i_note_usecases.dart';
-import '../../../presenter/stores/selection_store.dart';
+import '../../domain/usecases/note/i_note_usecases.dart';
+import '../../presenter/stores/selection_store.dart';
 
 class NotesController {
   final SelectionStore selection;
