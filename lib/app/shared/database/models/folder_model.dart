@@ -1,13 +1,16 @@
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/extension/extension.dart';
 
+import '../../encrypt/data_encrypt.dart';
 import '../entities/folder_entity.dart';
 
 class FolderModel {
-  final FolderEntity _entity;
+  late DataEncrypt _encrypt;
 
+  late FolderEntity _entity;
   FolderEntity get entity => _entity;
 
-  String get userId => _entity.userId;
+  String get userId => _encrypt.encode(_entity.userId);
 
   int get folderId => _entity.id;
 
@@ -17,7 +20,7 @@ class FolderModel {
 
   int get color => _entity.color;
 
-  String get name => _entity.name;
+  String get name => _encrypt.decode(_entity.name);
 
   bool get isDeleted => _entity.isDeleted.toBool!;
 
@@ -44,14 +47,15 @@ class FolderModel {
 
   DateTime get dateModification => _entity.dateModification.toDateTime;
 
-  FolderModel.fromEntity(this._entity);
-
   static int get _generaterId {
     return DateTime.now().millisecondsSinceEpoch;
   }
 
+  FolderModel.fromEntity(this._entity) : _encrypt = Modular.get<DataEncrypt>();
+
   FolderModel.empty()
-      : _entity = FolderEntity(
+      : _encrypt = Modular.get<DataEncrypt>(),
+        _entity = FolderEntity(
           folderId: _generaterId,
           userId: '',
           level: 0,
@@ -73,18 +77,21 @@ class FolderModel {
     required int color,
     required String name,
     required bool isDeleted,
-  }) : _entity = FolderEntity(
-          folderId: folderId == 0 ? _generaterId : folderId,
-          folderParent: folderParent,
-          userId: userId,
-          level: level,
-          name: name,
-          color: color,
-          isDeleted: isDeleted.toInt,
-          dateDeletion: dateDeletion?.toString(),
-          dateCreate: dateCreate.toString(),
-          dateModification: dateModification.toString(),
-        );
+  }) {
+    _encrypt = Modular.get<DataEncrypt>();
+    _entity = FolderEntity(
+      folderId: folderId == 0 ? _generaterId : folderId,
+      userId: _encrypt.encode(userId),
+      name: _encrypt.encode(name),
+      folderParent: folderParent,
+      level: level,
+      color: color,
+      isDeleted: isDeleted.toInt,
+      dateDeletion: dateDeletion?.toString(),
+      dateCreate: dateCreate.toString(),
+      dateModification: dateModification.toString(),
+    );
+  }
 
   FolderModel copyWith({
     int? folderId,
