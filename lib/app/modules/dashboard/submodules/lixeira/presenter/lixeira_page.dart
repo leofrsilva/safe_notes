@@ -10,9 +10,9 @@ import '../../../presenter/enum/mode_note_enum.dart';
 import '../../../presenter/mixin/template_page_mixin.dart';
 import '../../../presenter/widgets/checkbox_all_widget.dart';
 import '../../../presenter/widgets/confirm_deletion_widget.dart';
-import '../../../presenter/widgets/grid_folder_widget.dart';
-import '../../../presenter/widgets/grid_note_widget.dart';
 import 'lixeira_controller.dart';
+import 'widgets/grid_folder_deleted_widget.dart';
+import 'widgets/grid_note_deleted_widget.dart';
 
 class LixeiraPage extends StatefulWidget {
   const LixeiraPage({Key? key}) : super(key: key);
@@ -21,7 +21,8 @@ class LixeiraPage extends StatefulWidget {
   State<LixeiraPage> createState() => _LixeiraPageState();
 }
 
-class _LixeiraPageState extends State<LixeiraPage> with TemplatePageMixin {
+class _LixeiraPageState extends State<LixeiraPage>
+    with TemplatePageMixin, WidgetsBindingObserver {
   late LixeiraController _controller;
 
   _exitModeSelection() {
@@ -35,9 +36,23 @@ class _LixeiraPageState extends State<LixeiraPage> with TemplatePageMixin {
   String get title => 'Lixeira';
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      setState(() {});
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     _controller = Modular.get<LixeiraController>();
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -230,7 +245,7 @@ class _LixeiraPageState extends State<LixeiraPage> with TemplatePageMixin {
                           padding: EdgeInsets.only(
                             top: foldersDeleted.isEmpty ? 0.0 : 15.0,
                           ),
-                          child: GridFolderWidget(
+                          child: GridFolderDeletedWidget(
                             selection: _controller.selection,
                             selectable: selectable,
                             reactive: reactive,
@@ -255,7 +270,7 @@ class _LixeiraPageState extends State<LixeiraPage> with TemplatePageMixin {
                             top: 15.0,
                             bottom: 75.0,
                           ),
-                          child: GridNoteWidget(
+                          child: GridNoteDeletedWidget(
                             selectable: selectable,
                             selection: _controller.selection,
                             haveOrdenation: false,

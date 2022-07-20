@@ -88,9 +88,9 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Tag` (`name` TEXT NOT NULL, `description` TEXT, `color` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `id` INTEGER NOT NULL, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Note` (`title` TEXT NOT NULL, `body` TEXT NOT NULL, `favorite` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `tag_id` INTEGER, `folder_id` INTEGER NOT NULL, `id` INTEGER NOT NULL, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL, FOREIGN KEY (`tag_id`) REFERENCES `Tag` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`folder_id`) REFERENCES `Folder` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Note` (`title` TEXT NOT NULL, `body` TEXT NOT NULL, `favorite` INTEGER NOT NULL, `tag_id` INTEGER, `folder_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `date_deletion` TEXT, `id` INTEGER NOT NULL, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL, FOREIGN KEY (`tag_id`) REFERENCES `Tag` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`folder_id`) REFERENCES `Folder` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Folder` (`folder_parent` INTEGER, `user_id` TEXT NOT NULL, `level` INTEGER NOT NULL, `color` INTEGER NOT NULL, `name` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `id` INTEGER NOT NULL, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL, FOREIGN KEY (`folder_parent`) REFERENCES `Folder` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Folder` (`folder_parent` INTEGER, `user_id` TEXT NOT NULL, `level` INTEGER NOT NULL, `color` INTEGER NOT NULL, `name` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `date_deletion` TEXT, `id` INTEGER NOT NULL, `date_create` TEXT NOT NULL, `date_modification` TEXT NOT NULL, FOREIGN KEY (`folder_parent`) REFERENCES `Folder` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database
             .execute('CREATE UNIQUE INDEX `index_Tag_name` ON `Tag` (`name`)');
         await database.execute(
@@ -131,6 +131,7 @@ class _$FolderDAO extends FolderDAO {
                   'color': item.color,
                   'name': item.name,
                   'is_deleted': item.isDeleted,
+                  'date_deletion': item.dateDeletion,
                   'id': item.id,
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
@@ -147,6 +148,7 @@ class _$FolderDAO extends FolderDAO {
                   'color': item.color,
                   'name': item.name,
                   'is_deleted': item.isDeleted,
+                  'date_deletion': item.dateDeletion,
                   'id': item.id,
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
@@ -163,6 +165,7 @@ class _$FolderDAO extends FolderDAO {
                   'color': item.color,
                   'name': item.name,
                   'is_deleted': item.isDeleted,
+                  'date_deletion': item.dateDeletion,
                   'id': item.id,
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
@@ -192,14 +195,15 @@ class _$FolderDAO extends FolderDAO {
     return _queryAdapter.query('SELECT * FROM Folder WHERE id = ?1',
         mapper: (Map<String, Object?> row) => FolderEntity(
             folderId: row['id'] as int,
-            folderParent: row['folder_parent'] as int?,
             dateCreate: row['date_create'] as String,
             dateModification: row['date_modification'] as String,
             userId: row['user_id'] as String,
             level: row['level'] as int,
             name: row['name'] as String,
             color: row['color'] as int,
-            isDeleted: row['is_deleted'] as int),
+            isDeleted: row['is_deleted'] as int,
+            dateDeletion: row['date_deletion'] as String?,
+            folderParent: row['folder_parent'] as int?),
         arguments: [folderId]);
   }
 
@@ -208,14 +212,15 @@ class _$FolderDAO extends FolderDAO {
     return _queryAdapter.queryListStream('SELECT * FROM Folder ORDER BY id',
         mapper: (Map<String, Object?> row) => FolderEntity(
             folderId: row['id'] as int,
-            folderParent: row['folder_parent'] as int?,
             dateCreate: row['date_create'] as String,
             dateModification: row['date_modification'] as String,
             userId: row['user_id'] as String,
             level: row['level'] as int,
             name: row['name'] as String,
             color: row['color'] as int,
-            isDeleted: row['is_deleted'] as int),
+            isDeleted: row['is_deleted'] as int,
+            dateDeletion: row['date_deletion'] as String?,
+            folderParent: row['folder_parent'] as int?),
         queryableName: 'Folder',
         isView: false);
   }
@@ -226,14 +231,15 @@ class _$FolderDAO extends FolderDAO {
         'SELECT * FROM Folder WHERE folder_parent = ?1',
         mapper: (Map<String, Object?> row) => FolderEntity(
             folderId: row['id'] as int,
-            folderParent: row['folder_parent'] as int?,
             dateCreate: row['date_create'] as String,
             dateModification: row['date_modification'] as String,
             userId: row['user_id'] as String,
             level: row['level'] as int,
             name: row['name'] as String,
             color: row['color'] as int,
-            isDeleted: row['is_deleted'] as int),
+            isDeleted: row['is_deleted'] as int,
+            dateDeletion: row['date_deletion'] as String?,
+            folderParent: row['folder_parent'] as int?),
         arguments: [folderId]);
   }
 
@@ -265,9 +271,10 @@ class _$NoteDAO extends NoteDAO {
                   'title': item.title,
                   'body': item.body,
                   'favorite': item.favorite,
-                  'is_deleted': item.isDeleted,
                   'tag_id': item.tagId,
                   'folder_id': item.folderId,
+                  'is_deleted': item.isDeleted,
+                  'date_deletion': item.dateDeletion,
                   'id': item.id,
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
@@ -281,9 +288,10 @@ class _$NoteDAO extends NoteDAO {
                   'title': item.title,
                   'body': item.body,
                   'favorite': item.favorite,
-                  'is_deleted': item.isDeleted,
                   'tag_id': item.tagId,
                   'folder_id': item.folderId,
+                  'is_deleted': item.isDeleted,
+                  'date_deletion': item.dateDeletion,
                   'id': item.id,
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
@@ -297,9 +305,10 @@ class _$NoteDAO extends NoteDAO {
                   'title': item.title,
                   'body': item.body,
                   'favorite': item.favorite,
-                  'is_deleted': item.isDeleted,
                   'tag_id': item.tagId,
                   'folder_id': item.folderId,
+                  'is_deleted': item.isDeleted,
+                  'date_deletion': item.dateDeletion,
                   'id': item.id,
                   'date_create': item.dateCreate,
                   'date_modification': item.dateModification
@@ -328,8 +337,9 @@ class _$NoteDAO extends NoteDAO {
             title: row['title'] as String,
             body: row['body'] as String,
             favorite: row['favorite'] as int,
-            isDeleted: row['is_deleted'] as int,
             folderId: row['folder_id'] as int,
+            isDeleted: row['is_deleted'] as int,
+            dateDeletion: row['date_deletion'] as String?,
             tagId: row['tag_id'] as int?),
         arguments: [noteId]);
   }
@@ -344,8 +354,9 @@ class _$NoteDAO extends NoteDAO {
             title: row['title'] as String,
             body: row['body'] as String,
             favorite: row['favorite'] as int,
-            isDeleted: row['is_deleted'] as int,
             folderId: row['folder_id'] as int,
+            isDeleted: row['is_deleted'] as int,
+            dateDeletion: row['date_deletion'] as String?,
             tagId: row['tag_id'] as int?),
         arguments: [folderId]);
   }
@@ -366,8 +377,7 @@ class _$NoteDAO extends NoteDAO {
 
   @override
   Stream<List<NoteEntity>> getNotes() {
-    return _queryAdapter.queryListStream(
-        'SELECT Note.id,            Note.title,            Note.body,            Note.tag_id,            Note.favorite,            Note.folder_id,            Note.is_deleted,            Note.date_create,            Note.date_modification     FROM Note INNER JOIN Folder                on (Note.folder_id = Folder.id                AND Folder.is_deleted = 0)',
+    return _queryAdapter.queryListStream('SELECT * FROM Note ORDER BY id',
         mapper: (Map<String, Object?> row) => NoteEntity(
             noteId: row['id'] as int,
             dateCreate: row['date_create'] as String,
@@ -375,8 +385,9 @@ class _$NoteDAO extends NoteDAO {
             title: row['title'] as String,
             body: row['body'] as String,
             favorite: row['favorite'] as int,
-            isDeleted: row['is_deleted'] as int,
             folderId: row['folder_id'] as int,
+            isDeleted: row['is_deleted'] as int,
+            dateDeletion: row['date_deletion'] as String?,
             tagId: row['tag_id'] as int?),
         queryableName: 'Note',
         isView: false);

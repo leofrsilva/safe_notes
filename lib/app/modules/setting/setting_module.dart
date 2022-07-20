@@ -1,7 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 
-import 'presenter/controllers/setting_controller.dart';
-import 'presenter/controllers/theme_store.dart';
+import 'controllers/setting_controller.dart';
+import 'controllers/theme_store.dart';
 import 'presenter/setting_page.dart';
 
 class SettingModule extends Module {

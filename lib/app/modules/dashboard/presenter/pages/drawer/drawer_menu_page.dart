@@ -150,7 +150,7 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                                 text: 'Todas as notas',
                                 icon: Icons.library_books_outlined,
                                 trailing: Text(
-                                  qtd.toString(),
+                                  qtd != 0 ? qtd.toString() : '',
                                   style: TextStyle(
                                     color: ColorPalettes.secondy,
                                   ),

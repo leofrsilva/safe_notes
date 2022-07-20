@@ -21,6 +21,25 @@ class FolderModel {
 
   bool get isDeleted => _entity.isDeleted.toBool!;
 
+  DateTime? get dateDeletion => _entity.dateDeletion?.toDateTime;
+
+  int get deletionExpiration {
+    int expiration = 0;
+    if (dateDeletion != null) {
+      DateTime dateExecuteDeletion = dateDeletion!.add(
+        const Duration(days: 30),
+      );
+      Duration timeDifference = dateExecuteDeletion.difference(DateTime.now());
+
+      if (timeDifference.inMinutes < 1) {
+        expiration = -1;
+      } else {
+        expiration = timeDifference.inDays == 0 ? 1 : timeDifference.inDays;
+      }
+    }
+    return expiration;
+  }
+
   DateTime get dateCreate => _entity.dateCreate.toDateTime;
 
   DateTime get dateModification => _entity.dateModification.toDateTime;
@@ -45,6 +64,7 @@ class FolderModel {
 
   FolderModel({
     int? folderParent,
+    DateTime? dateDeletion,
     required int folderId,
     required DateTime dateCreate,
     required DateTime dateModification,
@@ -61,6 +81,7 @@ class FolderModel {
           name: name,
           color: color,
           isDeleted: isDeleted.toInt,
+          dateDeletion: dateDeletion?.toString(),
           dateCreate: dateCreate.toString(),
           dateModification: dateModification.toString(),
         );
@@ -75,6 +96,7 @@ class FolderModel {
     int? color,
     String? name,
     bool? isDeleted,
+    DateTime? dateDeletion,
   }) {
     return FolderModel(
       folderParent: folderParent ?? this.folderParent,
@@ -84,6 +106,7 @@ class FolderModel {
       name: name ?? this.name,
       color: color ?? this.color,
       isDeleted: isDeleted ?? this.isDeleted,
+      dateDeletion: dateDeletion ?? this.dateDeletion,
       dateCreate: dateCreate ?? this.dateCreate,
       dateModification: dateModification ?? this.dateModification,
     );
@@ -102,6 +125,9 @@ class FolderModel {
       name: json['name'],
       color: json['color'],
       isDeleted: json['is_deleted'] as bool,
+      dateDeletion: json['date_deletion'] != null
+          ? DateTime.parse(json['date_deletion'])
+          : null,
       dateCreate: DateTime.parse(json['date_create']),
       dateModification: DateTime.parse(json['date_modification'].toString()),
     );
@@ -116,6 +142,7 @@ class FolderModel {
       'name': name,
       'color': color,
       'is_deleted': isDeleted,
+      'date_deletion': dateDeletion?.toString(),
       'date_create': dateCreate.toString(),
       'date_modification': dateModification.toString(),
     };

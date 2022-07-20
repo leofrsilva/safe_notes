@@ -46,8 +46,14 @@ class NoteRepository extends INoteRepository {
   @override
   Future<Either<Failure, dynamic>> deleteNote(List<NoteModel> notes) async {
     try {
-      final entities =
-          notes.map((note) => note.copyWith(isDeleted: true).entity).toList();
+      final entities = notes
+          .map((note) => note
+              .copyWith(
+                isDeleted: true,
+                dateDeletion: DateTime.now(),
+              )
+              .entity)
+          .toList();
       final result = await _datasource.deleteNote(entities);
       return Right(result);
     } on Failure catch (e) {

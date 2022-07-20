@@ -10,7 +10,7 @@ class DeleteFolderUsecase extends IDeleteFolderUsecase {
   DeleteFolderUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(List<FolderModel> folders) {
-    return _repository.deleteFolder(folders);
+  Future<Either<Failure, dynamic>> call(List<FolderModel> folders) async {
+    return await _repository.deleteFolder(folders);
   }
 }

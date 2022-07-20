@@ -5,10 +5,12 @@ import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
 import '../../../domain/usecases/folder/i_folder_usecase.dart';
 import '../../../domain/usecases/note/i_note_usecases.dart';
+import '../../../presenter/stores/list_fields_store.dart';
 import '../../../presenter/stores/selection_store.dart';
 
 class LixeiraController {
   final SelectionStore selection;
+  final ListFieldsStore _listFieldsStore;
   final IRestoreNoteUsecase _restoreNoteUsecase;
   final IRestoreFolderUsecase _restoreFolderUsecase;
   final IDeleteNotePersistentUsecase _deleteNotePersistentUsecase;
@@ -16,6 +18,7 @@ class LixeiraController {
 
   LixeiraController(
     this.selection,
+    this._listFieldsStore,
     this._restoreNoteUsecase,
     this._restoreFolderUsecase,
     this._deleteNotePersistentUsecase,
@@ -82,6 +85,18 @@ class LixeiraController {
 
   Future _restoreFolders(
       BuildContext context, List<FolderModel> folders) async {
+    var listNote = <NoteModel>[];
+    for (var folder in folders) {
+      for (var folderer
+          in _listFieldsStore.reactive.listDescendantsFolder(folder)) {
+        listNote.clear();
+        listNote.addAll(
+          _listFieldsStore.reactive.listNoteByFolderDeleted(folderer.folderId),
+        );
+        await _restoreNotes(context, listNote);
+      }
+    }
+
     final either = await _restoreFolderUsecase.call(folders);
     if (either.isLeft()) {
       String field = folders.length > 1 ? 'Pastas' : 'Pasta';
@@ -129,6 +144,18 @@ class LixeiraController {
 
   Future _deletePersistentFolders(
       BuildContext context, List<FolderModel> folders) async {
+    var listNote = <NoteModel>[];
+    for (var folder in folders) {
+      for (var folderer
+          in _listFieldsStore.reactive.listDescendantsFolder(folder)) {
+        listNote.clear();
+        listNote.addAll(
+          _listFieldsStore.reactive.listNoteByFolderDeleted(folderer.folderId),
+        );
+        await _deletePersistentNotes(context, listNote);
+      }
+    }
+
     final either = await _deleteFolderPersistentUsecase.call(folders);
     if (either.isLeft()) {
       String field = folders.length > 1 ? 'Pastas' : 'Pasta';

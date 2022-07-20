@@ -10,7 +10,7 @@ class AddFolderUsecase extends IAddFolderUsecase {
   AddFolderUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(FolderModel folder) {
-    return _repository.addFolder(folder);
+  Future<Either<Failure, dynamic>> call(FolderModel folder) async {
+    return await _repository.addFolder(folder);
   }
 }

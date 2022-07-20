@@ -118,7 +118,9 @@ class _DeletedNotePageState extends State<DeletedNotePage> {
                         ),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _controller.restoreNotes(context, widget.note);
+                    },
                   ),
                   TextButton(
                     child: const Padding(
@@ -131,7 +133,12 @@ class _DeletedNotePageState extends State<DeletedNotePage> {
                         ),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _controller.deletePersistentNotes(
+                        context,
+                        widget.note,
+                      );
+                    },
                   ),
                 ],
               ),

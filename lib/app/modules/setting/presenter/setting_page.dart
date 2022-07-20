@@ -4,8 +4,8 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 
-import 'controllers/setting_controller.dart';
-import 'controllers/theme_store.dart';
+import '../controllers/setting_controller.dart';
+import '../controllers/theme_store.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);

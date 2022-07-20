@@ -40,6 +40,7 @@ class NotesController {
     moreButton[0] = '$strOpFavorite dos favoritos';
   }
 
+  //? EDIT
   void editFavorite(BuildContext context, List<NoteModel> notes) async {
     List<NoteModel> noteEditable = [];
     if (_strAddOrRemoveFavorite(notes).contains('Remover')) {
@@ -59,6 +60,7 @@ class NotesController {
     }
   }
 
+  //? DELETE
   void deleteNote(BuildContext context, List<NoteModel> notes) async {
     final either = await _deleteNoteUsecase.call(notes);
     if (either.isLeft()) {

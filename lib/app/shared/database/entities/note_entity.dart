@@ -26,14 +26,17 @@ class NoteEntity extends BaseEntity {
 
   final int favorite;
 
-  @ColumnInfo(name: 'is_deleted')
-  final int isDeleted;
-
   @ColumnInfo(name: 'tag_id')
   final int? tagId;
 
   @ColumnInfo(name: 'folder_id')
   final int folderId;
+
+  @ColumnInfo(name: 'is_deleted')
+  final int isDeleted;
+
+  @ColumnInfo(name: 'date_deletion')
+  final String? dateDeletion; 
 
   NoteEntity({
     required int noteId,
@@ -42,8 +45,9 @@ class NoteEntity extends BaseEntity {
     required this.title,
     required this.body,
     required this.favorite,
-    required this.isDeleted,
     required this.folderId,
+    required this.isDeleted,
+    this.dateDeletion,
     this.tagId,
   }) : super(
           id: noteId,

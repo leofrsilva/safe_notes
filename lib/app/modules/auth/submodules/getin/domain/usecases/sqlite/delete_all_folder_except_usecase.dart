@@ -9,7 +9,7 @@ class DeleteAllFolderExceptUsecase extends IDeleteAllFolderExceptUsecase {
   DeleteAllFolderExceptUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(int folderId) {
-    return _repository.deleteAllFolderExcept(folderId);
+  Future<Either<Failure, dynamic>> call(int folderId) async {
+    return await _repository.deleteAllFolderExcept(folderId);
   }
 }

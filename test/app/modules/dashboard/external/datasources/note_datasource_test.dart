@@ -35,7 +35,7 @@ void main() {
   group('note datasource addNote |', () {
     final noteEntity = note1.entity;
 
-    test('Adicionado um a Nota com Sucesso', () async {
+    test('Adicionado uma Nota com Sucesso', () async {
       final result = await datasource.addNote(noteEntity);
 
       expect(result, equals(noteEntity.id));
@@ -149,7 +149,7 @@ void main() {
     var noteModel = note6;
 
     test('retorna um NoNoteEditedToDeletedSqliteError', () async {
-      final note = note5.copyWith(isDeleted: false);
+      var note = note5.copyWith(isDeleted: false);
       await noteDAO.insertNote(note.entity);
 
       expect(
@@ -161,18 +161,27 @@ void main() {
     test('atualização da exclusção para true com Sucesso', () async {
       await noteDAO.insertNote(noteModel.entity);
 
-      noteModel = noteModel.copyWith(isDeleted: true);
+      noteModel = noteModel.copyWith(
+        isDeleted: true,
+        dateDeletion: DateTime.now(),
+      );
       await datasource.deleteNote([noteModel.entity]);
 
       final noteResult = await noteDAO.findNote(noteModel.noteId);
       expect(noteResult, isNotNull);
       expect(noteResult!.id, equals(noteModel.noteId));
       expect(noteResult.isDeleted, equals(1));
+      expect(noteResult.dateDeletion, isNotNull);
     });
 
     test('retorna um DeleteNoteSqliteError', () async {
       final noteDAOMock = NoteDAOExceptionMock();
       final datasouceMock = NoteDatasource(noteDAOMock);
+
+      noteModel = noteModel.copyWith(
+        isDeleted: true,
+        dateDeletion: DateTime.now(),
+      );
 
       expect(
         () => datasouceMock.deleteNote([noteModel.entity]),

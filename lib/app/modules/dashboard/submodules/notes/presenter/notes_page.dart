@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';

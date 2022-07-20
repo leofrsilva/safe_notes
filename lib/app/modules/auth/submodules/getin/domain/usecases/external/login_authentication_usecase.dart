@@ -9,7 +9,7 @@ class LoginAuthenticationUsecase extends ILoginAuthenticationUsecase {
   LoginAuthenticationUsecase(this._firebaseRepository);
 
   @override
-  Future<Either<Failure, String>> call(String email, String pass) {
-    return _firebaseRepository.signIn(email, pass);
+  Future<Either<Failure, String>> call(String email, String pass) async {
+    return await _firebaseRepository.signIn(email, pass);
   }
 }

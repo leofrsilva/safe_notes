@@ -77,7 +77,7 @@ class CardFolder extends StatelessWidget {
                     size: size,
                   ),
                   Positioned(
-                    top: (size * 0.175),
+                    top: (size * 0.2),
                     left: (size * 0.085),
                     child: Container(
                       width: (size * 0.75) / 2,

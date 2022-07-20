@@ -3,14 +3,48 @@ import 'package:flutter/services.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
+import 'dashboard_controller.dart';
 import 'pages/drawer/drawer_menu_page.dart';
 import 'pages/drawer/drawer_menu_controller.dart';
 import 'widgets/clip_view_port_widget.dart';
 
-class DashboardPage extends StatelessWidget {
-  DashboardPage({Key? key}) : super(key: key);
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({Key? key}) : super(key: key);
 
-  final drawerMenuController = Modular.get<DrawerMenuController>();
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage>
+    with WidgetsBindingObserver {
+  late DashboardController dashboardController;
+  late DrawerMenuController drawerMenuController;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      dashboardController.deleteExpiration();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    drawerMenuController = Modular.get<DrawerMenuController>();
+    dashboardController = Modular.get<DashboardController>();
+    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance?.addPostFrameCallback((timings) {
+      Future.delayed(timings, () {
+        dashboardController.deleteExpiration();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -13,6 +13,13 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
   ReactiveList(this._reactiveFolders, this._reactiveNotes);
 
   @override
+  int numberChildrenInFolderDeleted(FolderModel folder) {
+    int countNotes = listNoteByFolderDeleted(folder.folderId).length;
+    int countFolders = listFolderDeletedById(folder.folderId).length;
+    return countNotes + countFolders;
+  }
+
+  @override
   int numberChildrenInFolder(FolderModel folder) {
     int countNotes = listNoteByFolder(folder.folderId).length;
     int countFolders = qtdChildrenFolder(folder.folderId);
@@ -21,7 +28,14 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
 
   @override
   int get numberItemsDeleted {
-    return qtdFolderdeleted + qtdNoteDeleted;
+    int numberNoteDeleted = listNoteDeleted.length;
+    int numberFolderDeleted = listFolderDeleted.length;
+    return numberFolderDeleted + numberNoteDeleted;
+  }
+
+  @override
+  List<NoteModel> get listNoteAllDeleted {
+    return _reactiveNotes.listNoteDeleted;
   }
 
   //* ----------------------------------------------
@@ -46,6 +60,11 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
   @override
   List<FolderModel> get listFolderDeleted {
     return _reactiveFolders.listFolderDeleted;
+  }
+
+  @override
+  List<FolderModel> listFolderDeletedById(int folderId) {
+    return _reactiveFolders.listFolderDeletedById(folderId);
   }
 
   //? -- EXPANDED
@@ -96,6 +115,11 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
   @override
   List<FolderModel> listDescendants(FolderModel folder) {
     return _reactiveFolders.listDescendants(folder);
+  }
+
+  @override
+  List<FolderModel> listDescendantsFolder(FolderModel folder) {
+    return _reactiveFolders.listDescendantsFolder(folder);
   }
 
   //? -- FUNCTION FOR NAME FOLDER
@@ -159,7 +183,15 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
 
   @override
   List<NoteModel> get listNoteDeleted {
-    return _reactiveNotes.listNoteDeleted;
+    return _reactiveNotes.listNoteDeleted.where((note) {
+      var result = true;
+      var folder = getFolder(note.folderId);
+      if (folder.isDeleted) {
+        result = false;
+      }
+
+      return result;
+    }).toList();
   }
 
   @override

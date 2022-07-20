@@ -4,10 +4,10 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 
 import '../../enum/mode_note_enum.dart';
-import '../../reactive/reactive_list.dart';
+import '../../reactive/i_reactive_list.dart';
 
 class CustomSearchDelegate extends SearchDelegate<String?> {
-  final ReactiveList reactiveList;
+  final IReactiveList reactiveList;
 
   CustomSearchDelegate({
     required this.reactiveList,

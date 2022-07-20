@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:safe_notes/app/design/common/util/sizes.dart';
-import 'package:safe_notes/app/modules/setting/presenter/controllers/manager_route_navigator_store.dart';
+import 'package:safe_notes/app/modules/setting/controllers/manager_route_navigator_store.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import '../../stores/list_fields_store.dart';

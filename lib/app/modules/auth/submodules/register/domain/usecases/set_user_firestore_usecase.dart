@@ -11,7 +11,7 @@ class SetUserFirestoreUsecase extends ISetUserFirestoreUsecase {
   SetUserFirestoreUsecase(this._firebaseRepository);
 
   @override
-  Future<Either<Failure, dynamic>> call(UsuarioEntity entity) {
-    return _firebaseRepository.insertUserFirestore(entity);
+  Future<Either<Failure, dynamic>> call(UsuarioEntity entity) async {
+    return await _firebaseRepository.insertUserFirestore(entity);
   }
 }

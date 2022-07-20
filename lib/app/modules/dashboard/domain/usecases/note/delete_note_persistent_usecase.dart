@@ -10,7 +10,7 @@ class DeleteNotePersistentUsecase extends IDeleteNotePersistentUsecase {
   DeleteNotePersistentUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(List<NoteModel> notes) {
-    return _repository.deletePersistentNote(notes);
+  Future<Either<Failure, dynamic>> call(List<NoteModel> notes) async {
+    return await _repository.deletePersistentNote(notes);
   }
 }

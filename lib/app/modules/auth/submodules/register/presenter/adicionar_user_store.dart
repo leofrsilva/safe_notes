@@ -3,7 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/design/widgets/loading/loading_overlay.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
-import 'package:safe_notes/app/modules/setting/presenter/controllers/access_boot_store.dart';
+import 'package:safe_notes/app/modules/setting/controllers/access_boot_store.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 import 'package:safe_notes/app/shared/token/i_expire_token.dart';

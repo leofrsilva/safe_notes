@@ -79,17 +79,25 @@ class GetinFirebaseDatasource extends IGetinFirebaseDatasource {
 
   @override
   Future<dynamic> updateLoggedUserFirestore(String docRef) async {
-    await _firestore
-        .collection('usuario')
-        .doc(docRef)
-        .update(UsuarioModel.toLoggedJson())
-        .catchError((error) {
+    try {
+      await _firestore
+          .collection('usuario')
+          .doc(docRef)
+          .update(UsuarioModel.toLoggedJson())
+          .catchError((error) {
+        throw GetinFirestoreError(
+          'GetinFirebaseDatasource.updateLoggedUserFirestore',
+          error,
+          error.message,
+        );
+      });
+      return dynamic;
+    } catch (error) {
       throw GetinFirestoreError(
         'GetinFirebaseDatasource.updateLoggedUserFirestore',
         error,
-        error.message,
+        '',
       );
-    });
-    return dynamic;
+    }
   }
 }

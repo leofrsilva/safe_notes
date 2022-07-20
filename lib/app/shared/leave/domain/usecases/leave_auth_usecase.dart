@@ -9,7 +9,7 @@ class LeaveAuthUsecase extends ILeaveAuthUsecase {
   LeaveAuthUsecase(this._leaveRepository);
 
   @override
-  Future<Either<Failure, dynamic>> call() {
-    return _leaveRepository.leaveAuth();
+  Future<Either<Failure, dynamic>> call() async {
+    return await _leaveRepository.leaveAuth();
   }
 }

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
-import 'package:safe_notes/app/modules/setting/presenter/controllers/folder_buffer_expanded_store.dart';
-import 'package:safe_notes/app/modules/setting/presenter/controllers/manager_route_navigator_store.dart';
+import 'package:safe_notes/app/modules/setting/controllers/folder_buffer_expanded_store.dart';
+import 'package:safe_notes/app/modules/setting/controllers/manager_route_navigator_store.dart';
 import 'package:safe_notes/app/shared/database/database.dart';
 import 'package:safe_notes/app/shared/token/expire_token.dart';
 
@@ -125,12 +125,7 @@ class DashboardModule extends Module {
           (i) => LeaveAuthUsecase(i<ILeaveRepository>()),
         ),
         //?
-        Bind.lazySingleton<DashboardController>((i) => DashboardController(
-              i<AppCore>(),
-              ExpireToken(),
-              i<ILeaveAuthUsecase>(),
-            )),
-        //
+        //?
         Bind.singleton<ListNotesStore>(
           (i) => ListNotesStore(i<IGetListNotesUsecase>()),
         ),
@@ -145,6 +140,15 @@ class DashboardModule extends Module {
           ),
         ),
         //
+        Bind.lazySingleton<DashboardController>((i) => DashboardController(
+              i<AppCore>(),
+              ExpireToken(),
+              i<ILeaveAuthUsecase>(),
+              i<ListFieldsStore>(),
+              i<IDeleteNotePersistentUsecase>(),
+              i<IDeleteFolderPersistentUsecase>(),
+            )),
+        //
         Bind.singleton((i) => DrawerMenuController(
               i<ListFieldsStore>(),
               i<ManagerRouteNavigatorStore>(),
@@ -155,7 +159,7 @@ class DashboardModule extends Module {
   List<ModularRoute> get routes => [
         ChildRoute(
           Modular.initialRoute,
-          child: (_, __) => DashboardPage(),
+          child: (_, __) => const DashboardPage(),
           children: [
             ModuleRoute(
               '/mod-notes',

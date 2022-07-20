@@ -3,11 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
 
-import 'package:safe_notes/app/modules/setting/presenter/controllers/access_boot_store.dart';
-import 'package:safe_notes/app/modules/setting/presenter/controllers/manager_route_navigator_store.dart';
-
 import 'package:safe_notes/app/shared/leave/leave.dart';
 import 'package:safe_notes/app/shared/token/expire_token.dart';
+import '../setting/controllers/access_boot_store.dart';
+import '../setting/controllers/manager_route_navigator_store.dart';
 import 'splash_page.dart';
 import 'splash_controller.dart';
 

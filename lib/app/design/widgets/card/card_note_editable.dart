@@ -9,8 +9,11 @@ class CardNoteEditable extends StatelessWidget {
   final Function() onDeselect;
   final Function() onLongPress;
 
+  final Widget? foreground;
+
   const CardNoteEditable({
     Key? key,
+    this.foreground,
     required this.note,
     required this.selected,
     required this.onDeselect,
@@ -25,6 +28,7 @@ class CardNoteEditable extends StatelessWidget {
         Stack(
           children: [
             CardNote(
+              foreground: foreground,
               title: note.title,
               body: note.body,
               favorite: note.favorite,
@@ -67,8 +71,8 @@ class CardNoteEditable extends StatelessWidget {
                     if (states.contains(MaterialState.selected)) {
                       return null;
                     }
-                    return const BorderSide(
-                      color: Colors.grey,
+                    return BorderSide(
+                      color: ColorPalettes.grey,
                       width: 1.25,
                     );
                   }),

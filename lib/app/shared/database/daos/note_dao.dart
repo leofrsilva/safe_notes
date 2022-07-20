@@ -25,19 +25,6 @@ abstract class NoteDAO {
   @Query('UPDATE Note SET tag_id = NULL WHERE tag_id = :tagId')
   Future<void> removeTagFromNotes(int tagId);
 
-  @Query('''
-    SELECT Note.id,
-           Note.title,
-           Note.body,
-           Note.tag_id,
-           Note.favorite,
-           Note.folder_id,
-           Note.is_deleted,
-           Note.date_create,
-           Note.date_modification
-    FROM Note INNER JOIN Folder 
-              on (Note.folder_id = Folder.id 
-              AND Folder.is_deleted = 0)
-   ''')
+  @Query('SELECT * FROM Note ORDER BY id')
   Stream<List<NoteEntity>> getNotes();
 }

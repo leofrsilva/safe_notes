@@ -142,8 +142,17 @@ class ManagerFoldersController extends Disposable {
         if (modFolder != null) {
           final controllerFolder = Modular.get<FolderController>();
           final ids = folders.map<int>((folder) => folder.folderId).toList();
-          if (ids.contains(controllerFolder.folder.folderId)) {
-            controllerFolder.folderParent.value = DefaultDatabase.folderDefault;
+
+          var listFoldersDeleted = reactiveList
+              .listDescendants(controllerFolder.folder)
+              .where((folder) {
+            return folder.folderId != DefaultDatabase.folderDefault.folderId;
+          });
+          for (var folder in listFoldersDeleted) {
+            if (ids.contains(folder.folderId)) {
+              controllerFolder.folderParent.value =
+                  DefaultDatabase.folderDefault;
+            }
           }
         }
       }

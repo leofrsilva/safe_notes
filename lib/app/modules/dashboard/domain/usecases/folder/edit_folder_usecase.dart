@@ -10,7 +10,7 @@ class EditFolderUsecase extends IEditFolderUsecase {
   EditFolderUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(FolderModel folder) {
-    return _repository.editFolder(folder);
+  Future<Either<Failure, dynamic>> call(FolderModel folder) async {
+    return await _repository.editFolder(folder);
   }
 }

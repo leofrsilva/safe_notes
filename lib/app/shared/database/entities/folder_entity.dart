@@ -28,8 +28,10 @@ class FolderEntity extends BaseEntity {
   @ColumnInfo(name: 'is_deleted')
   final int isDeleted;
 
+  @ColumnInfo(name: 'date_deletion')
+  final String? dateDeletion;
+
   FolderEntity({
-    this.folderParent,
     required int folderId,
     required String dateCreate,
     required String dateModification,
@@ -38,6 +40,8 @@ class FolderEntity extends BaseEntity {
     required this.name,
     required this.color,
     required this.isDeleted,
+    this.dateDeletion,
+    this.folderParent,
   }) : super(
           id: folderId,
           dateCreate: dateCreate,

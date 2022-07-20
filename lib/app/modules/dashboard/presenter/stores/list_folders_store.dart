@@ -16,7 +16,7 @@ class ListFoldersStore
 
   void getListFolders(Function(List<FolderModel>)? onListener) {
     setLoading(true);
-    final either = _getListFoldersUsecase.call();
+    final either = _getListFoldersUsecase();
     either.fold(
       (failure) => setError(failure),
       (stream) {

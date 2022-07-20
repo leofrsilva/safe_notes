@@ -55,7 +55,7 @@ class BarStatus extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: Theme.of(context).iconTheme.color,
+                      color: Theme.of(context).backgroundColor,
                     ),
                     onPressed: onTapIconButtonPrevius,
                   ),

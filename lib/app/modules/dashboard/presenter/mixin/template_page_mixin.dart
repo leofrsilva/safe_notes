@@ -114,6 +114,11 @@ mixin TemplatePageMixin<T extends StatefulWidget> on State<T> {
   }
 
   @override
+  void didUpdateWidget(covariant oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void dispose() {
     _isVisibleButtonAdd?.dispose();
     _isVisibleButtonToTop.dispose();

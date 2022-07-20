@@ -4,7 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 
-import 'modules/setting/presenter/controllers/theme_store.dart';
+import 'modules/setting/controllers/theme_store.dart';
 import 'shared/error/failure.dart';
 
 class AppWidget extends StatefulWidget {

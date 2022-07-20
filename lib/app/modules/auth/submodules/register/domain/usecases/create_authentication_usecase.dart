@@ -8,7 +8,7 @@ class CreateUserAuthenticationUsecase extends ICreateUserAuthenticationUsecase {
   CreateUserAuthenticationUsecase(this._firebaseRepository);
 
   @override
-  Future<Either<Failure, String>> call(String email, String pass) {
-    return _firebaseRepository.signUp(email, pass);
+  Future<Either<Failure, String>> call(String email, String pass) async {
+    return await _firebaseRepository.signUp(email, pass);
   }
 }

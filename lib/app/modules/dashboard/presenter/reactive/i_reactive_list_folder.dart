@@ -11,6 +11,8 @@ abstract class IReactiveListFolder {
 
   List<FolderModel> get listFolderDeleted;
 
+  List<FolderModel> listFolderDeletedById(int folderId);
+
   // Expanded
   addAllFolder(List<FolderModel> folders);
 
@@ -30,6 +32,8 @@ abstract class IReactiveListFolder {
   List<FolderModel> childrensFolder(int folderId);
 
   List<FolderModel> listDescendants(FolderModel folder);
+
+  List<FolderModel> listDescendantsFolder(FolderModel folder);
 
   // Function for Name Folder
   int qtdNameFolder(int parentId, int level);

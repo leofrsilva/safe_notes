@@ -10,7 +10,7 @@ class RestoreFolderUsecase extends IRestoreFolderUsecase {
   RestoreFolderUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(List<FolderModel> folders) {
-    return _repository.restoreFolder(folders);
+  Future<Either<Failure, dynamic>> call(List<FolderModel> folders) async {
+    return await _repository.restoreFolder(folders);
   }
 }

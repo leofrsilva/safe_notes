@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 
+import '../../../presenter/reactive/i_reactive_list.dart';
 import '../../../presenter/reactive/reactive_list.dart';
 import 'manager_folders_controller.dart';
 import 'widgets/ladder_folder_manager.dart';
@@ -14,7 +15,7 @@ class ManagerFoldersPage extends StatefulWidget {
 }
 
 class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
-  late ReactiveList _reactiveList;
+  late IReactiveList _reactiveList;
   late ManagerFoldersController _controller;
 
   @override
@@ -45,7 +46,7 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               AnimatedBuilder(
-                animation: _reactiveList,
+                animation: _reactiveList as ReactiveList,
                 builder: (context, child) {
                   return LadderFolderManager(
                     listFolders: _reactiveList.listFolder,

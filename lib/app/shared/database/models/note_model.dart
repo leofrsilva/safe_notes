@@ -23,6 +23,25 @@ class NoteModel {
 
   bool get isDeleted => _entity.isDeleted.toBool!;
 
+  DateTime? get dateDeletion => _entity.dateDeletion?.toDateTime;
+
+  int get deletionExpiration {
+    int expiration = 0;
+    if (dateDeletion != null) {
+      DateTime dateExecuteDeletion = dateDeletion!.add(
+        const Duration(days: 30),
+      );
+      Duration timeDifference = dateExecuteDeletion.difference(DateTime.now());
+
+      if (timeDifference.inMinutes < 1) {
+        expiration = -1;
+      } else {
+        expiration = timeDifference.inDays == 0 ? 1 : timeDifference.inDays;
+      }
+    }
+    return expiration;
+  }
+
   DateTime get dateCreate => _entity.dateCreate.toDateTime;
 
   DateTime get dateModification => _entity.dateModification.toDateTime;
@@ -49,9 +68,10 @@ class NoteModel {
     required DateTime dateModification,
     required String body,
     required String title,
+    required int folderId,
     required bool favorite,
     required bool isDeleted,
-    required int folderId,
+    DateTime? dateDeletion,
     int? tagId,
   }) : _entity = NoteEntity(
           folderId: folderId == 0 ? _generaterId : folderId,
@@ -61,6 +81,7 @@ class NoteModel {
           title: title,
           favorite: favorite.toInt,
           isDeleted: isDeleted.toInt,
+          dateDeletion: dateDeletion?.toString(),
           dateCreate: dateCreate.toString(),
           dateModification: dateModification.toString(),
         );
@@ -69,12 +90,13 @@ class NoteModel {
     int? noteId,
     DateTime? dateCreate,
     DateTime? dateModification,
+    int? tagId,
     String? body,
     String? title,
-    bool? isDeleted,
     bool? favorite,
     int? folderId,
-    int? tagId,
+    bool? isDeleted,
+    DateTime? dateDeletion,
   }) {
     return NoteModel(
       noteId: noteId ?? this.noteId,
@@ -82,9 +104,10 @@ class NoteModel {
       dateModification: dateModification ?? this.dateModification,
       body: body ?? this.body,
       title: title ?? this.title,
-      isDeleted: isDeleted ?? this.isDeleted,
       favorite: favorite ?? this.favorite,
       folderId: folderId ?? this.folderId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      dateDeletion: dateDeletion ?? this.dateDeletion,
       tagId: tagId ?? this.tagId,
     );
   }
@@ -102,6 +125,7 @@ class NoteModel {
       'title': title,
       'favorite': favorite,
       'is_deleted': isDeleted,
+      'date_deletion': dateDeletion,
       'date_create': dateCreate,
       'date_modification': dateModification,
     };

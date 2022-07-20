@@ -64,7 +64,10 @@ class NoteDatasource extends INoteDatasource {
   @override
   Future<dynamic> deleteNote(List<NoteEntity> entities) async {
     try {
-      if (entities.where((entity) => entity.isDeleted == 0).isNotEmpty) {
+      if ((entities.where((entity) => entity.isDeleted == 0).isNotEmpty) ||
+          (entities
+              .where((entity) => entity.dateDeletion == null)
+              .isNotEmpty)) {
         throw NoNoteEditedToDeletedSqliteError();
       }
       return await _noteDAO.updateNotes(entities);

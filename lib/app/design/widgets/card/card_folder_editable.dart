@@ -70,8 +70,8 @@ class CardFolderEditable extends StatelessWidget {
                     if (states.contains(MaterialState.selected)) {
                       return null;
                     }
-                    return const BorderSide(
-                      color: Colors.grey,
+                    return BorderSide(
+                      color: ColorPalettes.grey,
                       width: 1.25,
                     );
                   }),

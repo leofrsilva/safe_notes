@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
-import '../reactive/i_reactive_list.dart';
-import '../stores/selection_store.dart';
+import '../../../../presenter/reactive/reactive_list.dart';
+import '../../../../presenter/stores/selection_store.dart';
 
-class GridFolderWidget extends StatelessWidget {
+class GridFolderDeletedWidget extends StatelessWidget {
   final bool selectable;
   final SelectionStore selection;
-  final IReactiveList reactive;
+  final ReactiveList reactive;
 
   final List<FolderModel> listFolders;
   final List<FolderModel> folderSelecteds;
@@ -16,7 +16,7 @@ class GridFolderWidget extends StatelessWidget {
   final Function(FolderModel) onTap;
   final Function() onLongPressCardFolder;
 
-  const GridFolderWidget({
+  const GridFolderDeletedWidget({
     Key? key,
     required this.selectable,
     required this.selection,
@@ -51,7 +51,7 @@ class GridFolderWidget extends StatelessWidget {
             );
           }
           return CardFolder(
-            qtd: reactive.numberChildrenInFolder(folder),
+            qtd: reactive.numberChildrenInFolderDeleted(folder),
             title: folder.name,
             background: Color(folder.color),
             onTap: () => onTap(folder),

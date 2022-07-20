@@ -10,7 +10,7 @@ class UpdateLoggedUserFirestoreUsecase
   UpdateLoggedUserFirestoreUsecase(this._firebaseRepository);
 
   @override
-  Future<Either<Failure, dynamic>> call(String docRef) {
-    return _firebaseRepository.updateLoggedUserFirestore(docRef);
+  Future<Either<Failure, dynamic>> call(String docRef) async {
+    return await _firebaseRepository.updateLoggedUserFirestore(docRef);
   }
 }

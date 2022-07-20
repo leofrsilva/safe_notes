@@ -46,7 +46,12 @@ class FolderRepository extends IFolderRepository {
       List<FolderModel> folders) async {
     try {
       final entities = folders
-          .map((folder) => folder.copyWith(isDeleted: true).entity)
+          .map((folder) => folder
+              .copyWith(
+                isDeleted: true,
+                dateDeletion: DateTime.now(),
+              )
+              .entity)
           .toList();
       final result = await _datasource.deleteFolder(entities);
       return Right(result);
@@ -66,7 +71,12 @@ class FolderRepository extends IFolderRepository {
       List<FolderModel> folders) async {
     try {
       final entities = folders
-          .map((folder) => folder.copyWith(isDeleted: false).entity)
+          .map((folder) => folder
+              .copyWith(
+                isDeleted: false,
+                dateDeletion: null,
+              )
+              .entity)
           .toList();
       final result = await _datasource.restoreFolder(entities);
       return Right(result);

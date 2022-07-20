@@ -7,6 +7,7 @@ import 'package:safe_notes/app/shared/database/models/folder_list_model.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import '../pages/drawer/drawer_menu_controller.dart';
+import '../reactive/i_reactive_list.dart';
 
 class LadderFolder extends StatefulWidget {
   final Function(FolderModel) onTapFolder;
@@ -25,8 +26,7 @@ class LadderFolder extends StatefulWidget {
 }
 
 class _LadderFolderState extends State<LadderFolder> {
-  final _reactive =
-      Modular.get<DrawerMenuController>().listFieldsStore.reactive;
+  late IReactiveList _reactiveList;
 
   FolderListModel? folderers;
   int selectedFolderId = 0;
@@ -60,10 +60,10 @@ class _LadderFolderState extends State<LadderFolder> {
   }
 
   bool isExpanded(int folderId) {
-    return _reactive.checkFolderIsExpanded(folderId);
+    return _reactiveList.checkFolderIsExpanded(folderId);
   }
 
-  String textQtdChildren(int qtd) {
+  String qtdChildrenFolder(int qtd) {
     if (qtd == 0) return '';
     return qtd.toString();
   }
@@ -71,6 +71,8 @@ class _LadderFolderState extends State<LadderFolder> {
   @override
   void initState() {
     super.initState();
+    _reactiveList =
+        Modular.get<DrawerMenuController>().listFieldsStore.reactive;
     reorganization();
     selectedFolderId = widget.selected;
   }
@@ -93,22 +95,18 @@ class _LadderFolderState extends State<LadderFolder> {
       iconColor: Color(folderers!.current.color),
       turnsColor: ColorPalettes.secondy.withOpacity(0.5),
       selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
-      trailing: _reactive.numberChildrenInFolder(folderers!.current) != 0
-          ? Text(
-              textQtdChildren(
-                _reactive.numberChildrenInFolder(folderers!.current),
-              ),
-              style: TextStyle(
-                color: ColorPalettes.secondy,
-              ),
-            )
-          : null,
+      trailing: Text(
+        qtdChildrenFolder(
+          _reactiveList.numberChildrenInFolder(folderers!.current),
+        ),
+        style: TextStyle(color: ColorPalettes.secondy),
+      ),
       children: generaterWidgetsFolders(folderers!.childrens),
       onExpansionChanged: (bool isExpanded) {
         if (isExpanded) {
-          _reactive.expanded(folderId: folderers!.current.folderId);
+          _reactiveList.expanded(folderId: folderers!.current.folderId);
         } else {
-          _reactive.notExpanded(folderId: folderers!.current.folderId);
+          _reactiveList.notExpanded(folderId: folderers!.current.folderId);
         }
       },
       onPressed: () {
@@ -152,22 +150,18 @@ class _LadderFolderState extends State<LadderFolder> {
             color: ColorPalettes.white,
           ),
         ),
-        trailing: _reactive.numberChildrenInFolder(folderChild.current) != 0
-            ? Text(
-                textQtdChildren(
-                  _reactive.numberChildrenInFolder(folderChild.current),
-                ),
-                style: TextStyle(
-                  color: ColorPalettes.secondy,
-                ),
-              )
-            : null,
+        trailing: Text(
+          qtdChildrenFolder(
+            _reactiveList.numberChildrenInFolder(folderChild.current),
+          ),
+          style: TextStyle(color: ColorPalettes.secondy),
+        ),
         children: generaterWidgetsFolders(folderChild.childrens),
         onExpansionChanged: (bool isExpanded) {
           if (isExpanded) {
-            _reactive.expanded(folderId: folderChild.current.folderId);
+            _reactiveList.expanded(folderId: folderChild.current.folderId);
           } else {
-            _reactive.notExpanded(folderId: folderChild.current.folderId);
+            _reactiveList.notExpanded(folderId: folderChild.current.folderId);
           }
         },
         onPressed: () {

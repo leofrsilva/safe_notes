@@ -22,6 +22,7 @@ class ColorPalettes {
   static Color green = Colors.green;
   static Color setActive = Colors.grey[500] ?? const Color(0xFF9E9E9E);
   static Color blueGrey = Colors.blueGrey;
+  static Color blueGrey50 = Colors.blueGrey.withOpacity(0.5);
   static Color black = const Color(0xFF000000);
   static Color black12 = Colors.black12;
   static Color black18 = const Color.fromARGB(55, 0, 0, 0);

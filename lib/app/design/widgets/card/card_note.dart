@@ -8,6 +8,8 @@ class CardNote extends StatelessWidget {
   final bool favorite;
   final Color? backgroundColor;
 
+  final Widget? foreground;
+
   final Function()? onTap;
   final Function()? onLongPress;
 
@@ -18,6 +20,7 @@ class CardNote extends StatelessWidget {
     required this.title,
     required this.body,
     required this.date,
+    this.foreground,
     this.backgroundColor,
     this.favorite = false,
   }) : super(key: key);
@@ -46,34 +49,49 @@ class CardNote extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Card(
-            elevation: 3.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: Container(
-              height: height,
-              width: width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(35.0),
-              ),
-              child: InkWell(
-                onTap: onTap,
-                onLongPress: onLongPress,
+          SizedBox(
+            width: width,
+            child: Card(
+              elevation: 3.0,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0,
-                    vertical: 12.0,
+              ),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    height: height,
+                    width: width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(35.0),
+                    ),
+                    child: InkWell(
+                      onTap: onTap,
+                      onLongPress: onLongPress,
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 12.0,
+                        ),
+                        child: Text(
+                          body,
+                          maxLines: 12,
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.fade,
+                          style: TextStyles.cardBodyNote,
+                        ),
+                      ),
+                    ),
                   ),
-                  child: Text(
-                    body,
-                    maxLines: 12,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.fade,
-                    style: TextStyles.cardBodyNote,
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(15.0),
+                      bottomRight: Radius.circular(15.0),
+                    ),
+                    child: foreground ?? Container(),
                   ),
-                ),
+                ],
               ),
             ),
           ),

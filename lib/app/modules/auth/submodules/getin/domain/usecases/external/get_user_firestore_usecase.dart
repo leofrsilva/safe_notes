@@ -10,7 +10,7 @@ class GetUserFirestoreUsecase extends IGetUserFirestoreUsecase {
   GetUserFirestoreUsecase(this._firebaseRepository);
 
   @override
-  Future<Either<Failure, UsuarioEntity>> call(String docRef) {
-    return _firebaseRepository.getUserFirestore(docRef);
+  Future<Either<Failure, UsuarioEntity>> call(String docRef) async {
+    return await _firebaseRepository.getUserFirestore(docRef);
   }
 }

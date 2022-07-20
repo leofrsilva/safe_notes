@@ -10,7 +10,7 @@ class RestoreNoteUsecase extends IRestoreNoteUsecase {
   RestoreNoteUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(List<NoteModel> notes) {
-    return _repository.restoreNote(notes);
+  Future<Either<Failure, dynamic>> call(List<NoteModel> notes) async {
+    return await _repository.restoreNote(notes);
   }
 }

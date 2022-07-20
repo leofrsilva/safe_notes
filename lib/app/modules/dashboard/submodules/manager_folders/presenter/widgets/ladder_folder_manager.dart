@@ -6,7 +6,7 @@ import 'package:safe_notes/app/shared/database/models/folder_list_model.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import '../../../../presenter/pages/drawer/drawer_menu_controller.dart';
-import '../../../../presenter/reactive/reactive_list.dart';
+import '../../../../presenter/reactive/i_reactive_list.dart';
 import '../manager_folders_controller.dart';
 
 enum ActionFolder {
@@ -29,7 +29,7 @@ class LadderFolderManager extends StatefulWidget {
 
 class _LadderFolderManagerState extends State<LadderFolderManager> {
   late ManagerFoldersController _managerFoldersController;
-  late ReactiveList _reactiveList;
+  late IReactiveList _reactiveList;
 
   bool modeEdit = false;
   List<int> listSelected = [];
@@ -67,8 +67,8 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
     return _reactiveList.checkFolderIsExpanded(folderId);
   }
 
-  String qtdChildrenFolder(int folderId) {
-    int qtd = _reactiveList.qtdChildrenFolder(folderId);
+  String qtdChildrenFolder(int qtd) {
+    // print(qtd);
     if (qtd == 0) return '';
     return qtd.toString();
   }
@@ -114,10 +114,10 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         turnsColor: ColorPalettes.secondy.withOpacity(0.5),
         selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
         trailing: Text(
-          qtdChildrenFolder(folderers!.current.folderId),
-          style: TextStyle(
-            color: ColorPalettes.secondy,
+          qtdChildrenFolder(
+            _reactiveList.numberChildrenInFolder(folderers!.current),
           ),
+          style: TextStyle(color: ColorPalettes.secondy),
         ),
         children: generaterWidgetsFolders(context, folderers!.childrens),
         onExpansionChanged: (bool isExpanded) {
@@ -196,11 +196,9 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
           ),
           trailing: Text(
             qtdChildrenFolder(
-              folderChild.current.folderId,
+              _reactiveList.numberChildrenInFolder(folderChild.current),
             ),
-            style: TextStyle(
-              color: ColorPalettes.secondy,
-            ),
+            style: TextStyle(color: ColorPalettes.secondy),
           ),
           children: generaterWidgetsFolders(context, folderChild.childrens),
           onExpansionChanged: (bool isExpanded) {

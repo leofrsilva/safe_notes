@@ -10,7 +10,7 @@ class EditNoteUsecase extends IEditNoteUsecase {
   EditNoteUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(List<NoteModel> notes) {
-    return _repository.editNote(notes);
+  Future<Either<Failure, dynamic>> call(List<NoteModel> notes) async {
+    return await _repository.editNote(notes);
   }
 }

@@ -3,8 +3,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/design/common/common.dart';
-import 'package:safe_notes/app/modules/setting/presenter/controllers/setting_controller.dart';
-import 'package:safe_notes/app/modules/setting/presenter/controllers/theme_store.dart';
+import 'package:safe_notes/app/modules/setting/controllers/setting_controller.dart';
+import 'package:safe_notes/app/modules/setting/controllers/theme_store.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
 import 'package:safe_notes/app/shared/error/failure.dart';
 

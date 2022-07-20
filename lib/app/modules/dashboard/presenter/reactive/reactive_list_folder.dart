@@ -1,3 +1,4 @@
+import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import 'i_reactive_list_folder.dart';
@@ -50,6 +51,11 @@ class ReactiveListFolder implements IReactiveListFolder {
   @override
   List<FolderModel> get listFolderDeleted {
     return _deleted.listFolderDeleted;
+  }
+
+  @override
+  List<FolderModel> listFolderDeletedById(int folderId) {
+    return _deleted.listFolderDeletedById(folderId);
   }
 
   //* -- EXPANDED
@@ -178,6 +184,32 @@ class ReactiveListFolder implements IReactiveListFolder {
     return descendants.reversed.toList();
   }
 
+  List<FolderModel> _getParentFolder(FolderModel folder) {
+    var folders = <FolderModel>[folder];
+    int parentId = folder.folderId;
+
+    var listFolder = _listFoldersIsExpanded.keys
+        .where((folderChild) =>
+            folderChild.folderId != parentId &&
+            folderChild.folderId != DefaultDatabase.folderDefault.folderId)
+        .toList();
+
+    for (var folderChild in listFolder) {
+      if (folderChild.folderParent == parentId) {
+        folders.addAll(_getParentFolder(folderChild));
+      }
+    }
+    return folders;
+  }
+
+  @override
+  List<FolderModel> listDescendantsFolder(FolderModel folder) {
+    var descendants = <FolderModel>[];
+
+    descendants.addAll(_getParentFolder(folder));
+    return descendants.toList();
+  }
+
   //* -- FUNCTION FOR NAME FOLDER
   @override
   int qtdNameFolder(int parentId, int level) {
@@ -226,11 +258,13 @@ class ReactiveListFolder implements IReactiveListFolder {
 class _DeletedFolders {
   final _listFolders = <FolderModel>[];
 
-  int get qtd => listFolderDeleted.length;
+  int _qtd = 0;
+  int get qtd => _qtd;
 
   set countDeleted(List<FolderModel> folders) {
     _listFolders.clear();
     _listFolders.addAll(folders);
+    _qtd = listFolderDeleted.length;
   }
 
   FolderModel _findSuperParent(FolderModel currentFolder) {
@@ -264,7 +298,13 @@ class _DeletedFolders {
         }
       }
     }
-    print(list.length);
     return list;
+  }
+
+  List<FolderModel> listFolderDeletedById(int folderId) {
+    return _listFolders
+        .where((folder) =>
+            folder.isDeleted == true && folder.folderParent == folderId)
+        .toList();
   }
 }

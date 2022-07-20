@@ -10,7 +10,7 @@ class AddNoteUsecase extends IAddNoteUsecase {
   AddNoteUsecase(this._repository);
 
   @override
-  Future<Either<Failure, dynamic>> call(NoteModel note) {
-    return _repository.addNote(note);
+  Future<Either<Failure, dynamic>> call(NoteModel note) async {
+    return await _repository.addNote(note);
   }
 }

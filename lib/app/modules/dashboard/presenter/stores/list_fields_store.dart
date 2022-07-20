@@ -1,4 +1,4 @@
-import 'package:safe_notes/app/modules/setting/presenter/controllers/folder_buffer_expanded_store.dart';
+import 'package:safe_notes/app/modules/setting/controllers/folder_buffer_expanded_store.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
@@ -41,7 +41,7 @@ class ListFieldsStore {
     _reactive.addAllFolder(folders);
   }
 
-  setNotes(List<NoteModel> folders) {
-    _reactive.addAllNotes(folders);
+  setNotes(List<NoteModel> notes) {
+    _reactive.addAllNotes(notes);
   }
 }
