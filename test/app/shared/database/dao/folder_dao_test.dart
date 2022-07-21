@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/shared/database/daos/folder_dao.dart';
 import 'package:safe_notes/app/shared/database/database.dart';
 import 'package:safe_notes/app/shared/database/entities/folder_entity.dart';
@@ -11,6 +13,7 @@ void main() {
   late FolderDAO folderDAO;
 
   setUpAll(() async {
+    initModule(AppModule());
     database = await $FloorAppDatabase.inMemoryDatabaseBuilder().build();
     folderDAO = database.folderDao;
   });

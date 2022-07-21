@@ -10,9 +10,7 @@ class ExpireToken extends IExpireToken {
   late TokenShared _tokenShared;
 
   static final ExpireToken _instance = ExpireToken._internal();
-
   factory ExpireToken() => _instance;
-
   ExpireToken._internal() {
     _tokenShared = TokenShared();
   }

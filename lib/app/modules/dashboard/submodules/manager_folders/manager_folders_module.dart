@@ -1,6 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
-import 'package:safe_notes/app/shared/database/database.dart';
 
 import '../../domain/usecases/folder/i_folder_usecase.dart';
 import '../../presenter/pages/drawer/drawer_menu_controller.dart';

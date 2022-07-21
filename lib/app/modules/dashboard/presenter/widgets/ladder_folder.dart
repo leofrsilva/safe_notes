@@ -138,6 +138,7 @@ class _LadderFolderState extends State<LadderFolder> {
         ),
         title: Text(
           folderChild.current.name,
+          maxLines: 3,
           textAlign: TextAlign.start,
           style: TextStyle(
             height: 1.6,

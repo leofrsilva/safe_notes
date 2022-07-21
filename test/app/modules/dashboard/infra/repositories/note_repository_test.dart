@@ -1,15 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/errors/note_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/infra/repositories/note_repository.dart';
+import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
 import '../../../../../mocks/mocks_sqlite.dart';
 import '../../../../../stub/note_model_stub.dart';
 
 void main() {
-  final note = note1;
+  late NoteModel note;
   final datasource = NoteDatasourceMock();
+
+  setUpAll(() {
+    initModule(AppModule());
+    note = note1;
+  });
 
   group('note repository addNote | ', () {
     test('isRight igual a True', () async {

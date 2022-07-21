@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/errors/get_list_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/usecases/get_list_folders_usecase.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
@@ -10,6 +12,10 @@ import '../../../../../stub/folder_model_stub.dart';
 
 void main() {
   final repository = GetListRepositoryMock();
+
+  setUpAll(() {
+    initModule(AppModule());
+  });
 
   test(
       'get list folders usecase GetListFoldersUsecase.Call | retorna uma Stream de Lista de FolderModel',

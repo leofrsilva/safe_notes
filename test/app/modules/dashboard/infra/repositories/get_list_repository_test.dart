@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/errors/get_list_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/infra/repositories/get_list_repository.dart';
 import 'package:safe_notes/app/shared/database/entities/folder_entity.dart';
@@ -13,6 +15,10 @@ import '../../../../../stub/folder_model_stub.dart';
 
 void main() {
   final datasource = GetListDatasourceMock();
+
+  setUpAll(() {
+    initModule(AppModule());
+  });
 
   group('get list repository getFolders | ', () {
     test('retorna uma Stream de Lista de FolderModel', () async {

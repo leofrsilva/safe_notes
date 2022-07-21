@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/auth/submodules/getin/domain/errors/getin_failures.dart';
 import 'package:safe_notes/app/modules/auth/submodules/getin/external/datasources/delete_folder_datasource.dart';
 import 'package:safe_notes/app/modules/auth/submodules/getin/infra/datasources/i_delete_folder_datasource.dart';
@@ -15,6 +17,8 @@ void main() {
   late IDeleteFolderDatasource datasource;
 
   setUpAll(() async {
+    initModule(AppModule());
+
     database = await $FloorAppDatabase.inMemoryDatabaseBuilder().build();
     folderDAO = database.folderDao;
     datasource = DeleteFolderDatasource(folderDAO);

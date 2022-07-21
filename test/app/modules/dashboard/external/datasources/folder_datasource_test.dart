@@ -1,11 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/errors/folder_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/external/datasources/folder_datasource.dart';
 import 'package:safe_notes/app/modules/dashboard/infra/datasources/i_folder_datasource.dart';
 import 'package:safe_notes/app/shared/database/daos/folder_dao.dart';
 import 'package:safe_notes/app/shared/database/daos/note_dao.dart';
 import 'package:safe_notes/app/shared/database/database.dart';
+import 'package:safe_notes/app/shared/database/entities/folder_entity.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import '../../../../../mocks/mocks_sqlite.dart';
 import '../../../../../stub/folder_model_stub.dart';
@@ -18,6 +22,8 @@ void main() {
   late IFolderDatasource datasource;
 
   setUpAll(() async {
+    initModule(AppModule());
+
     database = await $FloorAppDatabase.inMemoryDatabaseBuilder().build();
     folderDAO = database.folderDao;
     noteDAO = database.noteDao;
@@ -31,7 +37,8 @@ void main() {
   });
 
   group('folder datasource addFolder |', () {
-    final folderEntity = folder4.entity;
+    late FolderEntity folderEntity;
+    setUpAll(() => folderEntity = folder4.entity);
 
     test('Adicionado uma Pasta com Sucesso', () async {
       final result = await datasource.addFolder(folderEntity);
@@ -67,7 +74,8 @@ void main() {
   });
 
   group('folder datasource editFolder |', () {
-    final folderModel = folder2;
+    late FolderModel folderModel;
+    setUpAll(() => folderModel = folder2);
 
     test('Editou a Pasta com Sucesso', () async {
       await folderDAO.insertFolder(folderModel.entity);

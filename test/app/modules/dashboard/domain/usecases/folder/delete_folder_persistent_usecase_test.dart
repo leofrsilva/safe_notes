@@ -1,15 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/errors/folder_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/usecases/folder/delete_folder_persistent_usecase.dart';
+import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
 import '../../../../../../mocks/mocks_sqlite.dart';
 import '../../../../../../stub/folder_model_stub.dart';
 
 void main() {
-  final folder = folder1;
+  late FolderModel folder;
   final repository = FolderRepositoryMock();
+
+  setUpAll(() {
+    initModule(AppModule());
+    folder = folder1;
+  });
 
   test(
       'delete folder persistent usecase DeleteFolderPersistentUsecase.Call | isRight igual a True',

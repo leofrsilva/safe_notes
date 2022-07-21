@@ -1,11 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/errors/note_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/external/datasources/note_datasource.dart';
 import 'package:safe_notes/app/modules/dashboard/infra/datasources/i_note_datasource.dart';
 import 'package:safe_notes/app/shared/database/daos/folder_dao.dart';
 import 'package:safe_notes/app/shared/database/daos/note_dao.dart';
 import 'package:safe_notes/app/shared/database/database.dart';
+import 'package:safe_notes/app/shared/database/entities/note_entity.dart';
+import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
 import '../../../../../mocks/mocks_sqlite.dart';
 import '../../../../../stub/folder_model_stub.dart';
@@ -18,6 +22,8 @@ void main() {
   late INoteDatasource datasource;
 
   setUpAll(() async {
+    initModule(AppModule());
+
     database = await $FloorAppDatabase.inMemoryDatabaseBuilder().build();
     folderDAO = database.folderDao;
     for (var folder in listFolders) {
@@ -33,7 +39,8 @@ void main() {
   });
 
   group('note datasource addNote |', () {
-    final noteEntity = note1.entity;
+    late NoteEntity noteEntity;
+    setUpAll(() => noteEntity = note1.entity);
 
     test('Adicionado uma Nota com Sucesso', () async {
       final result = await datasource.addNote(noteEntity);
@@ -68,7 +75,8 @@ void main() {
   });
 
   group('note datasource editNote |', () {
-    final noteModel = note2;
+    late NoteModel noteModel;
+    setUpAll(() => noteModel = note2);
 
     test('Editou a Note com Sucesso', () async {
       await noteDAO.insertNote(noteModel.entity);
@@ -110,7 +118,8 @@ void main() {
   });
 
   group('note datasource restoreNote |', () {
-    var noteModel = note4;
+    late NoteModel noteModel;
+    setUpAll(() => noteModel = note4);
 
     test('retorna um NoNoteEditedToRestoredSqliteError', () async {
       final note = note3.copyWith(isDeleted: true);
@@ -146,7 +155,8 @@ void main() {
   });
 
   group('note datasource deleteNote |', () {
-    var noteModel = note6;
+    late NoteModel noteModel;
+    setUpAll(() => noteModel = note6);
 
     test('retorna um NoNoteEditedToDeletedSqliteError', () async {
       var note = note5.copyWith(isDeleted: false);
@@ -191,7 +201,8 @@ void main() {
   });
 
   group('note datasource deletePersistentNote |', () {
-    final noteModel = note7.copyWith(title: '', body: '');
+    late NoteModel noteModel;
+    setUpAll(() => noteModel = note7.copyWith(title: '', body: ''));
 
     test('Deletando a Nota permanentemente com Sucesso', () async {
       await noteDAO.insertNote(noteModel.entity);

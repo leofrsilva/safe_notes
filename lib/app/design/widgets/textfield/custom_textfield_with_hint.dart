@@ -121,7 +121,7 @@ class _CustomTextFieldWithHintState extends State<CustomTextFieldWithHint> {
                           onEditingComplete: widget.nextFocus
                               ? () => FocusScope.of(context).nextFocus()
                               : null,
-                          cursorHeight: 50.0,
+                          cursorHeight: 14.0,
                           cursorRadius: const Radius.circular(20.0),
                           decoration: InputDecoration(
                             hintText: widget.hint,

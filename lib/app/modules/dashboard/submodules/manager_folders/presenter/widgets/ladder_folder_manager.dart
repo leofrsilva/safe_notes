@@ -186,6 +186,7 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
           ),
           title: Text(
             folderChild.current.name,
+            maxLines: 1,
             textAlign: TextAlign.start,
             style: TextStyle(
               height: 1.7,

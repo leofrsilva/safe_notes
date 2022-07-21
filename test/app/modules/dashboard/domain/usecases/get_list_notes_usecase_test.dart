@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/errors/get_list_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/usecases/get_list_notes_usecase.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
@@ -10,6 +12,10 @@ import '../../../../../stub/note_model_stub.dart';
 
 void main() {
   final repository = GetListRepositoryMock();
+
+  setUpAll(() {
+    initModule(AppModule());
+  });
 
   test(
       'get list notes usecase GetListNotesUsecase.Call | retorna uma Stream de Lista de NoteModel',

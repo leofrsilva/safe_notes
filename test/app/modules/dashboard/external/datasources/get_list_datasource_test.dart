@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
+import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/errors/get_list_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/external/datasources/get_list_datasource.dart';
 import 'package:safe_notes/app/modules/dashboard/infra/datasources/i_get_list_datasource.dart';
@@ -22,6 +24,8 @@ void main() {
   late IGetListDatasource datasource;
 
   setUpAll(() async {
+    initModule(AppModule());
+
     database = await $FloorAppDatabase.inMemoryDatabaseBuilder().build();
     folderDAO = database.folderDao;
     noteDAO = database.noteDao;
