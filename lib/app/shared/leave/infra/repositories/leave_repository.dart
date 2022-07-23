@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/errors/failure.dart';
 
 import '../../domain/repositories/i_leave_repository.dart';
 import '../datasources/i_leave_datasource.dart';

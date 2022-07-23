@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
-import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/errors/failure.dart';
 import 'package:safe_notes/app/shared/token/i_expire_token.dart';
 
 import '../../../domain/errors/getin_failures.dart';

@@ -41,7 +41,7 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
     return GestureDetector(
       onTap: () => _focusNode.unfocus(),
       child: Scaffold(
-        backgroundColor: ColorPalettes.transparent,
+        backgroundColor: ColorPalettes.black54,
         body: SizedBox(
           height: Sizes.height(context),
           child: Stack(

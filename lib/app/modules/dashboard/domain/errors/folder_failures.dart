@@ -1,4 +1,4 @@
-import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/errors/failure.dart';
 
 class AddFolderSqliteError extends Failure {
   AddFolderSqliteError(

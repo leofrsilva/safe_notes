@@ -27,10 +27,6 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
 
   @override
   Widget build(BuildContext context) {
-    _reactiveList.listFolder.forEach((folder) {
-      print('${folder.entity.name} | ${folder.name}');
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gerenciar Pastas'),

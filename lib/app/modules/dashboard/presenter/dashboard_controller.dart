@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safe_notes/app/app_core.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/loading/loading_overlay.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/leave/domain/usecases/i_leave_auth_usecase.dart';
@@ -9,7 +8,6 @@ import 'package:safe_notes/app/shared/token/i_expire_token.dart';
 
 import '../domain/usecases/folder/i_folder_usecase.dart';
 import '../domain/usecases/note/i_note_usecases.dart';
-import 'pages/register_key/register_key_page.dart';
 import 'stores/list_fields_store.dart';
 
 class DashboardController {
@@ -29,15 +27,6 @@ class DashboardController {
     this._deleteNotePersistentUsecase,
     this._deleteFolderPersistentUsecase,
   );
-
-  callRegisterKeyPage(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierColor: ColorPalettes.black54,
-      builder: (context) => const RegisterKeyPage(),
-    );
-  }
 
   void logout(BuildContext context) async {
     await LoadingOverlay.show(

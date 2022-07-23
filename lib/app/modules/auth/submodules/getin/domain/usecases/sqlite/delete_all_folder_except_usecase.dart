@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/errors/failure.dart';
 
 import '../../repositories/i_delete_folder_repository.dart';
 import 'i_delete_all_folder_except_usecase.dart';

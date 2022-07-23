@@ -48,6 +48,7 @@ import 'submodules/manager_folders/manager_folders_module.dart';
 import 'submodules/favorites/favorites_module.dart';
 import 'submodules/lixeira/lixeira_module.dart';
 import 'submodules/notes/notes_module.dart';
+import 'submodules/register_key/redister_key_module.dart';
 
 class DashboardModule extends Module {
   @override
@@ -196,6 +197,11 @@ class DashboardModule extends Module {
         ModuleRoute(
           '/add-or-edit-note',
           module: AddOrEditNoteModule(),
+          transition: TransitionType.rightToLeft,
+        ),
+        ModuleRoute(
+          '/register-key',
+          module: RegisterKeyModule(),
           transition: TransitionType.rightToLeft,
         ),
       ];

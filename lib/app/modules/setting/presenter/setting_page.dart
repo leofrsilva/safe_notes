@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/errors/failure.dart';
 
 import '../controllers/setting_controller.dart';
 import '../controllers/theme_store.dart';

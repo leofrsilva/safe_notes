@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
-import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/errors/failure.dart';
 
 import '../../domain/repositories/i_get_list_repository.dart';
 import '../datasources/i_get_list_datasource.dart';

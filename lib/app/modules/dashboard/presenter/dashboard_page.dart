@@ -37,7 +37,7 @@ class _DashboardPageState extends State<DashboardPage>
       Future.delayed(timings, () {
         dashboardController.deleteExpiration();
       });
-      dashboardController.callRegisterKeyPage(context);
+      Modular.to.pushNamed('/dashboard/register-key/');
     });
   }
 

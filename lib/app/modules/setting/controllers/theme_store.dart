@@ -1,5 +1,5 @@
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/errors/failure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeStore extends StreamStore<Failure, bool> {

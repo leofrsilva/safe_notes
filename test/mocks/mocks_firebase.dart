@@ -9,7 +9,7 @@ import 'package:safe_notes/app/modules/auth/submodules/register/domain/errors/si
 import 'package:safe_notes/app/modules/auth/submodules/register/domain/repositories/i_signup_firebase_repository.dart';
 import 'package:safe_notes/app/modules/auth/submodules/register/infra/datasources/i_signup_firebase_datasource.dart';
 import 'package:safe_notes/app/shared/domain/models/usuario_model.dart';
-import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/errors/failure.dart';
 
 class FirebaseFirestoreMock extends Mock implements FirebaseFirestore {}
 

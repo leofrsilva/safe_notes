@@ -5,7 +5,7 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/menu/item_menu.dart';
 import 'package:safe_notes/app/modules/dashboard/presenter/widgets/ladder_folder.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
-import 'package:safe_notes/app/shared/error/failure.dart';
+import 'package:safe_notes/app/shared/errors/failure.dart';
 
 import '../../../submodules/folder/folder_module.dart';
 import '../../../submodules/folder/presenter/folder_controller.dart';

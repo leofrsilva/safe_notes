@@ -5,7 +5,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 
 import 'modules/setting/controllers/theme_store.dart';
-import 'shared/error/failure.dart';
+import 'shared/errors/failure.dart';
 
 class AppWidget extends StatefulWidget {
   const AppWidget({Key? key}) : super(key: key);

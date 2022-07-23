@@ -1,4 +1,4 @@
-import '../../error/failure.dart';
+import '../../errors/failure.dart';
 
 class SqliteFailure extends Failure {
   SqliteFailure(
