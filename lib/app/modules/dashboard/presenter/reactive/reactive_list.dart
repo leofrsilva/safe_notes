@@ -129,8 +129,8 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
   }
 
   @override
-  bool checkNameAlreadyExists(FolderModel folderer) {
-    return _reactiveFolders.checkNameAlreadyExists(folderer);
+  bool checkNameAlreadyExists(FolderModel folderer, String nameFolder) {
+    return _reactiveFolders.checkNameAlreadyExists(folderer, nameFolder);
   }
 
   //* ----------------------------------------------

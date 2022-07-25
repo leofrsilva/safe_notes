@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
+import 'package:safe_notes/app/shared/encrypt/encrypt.dart';
 
 import '../../../domain/usecases/folder/i_folder_usecase.dart';
 import '../../../presenter/pages/drawer/drawer_menu_controller.dart';
@@ -104,10 +106,12 @@ class ManagerFoldersController extends Disposable {
   void addFolder(BuildContext context, FolderModel folder) {
     _addFolderUsecase.call(folder).then((either) async {
       if (either.isLeft()) {
-        SnackbarError.show(
-          context,
-          message: 'Erro ao registar Pasta!',
-        );
+        if (either.fold(id, id) is! IncorrectEncryptionError) {
+          SnackbarError.show(
+            context,
+            message: 'Erro ao registar Pasta!',
+          );
+        }
       } else {
         _drawerMenuController.listFieldsStore.reactive
             .expanded(folderId: folder.folderParent ?? 0);
@@ -118,10 +122,12 @@ class ManagerFoldersController extends Disposable {
   void editFolder(BuildContext context, FolderModel folder) {
     _editFolderUsecase.call(folder).then((either) async {
       if (either.isLeft()) {
-        SnackbarError.show(
-          context,
-          message: 'Erro ao atualizar Pasta!',
-        );
+        if (either.fold(id, id) is! IncorrectEncryptionError) {
+          SnackbarError.show(
+            context,
+            message: 'Erro ao atualizar Pasta!',
+          );
+        }
       }
     });
   }
@@ -129,10 +135,12 @@ class ManagerFoldersController extends Disposable {
   void deleteFolder(BuildContext context, List<FolderModel> folders) {
     _deleteFolderUsecase.call(folders).then((either) {
       if (either.isLeft()) {
-        SnackbarError.show(
-          context,
-          message: 'Erro ao deletar Pasta!',
-        );
+        if (either.fold(id, id) is! IncorrectEncryptionError) {
+          SnackbarError.show(
+            context,
+            message: 'Erro ao deletar Pasta!',
+          );
+        }
       } else {
         ParallelRoute? modFolder;
         for (var module in Modular.to.navigateHistory) {

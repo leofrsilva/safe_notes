@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
+import 'package:safe_notes/app/shared/encrypt/encrypt.dart';
 import '../../../domain/usecases/note/i_note_usecases.dart';
 import '../../../presenter/enum/mode_note_enum.dart';
 import 'stores/expanded_store.dart';
@@ -71,10 +73,12 @@ class AddOrEditNoteController {
     final either = await _addNoteUsecase.call(noteFields.model);
     either.fold(
       (failure) {
-        SnackbarError.show(
-          context,
-          message: 'Error ao salvar a Nota!',
-        );
+        if (failure is! IncorrectEncryptionError) {
+          SnackbarError.show(
+            context,
+            message: 'Error ao salvar a Nota!',
+          );
+        }
       },
       (_) => mode = ModeNoteEnum.edit,
     );
@@ -87,10 +91,12 @@ class AddOrEditNoteController {
     if (editFavorite) noteFields.nowDateModification();
     final either = await _editNoteUsecase.call([noteFields.model]);
     if (either.isLeft()) {
-      SnackbarError.show(
-        context,
-        message: 'Error ao editar a Nota!',
-      );
+      if (either.fold(id, id) is! IncorrectEncryptionError) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao editar a Nota!',
+        );
+      }
     }
   }
 
@@ -99,10 +105,12 @@ class AddOrEditNoteController {
       final either =
           await _deleteNotePersistentUsecase.call([noteFields.model]);
       if (either.isLeft()) {
-        SnackbarError.show(
-          context,
-          message: 'Error ao deletar Nota!',
-        );
+        if (either.fold(id, id) is! IncorrectEncryptionError) {
+          SnackbarError.show(
+            context,
+            message: 'Error ao deletar Nota!',
+          );
+        }
       }
     }
   }

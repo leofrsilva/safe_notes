@@ -33,10 +33,18 @@ class _EditNamePageState extends State<EditNamePage> {
   double bottomPadding = 0.0;
   bool canAdd = false;
 
+  toggleCanAdd(bool value) {
+    if (value != canAdd) {
+      setState(() => canAdd = value);
+    }
+  }
+
   String? validatorName(String? name) {
     if (name != null) {
-      var folderModel = widget.folderModel.copyWith(name: name);
-      if (_reactiveList.checkNameAlreadyExists(folderModel)) {
+      if (_reactiveList.checkNameAlreadyExists(
+        widget.folderModel,
+        _textEditingFolder.text,
+      )) {
         return 'Já existe uma pasta com esse nome.';
       }
     }
@@ -132,24 +140,22 @@ class _EditNamePageState extends State<EditNamePage> {
                               focusNode: _focusNode,
                               validator: validatorName,
                               onChanged: (String name) {
-                                setState(() {
-                                  if (name.isEmpty) {
-                                    canAdd = false;
-                                  } else if (name.isNotEmpty) {
-                                    if (name == widget.folderModel.name) {
-                                      canAdd = false;
-                                    } else if (name.length > 1) {
-                                      canAdd = true;
-                                    }
-                                    folder = folder.copyWith(name: name.trim());
+                                if (name.isEmpty) {
+                                  toggleCanAdd(false);
+                                } else if (name.isNotEmpty) {
+                                  if (name == widget.folderModel.name) {
+                                    toggleCanAdd(false);
+                                  } else if (name.length > 1) {
+                                    toggleCanAdd(true);
                                   }
-                                });
+                                }
+                                //
                                 final formState = _formKey.currentState;
                                 if (formState != null) {
                                   if (formState.validate()) {
-                                    setState(() => canAdd = true);
+                                    toggleCanAdd(true);
                                   } else {
-                                    setState(() => canAdd = false);
+                                    toggleCanAdd(false);
                                   }
                                 }
                               },
@@ -208,6 +214,7 @@ class _EditNamePageState extends State<EditNamePage> {
                                     onPressed: canAdd
                                         ? () {
                                             folder = folder.copyWith(
+                                              name: _textEditingFolder.text,
                                               dateModification: DateTime.now(),
                                             );
                                             _controller.editFolder(

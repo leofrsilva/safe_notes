@@ -6,20 +6,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DataEncrypt {
   String? _keyInput;
-  setKey(String? value) {
+  Future setKey(
+    String? value, {
+    Future<bool> Function()? onSaveKey,
+  }) async {
     _keyInput = value?.trim();
     if (value != null && value.isNotEmpty) {
-      _checkValue();
+      await _checkValue(onSaveKey);
     }
   }
 
   bool isCorrectKey = false;
 
-  _checkValue() async {
+  _checkValue(Future<bool> Function()? onSaveKey) async {
     var valueEncrypted = await _getCheckValue;
     if (valueEncrypted.isEmpty) {
-      await _setCheckValue();
       isCorrectKey = true;
+      await _setCheckValue();
+      await onSaveKey?.call().then((isSaved) {
+        if (isSaved == false) _deleteCheckValue();
+      });
     } else {
       if (decode(valueEncrypted) != _value) {
         isCorrectKey = false;
@@ -27,12 +33,15 @@ class DataEncrypt {
         isCorrectKey = true;
       }
     }
-
-    print(isCorrectKey);
   }
 
   final _value = 'Safe Notes';
   final _keyCheckValue = 'check-value';
+  Future _deleteCheckValue() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.remove(_keyCheckValue);
+  }
+
   Future _setCheckValue() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setString(_keyCheckValue, encode(_value));

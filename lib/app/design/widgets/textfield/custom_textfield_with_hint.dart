@@ -15,6 +15,7 @@ class CustomTextFieldWithHint extends StatefulWidget {
   final Function(String?)? onSaved;
   String? Function(String?)? validator;
   List<TextInputFormatter>? inputFormatters;
+  final TextCapitalization? textCapitalization;
 
   AutovalidateMode? autovalidateMode;
   final TextEditingController? controller;
@@ -35,6 +36,7 @@ class CustomTextFieldWithHint extends StatefulWidget {
     this.onChanged,
     this.inputFormatters,
     this.autovalidateMode,
+    this.textCapitalization,
   }) : super(key: key);
 
   @override
@@ -70,8 +72,8 @@ class _CustomTextFieldWithHintState extends State<CustomTextFieldWithHint> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: paddingTop),
       height: 70 + paddingTop,
+      padding: EdgeInsets.only(top: paddingTop),
       child: FormField<String>(
           autovalidateMode: widget.autovalidateMode,
           initialValue: widget.controller != null
@@ -93,70 +95,76 @@ class _CustomTextFieldWithHintState extends State<CustomTextFieldWithHint> {
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: <BoxShadow>[
                             BoxShadow(
-                              color: ColorPalettes.black.withOpacity(0.035),
+                              color: ColorPalettes.black.withOpacity(0.045),
                               blurRadius: 10.0,
                               spreadRadius: 0.0,
                             ),
                           ],
                         ),
-                        child: TextField(
-                          controller: widget.controller,
-                          keyboardType: widget.isEmail
-                              ? TextInputType.emailAddress
-                              : null,
-                          focusNode: focusNode,
-                          obscureText: isNotVisible,
-                          style: TextStyles.fieldStyle,
-                          inputFormatters: widget.inputFormatters,
-                          cursorColor: Theme.of(context).primaryColor,
-                          onChanged: (text) {
-                            currentText = text;
-                            state.didChange(text);
-                            if (widget.onChanged != null) {
-                              widget.onChanged!(text);
-                            }
-                          },
-                          textInputAction:
-                              widget.nextFocus ? TextInputAction.next : null,
-                          onEditingComplete: widget.nextFocus
-                              ? () => FocusScope.of(context).nextFocus()
-                              : null,
-                          cursorHeight: 14.0,
-                          cursorRadius: const Radius.circular(20.0),
-                          decoration: InputDecoration(
-                            hintText: widget.hint,
-                            hintStyle: TextStyles.fieldStyle.copyWith(
-                              color: ColorPalettes.grey,
-                              height: 3.5,
-                            ),
-                            filled: true,
-                            fillColor: ColorPalettes.whiteSemiTransparent,
-                            hoverColor: ColorPalettes.whiteSemiTransparent,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
-                            ),
-                            suffixIcon: widget.isPass
-                                ? isNotVisible
-                                    ? GestureDetector(
-                                        child: const Icon(
-                                          Icons.visibility_outlined,
-                                          size: 22,
-                                        ),
-                                        onTap: () {
-                                          setState(() => isNotVisible = false);
-                                        },
-                                      )
-                                    : GestureDetector(
-                                        child: const Icon(
-                                          Icons.visibility_off_outlined,
-                                          size: 22,
-                                        ),
-                                        onTap: () {
-                                          setState(() => isNotVisible = true);
-                                        },
-                                      )
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: TextField(
+                            controller: widget.controller,
+                            keyboardType: widget.isEmail
+                                ? TextInputType.emailAddress
                                 : null,
+                            focusNode: focusNode,
+                            obscureText: isNotVisible,
+                            style: TextStyles.fieldStyle,
+                            inputFormatters: widget.inputFormatters,
+                            cursorColor: Theme.of(context).primaryColor,
+                            textCapitalization: widget.textCapitalization ??
+                                TextCapitalization.none,
+                            onChanged: (text) {
+                              currentText = text;
+                              state.didChange(text);
+                              if (widget.onChanged != null) {
+                                widget.onChanged!(text);
+                              }
+                            },
+                            textInputAction:
+                                widget.nextFocus ? TextInputAction.next : null,
+                            onEditingComplete: widget.nextFocus
+                                ? () => FocusScope.of(context).nextFocus()
+                                : null,
+                            cursorRadius: const Radius.circular(20.0),
+                            decoration: InputDecoration(
+                              hintText: widget.hint,
+                              hintStyle: TextStyles.fieldStyle.copyWith(
+                                color: ColorPalettes.grey,
+                                // height: 3.5,
+                              ),
+                              filled: true,
+                              fillColor: ColorPalettes.whiteSemiTransparent,
+                              hoverColor: ColorPalettes.whiteSemiTransparent,
+                              border: InputBorder.none,
+                              // border: OutlineInputBorder(
+                              //   borderRadius: BorderRadius.circular(10),
+                              //   borderSide: BorderSide.none,
+                              // ),
+                              suffixIcon: widget.isPass
+                                  ? isNotVisible
+                                      ? GestureDetector(
+                                          child: const Icon(
+                                            Icons.visibility_outlined,
+                                            size: 22,
+                                          ),
+                                          onTap: () {
+                                            setState(
+                                                () => isNotVisible = false);
+                                          },
+                                        )
+                                      : GestureDetector(
+                                          child: const Icon(
+                                            Icons.visibility_off_outlined,
+                                            size: 22,
+                                          ),
+                                          onTap: () {
+                                            setState(() => isNotVisible = true);
+                                          },
+                                        )
+                                  : null,
+                            ),
                           ),
                         ),
                       ),

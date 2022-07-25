@@ -233,12 +233,12 @@ class ReactiveListFolder implements IReactiveListFolder {
   }
 
   @override
-  bool checkNameAlreadyExists(FolderModel folderer) {
+  bool checkNameAlreadyExists(FolderModel folderer, String nameFolder) {
     bool exists = false;
     for (var folder in listFolder) {
       if (folder.level == folderer.level &&
           folder.folderParent == folderer.folderParent) {
-        if (folder.name == folderer.name) {
+        if (folder.name != folderer.name && folder.name == nameFolder) {
           exists = true;
         }
       }

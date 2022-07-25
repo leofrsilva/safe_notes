@@ -35,14 +35,22 @@ class _AddFolderPageState extends State<AddFolderPage> {
   double bottomPadding = 0.0;
   bool canAdd = true;
 
+  toggleCanAdd(bool value) {
+    if (value != canAdd) {
+      setState(() => canAdd = value);
+    }
+  }
+
   String? validatorName(String? name) {
     if (name != null) {
       var folderModel = widget.folderModel.copyWith(
-        name: name,
         level: widget.folderModel.level + 1,
         folderParent: widget.folderModel.folderId,
       );
-      if (_reactiveList.checkNameAlreadyExists(folderModel)) {
+      if (_reactiveList.checkNameAlreadyExists(
+        folderModel,
+        _textEditingFolder.text,
+      )) {
         return 'Já existe uma pasta com esse nome.';
       }
     }
@@ -141,28 +149,25 @@ class _AddFolderPageState extends State<AddFolderPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             CustomTextFieldWithHint(
+                              textCapitalization: TextCapitalization.sentences,
                               controller: _textEditingFolder,
                               title: 'Criar Pasta',
                               hint: 'Nome da Pasta',
                               focusNode: _focusNode,
                               validator: validatorName,
                               onChanged: (String name) {
-                                setState(() {
-                                  if (name.isEmpty) {
-                                    canAdd = false;
-                                  } else if (name.isNotEmpty) {
-                                    if (name.length == 1) {
-                                      canAdd = true;
-                                    }
-                                    folder = folder.copyWith(name: name.trim());
-                                  }
-                                });
+                                if (name.isEmpty) {
+                                  toggleCanAdd(false);
+                                } else if (name.isNotEmpty) {
+                                  if (name.length == 1) toggleCanAdd(true);
+                                }
+                                //
                                 final formState = _formKey.currentState;
                                 if (formState != null) {
                                   if (formState.validate()) {
-                                    setState(() => canAdd = true);
+                                    toggleCanAdd(true);
                                   } else {
-                                    setState(() => canAdd = false);
+                                    toggleCanAdd(false);
                                   }
                                 }
                               },
@@ -228,6 +233,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                                     onPressed: canAdd
                                         ? () {
                                             folder = folder.copyWith(
+                                              name: _textEditingFolder.text,
                                               dateCreate: DateTime.now(),
                                               dateModification: DateTime.now(),
                                             );

@@ -5,6 +5,7 @@ import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/modules/setting/controllers/folder_buffer_expanded_store.dart';
 import 'package:safe_notes/app/modules/setting/controllers/manager_route_navigator_store.dart';
 import 'package:safe_notes/app/shared/database/database.dart';
+import 'package:safe_notes/app/shared/encrypt/data_encrypt.dart';
 import 'package:safe_notes/app/shared/token/expire_token.dart';
 
 import 'package:safe_notes/app/shared/leave/leave.dart';
@@ -61,16 +62,27 @@ class DashboardModule extends Module {
         Bind.lazySingleton<IFolderRepository>(
             (i) => FolderRepository(i<IFolderDatasource>())),
         //
-        Bind.lazySingleton<IAddFolderUsecase>(
-            (i) => AddFolderUsecase(i<IFolderRepository>())),
-        Bind.lazySingleton<IEditFolderUsecase>(
-            (i) => EditFolderUsecase(i<IFolderRepository>())),
-        Bind.lazySingleton<IDeleteFolderUsecase>(
-            (i) => DeleteFolderUsecase(i<IFolderRepository>())),
-        Bind.lazySingleton<IRestoreFolderUsecase>(
-            (i) => RestoreFolderUsecase(i<IFolderRepository>())),
+        Bind.lazySingleton<IAddFolderUsecase>((i) => AddFolderUsecase(
+              i<IFolderRepository>(),
+              i<DataEncrypt>(),
+            )),
+        Bind.lazySingleton<IEditFolderUsecase>((i) => EditFolderUsecase(
+              i<IFolderRepository>(),
+              i<DataEncrypt>(),
+            )),
+        Bind.lazySingleton<IDeleteFolderUsecase>((i) => DeleteFolderUsecase(
+              i<IFolderRepository>(),
+              i<DataEncrypt>(),
+            )),
+        Bind.lazySingleton<IRestoreFolderUsecase>((i) => RestoreFolderUsecase(
+              i<IFolderRepository>(),
+              i<DataEncrypt>(),
+            )),
         Bind.lazySingleton<IDeleteFolderPersistentUsecase>(
-            (i) => DeleteFolderPersistentUsecase(i<IFolderRepository>())),
+            (i) => DeleteFolderPersistentUsecase(
+                  i<IFolderRepository>(),
+                  i<DataEncrypt>(),
+                )),
         //?
         //? NOTE
         Bind.lazySingleton<INoteDatasource>((i) => NoteDatasource(
@@ -82,19 +94,24 @@ class DashboardModule extends Module {
         //
         Bind.lazySingleton<IAddNoteUsecase>((i) => AddNoteUsecase(
               i<INoteRepository>(),
+              i<DataEncrypt>(),
             )),
         Bind.lazySingleton<IEditNoteUsecase>((i) => EditNoteUsecase(
               i<INoteRepository>(),
+              i<DataEncrypt>(),
             )),
         Bind.lazySingleton<IRestoreNoteUsecase>((i) => RestoreNoteUsecase(
               i<INoteRepository>(),
+              i<DataEncrypt>(),
             )),
         Bind.lazySingleton<IDeleteNoteUsecase>((i) => DeleteNoteUsecase(
               i<INoteRepository>(),
+              i<DataEncrypt>(),
             )),
         Bind.lazySingleton<IDeleteNotePersistentUsecase>(
             (i) => DeleteNotePersistentUsecase(
                   i<INoteRepository>(),
+                  i<DataEncrypt>(),
                 )),
         //?
         //? GET LIST

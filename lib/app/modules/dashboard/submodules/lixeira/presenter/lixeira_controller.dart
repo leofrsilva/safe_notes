@@ -152,7 +152,9 @@ class LixeiraController {
         listNote.addAll(
           _listFieldsStore.reactive.listNoteByFolderDeleted(folderer.folderId),
         );
-        await _deletePersistentNotes(context, listNote);
+        if (listNote.isNotEmpty) {
+          await _deletePersistentNotes(context, listNote);
+        }
       }
     }
 

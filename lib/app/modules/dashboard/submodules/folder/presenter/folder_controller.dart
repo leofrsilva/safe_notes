@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
+import 'package:safe_notes/app/shared/encrypt/encrypt_failure.dart';
 
 import '../../../domain/usecases/folder/i_folder_usecase.dart';
 import '../../../domain/usecases/note/i_note_usecases.dart';
@@ -89,10 +91,12 @@ class FolderController {
 
     final either = await _editNoteUsecase.call(noteEditable);
     if (either.isLeft()) {
-      SnackbarError.show(
-        context,
-        message: 'Error ao editar a Nota!',
-      );
+      if (either.fold(id, id) is! IncorrectEncryptionError) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao editar a Nota!',
+        );
+      }
     }
   }
 
@@ -124,10 +128,12 @@ class FolderController {
   Future deleteNote(BuildContext context, List<NoteModel> notes) async {
     final either = await _deleteNoteUsecase.call(notes);
     if (either.isLeft()) {
-      SnackbarError.show(
-        context,
-        message: 'Error ao deletar a Nota!',
-      );
+      if (either.fold(id, id) is! IncorrectEncryptionError) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao deletar a Nota!',
+        );
+      }
     }
   }
 
@@ -135,10 +141,12 @@ class FolderController {
   Future deleteFolder(BuildContext context, List<FolderModel> folders) async {
     final either = await _deleteFolderUsecase.call(folders);
     if (either.isLeft()) {
-      SnackbarError.show(
-        context,
-        message: 'Error ao deletar a Pasta!',
-      );
+      if (either.fold(id, id) is! IncorrectEncryptionError) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao deletar a Pasta!',
+        );
+      }
     }
   }
 }

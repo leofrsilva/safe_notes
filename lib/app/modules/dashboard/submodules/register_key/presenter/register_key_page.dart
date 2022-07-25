@@ -4,6 +4,8 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/encrypt/data_encrypt.dart';
 
+import 'register_key_controller.dart';
+
 class RegisterKeyPage extends StatefulWidget {
   const RegisterKeyPage({Key? key}) : super(key: key);
 
@@ -12,7 +14,7 @@ class RegisterKeyPage extends StatefulWidget {
 }
 
 class _RegisterKeyPageState extends State<RegisterKeyPage> {
-  late DataEncrypt _dataEncrypt;
+  late RegisterKeyController controller;
 
   late TextEditingController _textEditingKey;
   late FocusNode _focusNode;
@@ -21,7 +23,7 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
   @override
   void initState() {
     super.initState();
-    _dataEncrypt = Modular.get<DataEncrypt>();
+    controller = Modular.get<RegisterKeyController>();
     _textEditingKey = TextEditingController();
     _focusNode = FocusNode();
     WidgetsBinding.instance?.addPostFrameCallback((timings) {
@@ -111,12 +113,10 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
                                     ),
                                   ),
                                   onPressed: canSend
-                                      ? () {
-                                          _dataEncrypt.setKey(
+                                      ? () => controller.sendKey(
+                                            context,
                                             _textEditingKey.text,
-                                          );
-                                          Modular.to.pop();
-                                        }
+                                          )
                                       : null,
                                 ),
                               ],

@@ -38,5 +38,5 @@ abstract class IReactiveListFolder {
   // Function for Name Folder
   int qtdNameFolder(int parentId, int level);
 
-  bool checkNameAlreadyExists(FolderModel folderer);
+  bool checkNameAlreadyExists(FolderModel folderer, String nameFolder);
 }

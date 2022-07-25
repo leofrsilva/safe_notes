@@ -28,6 +28,14 @@ class DashboardController {
     this._deleteFolderPersistentUsecase,
   );
 
+  void accessKey() {
+    Modular.to.pushNamed('/dashboard/register-key/').whenComplete(() {
+      _listFieldsStore.listNotesStore.getListNotes(_listFieldsStore.setNotes);
+      _listFieldsStore.listFoldersStore
+          .getListFolders(_listFieldsStore.setFolders);
+    });
+  }
+
   void logout(BuildContext context) async {
     await LoadingOverlay.show(
       context,

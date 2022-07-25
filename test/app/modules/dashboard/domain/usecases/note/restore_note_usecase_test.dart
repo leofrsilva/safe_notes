@@ -6,17 +6,21 @@ import 'package:safe_notes/app/app_module.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/errors/note_failures.dart';
 import 'package:safe_notes/app/modules/dashboard/domain/usecases/note/restore_note_usecase.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
+import 'package:safe_notes/app/shared/encrypt/encrypt.dart';
 
 import '../../../../../../mocks/mocks_sqlite.dart';
 import '../../../../../../stub/note_model_stub.dart';
 
 void main() {
   late NoteModel note = note1;
+  late DataEncrypt dataEncrypt;
   final repository = NoteRepositoryMock();
 
   setUpAll(() {
     initModule(AppModule());
     note = note1;
+    dataEncrypt = DataEncrypt();
+    dataEncrypt.setKey('val1');
   });
 
   test('restore note usecase RestoreNoteUsecase.Call | isRight igual a True',
@@ -25,7 +29,7 @@ void main() {
       (_) async => const Right(dynamic),
     );
 
-    final usecase = RestoreNoteUsecase(repository);
+    final usecase = RestoreNoteUsecase(repository, dataEncrypt);
     final result = await usecase.call([note]);
 
     expect(result.isRight(), equals(true));
@@ -38,7 +42,7 @@ void main() {
       (_) async => Left(NoNoteEditedToRestoredSqliteError()),
     );
 
-    final usecase = RestoreNoteUsecase(repository);
+    final usecase = RestoreNoteUsecase(repository, dataEncrypt);
     final result = await usecase.call([note]);
 
     expect(result.isLeft(), equals(true));
@@ -52,10 +56,25 @@ void main() {
       (_) async => Left(RestoreNoteSqliteErrorMock()),
     );
 
-    final usecase = RestoreNoteUsecase(repository);
+    final usecase = RestoreNoteUsecase(repository, dataEncrypt);
     final result = await usecase.call([note]);
 
     expect(result.isLeft(), equals(true));
     expect(result.fold(id, id), isA<RestoreNoteSqliteError>());
+  });
+
+  test(
+      'restore note usecase RestoreNoteUsecase.Call | retorna IncorrectEncryptionError',
+      () async {
+    await dataEncrypt.setKey('val2');
+    when(() => repository.restoreNote([note])).thenAnswer(
+      (_) async => const Right(dynamic),
+    );
+
+    final usecase = RestoreNoteUsecase(repository, dataEncrypt);
+    final result = await usecase.call([note]);
+
+    expect(result.isLeft(), equals(true));
+    expect(result.fold(id, id), isA<IncorrectEncryptionError>());
   });
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
+import 'package:safe_notes/app/shared/encrypt/encrypt.dart';
 
 import '../../domain/usecases/note/i_note_usecases.dart';
 import '../../presenter/stores/selection_store.dart';
@@ -31,20 +33,24 @@ class FavoritesController {
 
     final either = await _editNoteUsecase.call(noteEditable);
     if (either.isLeft()) {
-      SnackbarError.show(
-        context,
-        message: 'Error ao editar a Nota!',
-      );
+      if (either.fold(id, id) is! IncorrectEncryptionError) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao editar a Nota!',
+        );
+      }
     }
   }
 
   void deleteNote(BuildContext context, List<NoteModel> notes) async {
     final either = await _deleteNoteUsecase.call(notes);
     if (either.isLeft()) {
-      SnackbarError.show(
-        context,
-        message: 'Error ao deletar a Nota!',
-      );
+      if (either.fold(id, id) is! IncorrectEncryptionError) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao deletar a Nota!',
+        );
+      }
     }
   }
 }
