@@ -12,13 +12,13 @@ class NoteDatasource extends INoteDatasource {
   NoteDatasource(this._noteDAO);
 
   @override
-  Future<dynamic> addNote(NoteEntity entity) async {
+  Future<dynamic> addNotes(List<NoteEntity> entities) async {
     try {
-      final id = await _noteDAO.insertNote(entity);
-      if (id <= 0) {
+      final ids = await _noteDAO.insertNotes(entities);
+      if (ids.length != entities.length) {
         throw NotReturnNoteIdSqliteError();
       }
-      return id;
+      return ids;
     } on SqliteException catch (error, stackTrace) {
       throw AddNoteSqliteError(
         stackTrace,

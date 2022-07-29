@@ -10,7 +10,7 @@ class FolderModel {
   late FolderEntity _entity;
   FolderEntity get entity => _entity;
 
-  String get userId => _encrypt.encode(_entity.userId);
+  String get userId => _entity.userId;
 
   int get folderId => _entity.id;
 
@@ -81,7 +81,7 @@ class FolderModel {
     _encrypt = Modular.get<DataEncrypt>();
     _entity = FolderEntity(
       folderId: folderId == 0 ? _generaterId : folderId,
-      userId: _encrypt.encode(userId),
+      userId: userId,
       name: _encrypt.encode(name),
       folderParent: folderParent,
       level: level,
@@ -149,6 +149,36 @@ class FolderModel {
       'name': name,
       'color': color,
       'is_deleted': isDeleted,
+      'date_deletion': dateDeletion?.toString(),
+      'date_create': dateCreate.toString(),
+      'date_modification': dateModification.toString(),
+    };
+  }
+
+  factory FolderModel.fromJsonEncrypted(Map<String, dynamic> json) {
+    return FolderModel.fromEntity(FolderEntity(
+      folderId: json['id'],
+      folderParent: json['folder_parent'],
+      userId: json['user_id'],
+      level: json['level'],
+      name: json['name'],
+      color: json['color'],
+      isDeleted: json['is_deleted'],
+      dateDeletion: json['date_deletion'],
+      dateCreate: json['date_create'],
+      dateModification: json['date_modification'],
+    ));
+  }
+
+  Map<String, dynamic> toJsonEncrypted() {
+    return {
+      'id': _entity.id,
+      'folder_parent': _entity.folderParent,
+      'user_id': _entity.userId,
+      'level': _entity.level,
+      'name': _entity.name,
+      'color': _entity.color,
+      'is_deleted': _entity.isDeleted,
       'date_deletion': dateDeletion?.toString(),
       'date_create': dateCreate.toString(),
       'date_modification': dateModification.toString(),

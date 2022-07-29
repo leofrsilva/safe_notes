@@ -23,6 +23,8 @@ abstract class IReactiveListFolder {
   bool checkFolderIsExpanded(int id);
 
   // List Folder
+  List<FolderModel> get allFolders;
+
   FolderModel getFolder(int id);
 
   int qtdChildrenFolder(int folderId);

@@ -9,6 +9,8 @@ abstract class IReactiveListNote {
   int get qtdFavorites;
 
   // LISTS
+  List<NoteModel> get allNotes;
+
   List<NoteModel> listAllNote({bool orderByDesc = true});
 
   List<NoteModel> get favorites;

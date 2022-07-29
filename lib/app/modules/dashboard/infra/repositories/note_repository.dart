@@ -10,9 +10,11 @@ class NoteRepository extends INoteRepository {
   NoteRepository(this._datasource);
 
   @override
-  Future<Either<Failure, dynamic>> addNote(NoteModel note) async {
+  Future<Either<Failure, dynamic>> addNotes(List<NoteModel> notes) async {
     try {
-      final result = await _datasource.addNote(note.entity);
+      final result = await _datasource.addNotes(
+        notes.map((note) => note.entity).toList(),
+      );
       return Right(result);
     } on Failure catch (e) {
       return Left(e);

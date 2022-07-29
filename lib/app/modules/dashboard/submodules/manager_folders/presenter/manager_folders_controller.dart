@@ -104,7 +104,7 @@ class ManagerFoldersController extends Disposable {
   }
 
   void addFolder(BuildContext context, FolderModel folder) {
-    _addFolderUsecase.call(folder).then((either) async {
+    _addFolderUsecase.call([folder]).then((either) async {
       if (either.isLeft()) {
         if (either.fold(id, id) is! IncorrectEncryptionError) {
           SnackbarError.show(

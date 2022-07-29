@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:encrypt/encrypt.dart' as crypt;
 
 import 'package:safe_notes/app/design/common/extension/encrypt_extension.dart';
+import 'package:safe_notes/app/shared/encrypt/handle_code.dart';
 import 'i_expire_token.dart';
 import 'token_shared.dart';
 
@@ -140,30 +141,5 @@ class ExpireToken extends IExpireToken {
 
   String _base64UrlDecode(String base64Url) {
     return HandleCode.strtr(base64Url, {'-': '+', '_': '/'});
-  }
-}
-
-class HandleCode {
-  static String strtr(String b64, Map<String, String> fromTo) {
-    fromTo.forEach((from, to) {
-      b64 = b64.replaceAll(from, to);
-    });
-    return b64;
-  }
-
-  static String rtrim(String str, {String? charsToBeRemoved}) {
-    if (charsToBeRemoved == null) {
-      return str.trimRight();
-    } else {
-      List<String> charList = charsToBeRemoved.split('');
-
-      String lastChar = str.split('').last;
-      while (charList.contains(lastChar)) {
-        int lastHash = str.length - 1;
-        str = str.substring(0, lastHash);
-        lastChar = str.split('').last;
-      }
-      return str;
-    }
   }
 }

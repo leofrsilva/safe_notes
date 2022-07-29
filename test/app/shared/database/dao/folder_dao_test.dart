@@ -23,20 +23,20 @@ void main() {
   });
 
   test('folder dao insertFolder', () async {
-    int id = await folderDAO.insertFolder(folder.entity);
+    List<int> ids = await folderDAO.insertFolders([folder.entity]);
 
-    expect(id, isNotNull);
-    expect(id, isA<int>());
+    expect(ids, isNotNull);
+    expect(ids, isA<List<int>>());
   });
 
   test('folder dao updateFolders', () async {
     var folder = folder1.copyWith(isDeleted: false);
-    int id = await folderDAO.insertFolder(folder.entity);
+    List<int> ids = await folderDAO.insertFolders([folder.entity]);
 
     folder = folder.copyWith(isDeleted: true);
     await folderDAO.updateFolders([folder.entity]);
 
-    final entity = await folderDAO.findFolder(id);
+    final entity = await folderDAO.findFolder(ids.first);
     expect(entity, isNotNull);
 
     final resultFolder = FolderModel.fromEntity(entity!);
@@ -46,12 +46,12 @@ void main() {
 
   test('folder dao deleteFolder', () async {
     var folder = folder2.copyWith(isDeleted: false);
-    int id = await folderDAO.insertFolder(folder.entity);
+    List<int> ids = await folderDAO.insertFolders([folder.entity]);
 
     folder = folder.copyWith(isDeleted: true);
     await folderDAO.updateFolders([folder.entity]);
 
-    final entity = await folderDAO.findFolder(id);
+    final entity = await folderDAO.findFolder(ids.first);
     expect(entity, isNotNull);
 
     final resultFolder = FolderModel.fromEntity(entity!);
@@ -61,16 +61,16 @@ void main() {
 
   test('folder dao findFolder', () async {
     var folder = folder3;
-    int id = await folderDAO.insertFolder(folder.entity);
+    List<int> ids = await folderDAO.insertFolders([folder.entity]);
 
-    final entity = await folderDAO.findFolder(id);
+    final entity = await folderDAO.findFolder(ids.first);
     expect(entity, isNotNull);
     expect(entity, isA<FolderEntity>());
   });
 
   test('folder dao getFolders', () async {
     var folder = folder4;
-    await folderDAO.insertFolder(folder.entity);
+    await folderDAO.insertFolders([folder.entity]);
 
     final streamList = folderDAO.getFolders();
 

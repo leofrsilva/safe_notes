@@ -24,24 +24,24 @@ void main() {
   });
 
   test('add note usecase AddNoteUsecase.Call | isRight igual a True', () async {
-    when(() => repository.addNote(note)).thenAnswer(
+    when(() => repository.addNotes([note])).thenAnswer(
       (_) async => const Right(dynamic),
     );
 
     final usecase = AddNoteUsecase(repository, dataEncrypt);
-    final result = await usecase.call(note);
+    final result = await usecase.call([note]);
 
     expect(result.isRight(), equals(true));
   });
 
   test('add note usecase AddNoteUsecase.Call | retorna AddNoteSqliteError',
       () async {
-    when(() => repository.addNote(note)).thenAnswer(
+    when(() => repository.addNotes([note])).thenAnswer(
       (_) async => Left(AddNoteSqliteErrorMock()),
     );
 
     final usecase = AddNoteUsecase(repository, dataEncrypt);
-    final result = await usecase.call(note);
+    final result = await usecase.call([note]);
 
     expect(result.isLeft(), equals(true));
     expect(result.fold(id, id), isA<AddNoteSqliteError>());
@@ -50,12 +50,12 @@ void main() {
   test(
       'add note usecase AddNoteUsecase.Call | retorna NotReturnNoteIdSqliteError',
       () async {
-    when(() => repository.addNote(note)).thenAnswer(
+    when(() => repository.addNotes([note])).thenAnswer(
       (_) async => Left(NotReturnNoteIdSqliteError()),
     );
 
     final usecase = AddNoteUsecase(repository, dataEncrypt);
-    final result = await usecase.call(note);
+    final result = await usecase.call([note]);
 
     expect(result.isLeft(), equals(true));
     expect(result.fold(id, id), isA<NotReturnNoteIdSqliteError>());
@@ -65,12 +65,12 @@ void main() {
       'add note usecase AddNoteUsecase.Call | retorna IncorrectEncryptionError',
       () async {
     await dataEncrypt.setKey('val2');
-    when(() => repository.addNote(note)).thenAnswer(
+    when(() => repository.addNotes([note])).thenAnswer(
       (_) async => const Right(dynamic),
     );
 
     final usecase = AddNoteUsecase(repository, dataEncrypt);
-    final result = await usecase.call(note);
+    final result = await usecase.call([note]);
 
     expect(result.isLeft(), equals(true));
     expect(result.fold(id, id), isA<IncorrectEncryptionError>());

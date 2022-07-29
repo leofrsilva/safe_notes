@@ -36,6 +36,7 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
         ),
       ),
       body: Container(
+        margin: const EdgeInsets.only(bottom: 10.0),
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,

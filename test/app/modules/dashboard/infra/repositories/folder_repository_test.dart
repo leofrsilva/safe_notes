@@ -21,32 +21,32 @@ void main() {
 
   group('folder repository addFolder | ', () {
     test('isRight igual a True', () async {
-      when(() => datasource.addFolder(folder.entity))
-          .thenAnswer((_) async => 1);
+      when(() => datasource.addFolders([folder.entity]))
+          .thenAnswer((_) async => [1]);
 
       final repository = FolderRepository(datasource);
-      final result = await repository.addFolder(folder);
+      final result = await repository.addFolders([folder]);
 
       expect(result.isRight(), equals(true));
     });
 
     test('retornar um AddFolderSqliteError', () async {
-      when(() => datasource.addFolder(folder.entity))
+      when(() => datasource.addFolders([folder.entity]))
           .thenThrow(AddFolderSqliteErrorMock());
 
       final repository = FolderRepository(datasource);
-      final result = await repository.addFolder(folder);
+      final result = await repository.addFolders([folder]);
 
       expect(result.isLeft(), equals(true));
       expect(result.fold(id, id), isA<AddFolderSqliteError>());
     });
 
     test('retornar um NotReturnFolderIdSqliteError', () async {
-      when(() => datasource.addFolder(folder.entity))
+      when(() => datasource.addFolders([folder.entity]))
           .thenThrow(NotReturnFolderIdSqliteErrorMock());
 
       final repository = FolderRepository(datasource);
-      final result = await repository.addFolder(folder);
+      final result = await repository.addFolders([folder]);
 
       expect(result.isLeft(), equals(true));
       expect(result.fold(id, id), isA<NotReturnFolderIdSqliteError>());
@@ -55,11 +55,11 @@ void main() {
 
   group('folder repository editFolder | ', () {
     test('isRight igual a True', () async {
-      when(() => datasource.addFolder(folder.entity))
-          .thenAnswer((_) async => 1);
+      when(() => datasource.addFolders([folder.entity]))
+          .thenAnswer((_) async => [1]);
 
       final repository = FolderRepository(datasource);
-      final result = await repository.addFolder(folder);
+      final result = await repository.addFolders([folder]);
 
       expect(result.isRight(), equals(true));
     });

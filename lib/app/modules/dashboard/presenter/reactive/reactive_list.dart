@@ -93,6 +93,11 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
 
   //? -- LIST FOLDER
   @override
+  List<FolderModel> get allFolders {
+    return _reactiveFolders.allFolders;
+  }
+
+  @override
   FolderModel getFolder(int id) {
     return _reactiveFolders.getFolder(id);
   }
@@ -155,6 +160,9 @@ class ReactiveList extends ChangeNotifier implements IReactiveList {
   }
 
   //? -- LISTS
+  @override
+  List<NoteModel> get allNotes => _reactiveNotes.allNotes;
+
   @override
   List<NoteModel> listAllNote({bool orderByDesc = true}) {
     return _reactiveNotes.listAllNote(orderByDesc: orderByDesc);

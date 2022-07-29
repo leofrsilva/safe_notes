@@ -1,4 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:safe_notes/app/app_core.dart';
+import 'package:safe_notes/app/shared/encrypt/data_encrypt.dart';
 
 import 'controllers/setting_controller.dart';
 import 'controllers/theme_store.dart';
@@ -9,6 +11,8 @@ class SettingModule extends Module {
   List<Bind<Object>> get binds => [
         Bind.lazySingleton<SettingController>((i) => SettingController(
               i<ThemeStore>(),
+              i<AppCore>(),
+              i<DataEncrypt>(),
             )),
       ];
   @override

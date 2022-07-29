@@ -80,7 +80,11 @@ class _EditNamePageState extends State<EditNamePage> {
     _formKey = GlobalKey<FormState>();
     _focusNode = FocusNode();
     _focusNode.addListener(toggleFocus);
-    _focusNode.requestFocus();
+    WidgetsBinding.instance?.addPostFrameCallback((timings) {
+      if (Sizes.orientation(context) == Orientation.portrait) {
+        _focusNode.requestFocus();
+      }
+    });
   }
 
   @override
@@ -129,104 +133,109 @@ class _EditNamePageState extends State<EditNamePage> {
                       ),
                       child: Form(
                         key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CustomTextFieldWithHint(
-                              controller: _textEditingFolder,
-                              title: 'Renomear a Pasta',
-                              hint: 'Nome da Pasta',
-                              focusNode: _focusNode,
-                              validator: validatorName,
-                              onChanged: (String name) {
-                                if (name.isEmpty) {
-                                  toggleCanAdd(false);
-                                } else if (name.isNotEmpty) {
-                                  if (name == widget.folderModel.name) {
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              CustomTextFieldWithHint(
+                                controller: _textEditingFolder,
+                                title: 'Renomear a Pasta',
+                                hint: 'Nome da Pasta',
+                                focusNode: _focusNode,
+                                validator: validatorName,
+                                onChanged: (String name) {
+                                  if (name.isEmpty) {
                                     toggleCanAdd(false);
-                                  } else if (name.length > 1) {
-                                    toggleCanAdd(true);
+                                  } else if (name.isNotEmpty) {
+                                    if (name == widget.folderModel.name) {
+                                      toggleCanAdd(false);
+                                    } else if (name.length > 1) {
+                                      toggleCanAdd(true);
+                                    }
                                   }
-                                }
-                                //
-                                final formState = _formKey.currentState;
-                                if (formState != null) {
-                                  if (formState.validate()) {
-                                    toggleCanAdd(true);
-                                  } else {
-                                    toggleCanAdd(false);
+                                  //
+                                  final formState = _formKey.currentState;
+                                  if (formState != null) {
+                                    if (formState.validate()) {
+                                      toggleCanAdd(true);
+                                    } else {
+                                      toggleCanAdd(false);
+                                    }
                                   }
-                                }
-                              },
-                            ),
-                            const SizedBox(height: 15.0),
-                            SizedBox(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    )),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                        vertical: 5.0,
-                                      ),
-                                      child: Text(
-                                        'Cancelar',
-                                        style: TextStyles.textButton(context),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Modular.to.pop();
-                                    },
-                                  ),
-                                  Container(
-                                    width: 1.5,
-                                    height: 12.0,
-                                    color: ColorPalettes.blueGrey,
-                                  ),
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    )),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                        vertical: 5.0,
-                                      ),
-                                      child: Text(
-                                        'Renomear',
-                                        style: TextStyles.textButton(context)
-                                            .copyWith(
-                                          color: canAdd
-                                              ? Theme.of(context).primaryColor
-                                              : ColorPalettes.grey,
+                                },
+                              ),
+                              const SizedBox(height: 15.0),
+                              SizedBox(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      )),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0,
+                                          vertical: 5.0,
+                                        ),
+                                        child: Text(
+                                          'Cancelar',
+                                          style: TextStyles.textButton(context),
                                         ),
                                       ),
+                                      onPressed: () {
+                                        Modular.to.pop();
+                                      },
                                     ),
-                                    onPressed: canAdd
-                                        ? () {
-                                            folder = folder.copyWith(
-                                              name: _textEditingFolder.text,
-                                              dateModification: DateTime.now(),
-                                            );
-                                            _controller.editFolder(
-                                                context, folder);
-                                            Modular.to.pop();
-                                          }
-                                        : null,
-                                  ),
-                                ],
+                                    Container(
+                                      width: 1.5,
+                                      height: 12.0,
+                                      color: ColorPalettes.blueGrey,
+                                    ),
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      )),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0,
+                                          vertical: 5.0,
+                                        ),
+                                        child: Text(
+                                          'Renomear',
+                                          style: TextStyles.textButton(context)
+                                              .copyWith(
+                                            color: canAdd
+                                                ? Theme.of(context).primaryColor
+                                                : ColorPalettes.grey,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: canAdd
+                                          ? () {
+                                              folder = folder.copyWith(
+                                                name: _textEditingFolder.text,
+                                                dateModification:
+                                                    DateTime.now(),
+                                              );
+                                              _controller.editFolder(
+                                                  context, folder);
+                                              Modular.to.pop();
+                                            }
+                                          : null,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

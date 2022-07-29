@@ -20,6 +20,7 @@ class AppModule extends Module {
       (i) => $FloorAppDatabase.databaseBuilder('app_database.db').build(),
     ),
     Bind.lazySingleton<AppCore>((i) => AppCore()),
+    Bind.singleton<DataEncrypt>((i) => DataEncrypt()),
     //
     Bind.lazySingleton<ManagerRouteNavigatorStore>(
       (i) => ManagerRouteNavigatorStore(),
@@ -33,9 +34,10 @@ class AppModule extends Module {
     Bind.singleton<ThemeStore>((i) => ThemeStore()),
     Bind.singleton<SettingController>((i) => SettingController(
           i<ThemeStore>(),
+          i<AppCore>(),
+          i<DataEncrypt>(),
         )),
     //
-    Bind.singleton<DataEncrypt>((i) => DataEncrypt()),
   ];
 
   @override

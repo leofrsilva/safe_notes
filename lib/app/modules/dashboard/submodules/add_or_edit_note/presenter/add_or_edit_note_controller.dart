@@ -70,7 +70,7 @@ class AddOrEditNoteController {
   }
 
   Future<void> addNote(BuildContext context) async {
-    final either = await _addNoteUsecase.call(noteFields.model);
+    final either = await _addNoteUsecase.call([noteFields.model]);
     either.fold(
       (failure) {
         if (failure is! IncorrectEncryptionError) {

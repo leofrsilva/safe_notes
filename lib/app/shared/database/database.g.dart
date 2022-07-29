@@ -244,9 +244,9 @@ class _$FolderDAO extends FolderDAO {
   }
 
   @override
-  Future<int> insertFolder(FolderEntity record) {
-    return _folderEntityInsertionAdapter.insertAndReturnId(
-        record, OnConflictStrategy.abort);
+  Future<List<int>> insertFolders(List<FolderEntity> records) {
+    return _folderEntityInsertionAdapter.insertListAndReturnIds(
+        records, OnConflictStrategy.abort);
   }
 
   @override
@@ -394,9 +394,9 @@ class _$NoteDAO extends NoteDAO {
   }
 
   @override
-  Future<int> insertNote(NoteEntity record) {
-    return _noteEntityInsertionAdapter.insertAndReturnId(
-        record, OnConflictStrategy.abort);
+  Future<List<int>> insertNotes(List<NoteEntity> records) {
+    return _noteEntityInsertionAdapter.insertListAndReturnIds(
+        records, OnConflictStrategy.abort);
   }
 
   @override

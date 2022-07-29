@@ -27,7 +27,7 @@ void main() {
     database = await $FloorAppDatabase.inMemoryDatabaseBuilder().build();
     folderDAO = database.folderDao;
     noteDAO = database.noteDao;
-    await folderDAO.insertFolder(folder.entity);
+    await folderDAO.insertFolders([folder.entity]);
 
     datasource = FolderDatasource(folderDAO, noteDAO);
   });
@@ -41,20 +41,20 @@ void main() {
     setUpAll(() => folderEntity = folder4.entity);
 
     test('Adicionado uma Pasta com Sucesso', () async {
-      final result = await datasource.addFolder(folderEntity);
+      final result = await datasource.addFolders([folderEntity]);
 
-      expect(result, equals(folderEntity.id));
+      expect(result, equals([folderEntity.id]));
     });
 
     test('retorna um AddFolderSqliteError', () async {
       final folderDAOMock = FolderDAOMock();
       final datasouceMock = FolderDatasource(folderDAOMock, noteDAO);
 
-      when(() => folderDAOMock.insertFolder(folderEntity))
+      when(() => folderDAOMock.insertFolders([folderEntity]))
           .thenThrow(SqliteExceptionMock());
 
       expect(
-        () => datasouceMock.addFolder(folderEntity),
+        () => datasouceMock.addFolders([folderEntity]),
         throwsA(isA<AddFolderSqliteError>()),
       );
     });
@@ -63,11 +63,11 @@ void main() {
       final folderDAOMock = FolderDAOMock();
       final datasouceMock = FolderDatasource(folderDAOMock, noteDAO);
 
-      when(() => folderDAOMock.insertFolder(folderEntity))
-          .thenAnswer((_) async => 0);
+      when(() => folderDAOMock.insertFolders([folderEntity]))
+          .thenAnswer((_) async => []);
 
       expect(
-        () => datasouceMock.addFolder(folderEntity),
+        () => datasouceMock.addFolders([folderEntity]),
         throwsA(isA<NotReturnFolderIdSqliteError>()),
       );
     });
@@ -78,7 +78,7 @@ void main() {
     setUpAll(() => folderModel = folder2);
 
     test('Editou a Pasta com Sucesso', () async {
-      await folderDAO.insertFolder(folderModel.entity);
+      await folderDAO.insertFolders([folderModel.entity]);
 
       var folderEdited = folderModel.copyWith(
         color: 222222,
@@ -136,7 +136,7 @@ void main() {
   group('folder datasource deleteFolder |', () {
     test('retorna um NoFolderEditedToDeletedSqliteError', () async {
       final note = folder3.entity;
-      await folderDAO.insertFolder(note);
+      await folderDAO.insertFolders([note]);
 
       expect(
         () => datasource.deleteFolder([note]),
@@ -146,27 +146,27 @@ void main() {
 
     test('Deletado a Pasta e seus filhos com Sucesso', () async {
       // INSERT FOLDERS
-      await folderDAO.insertFolder(folder1.entity);
-      await folderDAO.insertFolder(folder11.entity);
-      await folderDAO.insertFolder(folder111.entity);
-      await folderDAO.insertFolder(folder1111.entity);
+      await folderDAO.insertFolders([folder1.entity]);
+      await folderDAO.insertFolders([folder11.entity]);
+      await folderDAO.insertFolders([folder111.entity]);
+      await folderDAO.insertFolders([folder1111.entity]);
 
       // INSERT NOTES
-      await noteDAO.insertNote(
+      await noteDAO.insertNotes([
         note1.copyWith(folderId: folder1.folderId).entity,
-      );
-      await noteDAO.insertNote(
+      ]);
+      await noteDAO.insertNotes([
         note2.copyWith(folderId: folder1.folderId).entity,
-      );
-      await noteDAO.insertNote(
+      ]);
+      await noteDAO.insertNotes([
         note3.copyWith(folderId: folder11.folderId).entity,
-      );
-      await noteDAO.insertNote(
+      ]);
+      await noteDAO.insertNotes([
         note4.copyWith(folderId: folder111.folderId).entity,
-      );
-      await noteDAO.insertNote(
+      ]);
+      await noteDAO.insertNotes([
         note5.copyWith(folderId: folder1111.folderId).entity,
-      );
+      ]);
 
       final folderer = folder1.copyWith(isDeleted: true);
       await datasource.deleteFolder([folderer.entity]);
@@ -204,7 +204,7 @@ void main() {
     });
 
     test('retorna um DeleteFolderSqliteError', () async {
-      await folderDAO.insertFolder(folder5.entity);
+      await folderDAO.insertFolders([folder5.entity]);
 
       final folderDAOMock = FolderDAOExceptionMock();
       final datasouceMock = FolderDatasource(folderDAOMock, noteDAO);
@@ -220,7 +220,7 @@ void main() {
   group('folder datasource restoreFolder |', () {
     test('retorna um NoFolderEditedToRestoredSqliteError', () async {
       var note = folder7.copyWith(isDeleted: true);
-      await folderDAO.insertFolder(note.entity);
+      await folderDAO.insertFolders([note.entity]);
 
       expect(
         () => datasource.restoreFolder([note.entity]),
@@ -229,9 +229,11 @@ void main() {
     });
 
     test('Restaurado a Pasta e seus filhos com Sucesso', () async {
-      await folderDAO.insertFolder(folder6.copyWith(isDeleted: true).entity);
-      await folderDAO.insertFolder(folder61.copyWith(isDeleted: true).entity);
-      await folderDAO.insertFolder(folder611.copyWith(isDeleted: true).entity);
+      await folderDAO.insertFolders([folder6.copyWith(isDeleted: true).entity]);
+      await folderDAO
+          .insertFolders([folder61.copyWith(isDeleted: true).entity]);
+      await folderDAO
+          .insertFolders([folder611.copyWith(isDeleted: true).entity]);
       final folderer = folder6.copyWith(isDeleted: false);
 
       await datasource.restoreFolder([folderer.entity]);
@@ -248,7 +250,7 @@ void main() {
     });
 
     test('retorna um RestoreFolderSqliteError', () async {
-      await folderDAO.insertFolder(folder8.entity);
+      await folderDAO.insertFolders([folder8.entity]);
 
       final folderDAOMock = FolderDAOExceptionMock();
       final datasouceMock = FolderDatasource(folderDAOMock, noteDAO);
@@ -263,8 +265,9 @@ void main() {
 
   group('folder datasource deletePersistentFolder |', () {
     test('Restaurado a Pasta e seus filhos com Sucesso', () async {
-      await folderDAO.insertFolder(folder9.copyWith(isDeleted: true).entity);
-      await folderDAO.insertFolder(folder91.copyWith(isDeleted: true).entity);
+      await folderDAO.insertFolders([folder9.copyWith(isDeleted: true).entity]);
+      await folderDAO
+          .insertFolders([folder91.copyWith(isDeleted: true).entity]);
 
       await datasource.deletePersistentFolder([folder9.entity]);
 
@@ -275,7 +278,7 @@ void main() {
     });
 
     test('retorna um DeleteFolderPersistentSqliteError', () async {
-      await folderDAO.insertFolder(folder10.entity);
+      await folderDAO.insertFolders([folder10.entity]);
 
       final folderDAOMock = FolderDAOExceptionMock();
       final datasouceMock = FolderDatasource(folderDAOMock, noteDAO);

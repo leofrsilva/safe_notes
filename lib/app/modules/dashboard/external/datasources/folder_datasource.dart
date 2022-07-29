@@ -17,13 +17,13 @@ class FolderDatasource extends IFolderDatasource {
   FolderDatasource(this._folderDAO, this._noteDAO);
 
   @override
-  Future<int> addFolder(FolderEntity entity) async {
+  Future<List<int>> addFolders(List<FolderEntity> entities) async {
     try {
-      final folderId = await _folderDAO.insertFolder(entity);
-      if (folderId <= 0) {
+      final foldersId = await _folderDAO.insertFolders(entities);
+      if (foldersId.length != entities.length) {
         throw NotReturnFolderIdSqliteError();
       }
-      return folderId;
+      return foldersId;
     } on SqliteException catch (error, stackTrace) {
       throw AddFolderSqliteError(
         stackTrace,

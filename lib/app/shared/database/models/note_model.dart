@@ -132,9 +132,39 @@ class NoteModel {
       'title': title,
       'favorite': favorite,
       'is_deleted': isDeleted,
-      'date_deletion': dateDeletion,
-      'date_create': dateCreate,
-      'date_modification': dateModification,
+      'date_deletion': dateDeletion?.toString(),
+      'date_create': dateCreate.toString(),
+      'date_modification': dateModification.toString(),
+    };
+  }
+
+  factory NoteModel.fromJsonEncrypted(Map<String, dynamic> json) {
+    return NoteModel.fromEntity(NoteEntity(
+      folderId: json['folderId'],
+      noteId: json['noteId'],
+      tagId: json['tagId'],
+      body: json['body'],
+      title: json['title'],
+      favorite: json['favorite'],
+      isDeleted: json['is_deleted'],
+      dateDeletion: json['date_deletion'],
+      dateCreate: json['date_create'],
+      dateModification: json['date_modification'],
+    ));
+  }
+
+  Map<String, dynamic> toJsonEncrypted() {
+    return {
+      'folderId': _entity.folderId,
+      'noteId': _entity.id,
+      'tagId': _entity.tagId,
+      'body': _entity.body,
+      'title': _entity.title,
+      'favorite': _entity.favorite,
+      'is_deleted': _entity.isDeleted,
+      'date_deletion': dateDeletion?.toString(),
+      'date_create': dateCreate.toString(),
+      'date_modification': dateModification.toString(),
     };
   }
 }

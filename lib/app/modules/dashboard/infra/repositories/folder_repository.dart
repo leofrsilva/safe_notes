@@ -10,9 +10,11 @@ class FolderRepository extends IFolderRepository {
   FolderRepository(this._datasource);
 
   @override
-  Future<Either<Failure, dynamic>> addFolder(FolderModel folder) async {
+  Future<Either<Failure, dynamic>> addFolders(List<FolderModel> folders) async {
     try {
-      final result = await _datasource.addFolder(folder.entity);
+      final result = await _datasource.addFolders(
+        folders.map((folder) => folder.entity).toList(),
+      );
       return Right(result);
     } on Failure catch (e) {
       return Left(e);

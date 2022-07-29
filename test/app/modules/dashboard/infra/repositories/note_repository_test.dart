@@ -21,31 +21,32 @@ void main() {
 
   group('note repository addNote | ', () {
     test('isRight igual a True', () async {
-      when(() => datasource.addNote(note.entity)).thenAnswer((_) async => 1);
+      when(() => datasource.addNotes([note.entity]))
+          .thenAnswer((_) async => [1]);
 
       final repository = NoteRepository(datasource);
-      final result = await repository.addNote(note);
+      final result = await repository.addNotes([note]);
 
       expect(result.isRight(), equals(true));
     });
 
     test('retornar um AddNoteSqliteError', () async {
-      when(() => datasource.addNote(note.entity))
+      when(() => datasource.addNotes([note.entity]))
           .thenThrow(AddNoteSqliteErrorMock());
 
       final repository = NoteRepository(datasource);
-      final result = await repository.addNote(note);
+      final result = await repository.addNotes([note]);
 
       expect(result.isLeft(), equals(true));
       expect(result.fold(id, id), isA<AddNoteSqliteError>());
     });
 
     test('retornar um NotReturnNoteIdSqliteError', () async {
-      when(() => datasource.addNote(note.entity))
+      when(() => datasource.addNotes([note.entity]))
           .thenThrow(NotReturnNoteIdSqliteError());
 
       final repository = NoteRepository(datasource);
-      final result = await repository.addNote(note);
+      final result = await repository.addNotes([note]);
 
       expect(result.isLeft(), equals(true));
       expect(result.fold(id, id), isA<NotReturnNoteIdSqliteError>());

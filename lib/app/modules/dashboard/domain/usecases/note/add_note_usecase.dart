@@ -12,9 +12,9 @@ class AddNoteUsecase extends IAddNoteUsecase {
   AddNoteUsecase(this._repository, this._dataEncrypt);
 
   @override
-  Future<Either<Failure, dynamic>> call(NoteModel note) async {
+  Future<Either<Failure, dynamic>> call(List<NoteModel> notes) async {
     if (_dataEncrypt.isCorrectKey) {
-      return await _repository.addNote(note);
+      return await _repository.addNotes(notes);
     } else {
       return left(IncorrectEncryptionError());
     }

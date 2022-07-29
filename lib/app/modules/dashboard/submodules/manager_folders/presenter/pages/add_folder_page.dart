@@ -95,7 +95,11 @@ class _AddFolderPageState extends State<AddFolderPage> {
     _formKey = GlobalKey<FormState>();
     _focusNode = FocusNode();
     _focusNode.addListener(toggleFocus);
-    _focusNode.requestFocus();
+    WidgetsBinding.instance?.addPostFrameCallback((timings) {
+      if (Sizes.orientation(context) == Orientation.portrait) {
+        _focusNode.requestFocus();
+      }
+    });
   }
 
   @override
@@ -126,9 +130,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                     },
                   ),
                   GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                    },
+                    onTap: () => FocusScope.of(context).unfocus(),
                     child: Container(
                       width: 330.0,
                       padding: const EdgeInsets.only(
@@ -144,109 +146,115 @@ class _AddFolderPageState extends State<AddFolderPage> {
                       ),
                       child: Form(
                         key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CustomTextFieldWithHint(
-                              textCapitalization: TextCapitalization.sentences,
-                              controller: _textEditingFolder,
-                              title: 'Criar Pasta',
-                              hint: 'Nome da Pasta',
-                              focusNode: _focusNode,
-                              validator: validatorName,
-                              onChanged: (String name) {
-                                if (name.isEmpty) {
-                                  toggleCanAdd(false);
-                                } else if (name.isNotEmpty) {
-                                  if (name.length == 1) toggleCanAdd(true);
-                                }
-                                //
-                                final formState = _formKey.currentState;
-                                if (formState != null) {
-                                  if (formState.validate()) {
-                                    toggleCanAdd(true);
-                                  } else {
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              CustomTextFieldWithHint(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                controller: _textEditingFolder,
+                                title: 'Criar Pasta',
+                                hint: 'Nome da Pasta',
+                                focusNode: _focusNode,
+                                validator: validatorName,
+                                onChanged: (String name) {
+                                  if (name.isEmpty) {
                                     toggleCanAdd(false);
+                                  } else if (name.isNotEmpty) {
+                                    if (name.length == 1) toggleCanAdd(true);
                                   }
-                                }
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15.0),
-                              child: GridSelectionColor(
-                                onChangeColor: (int color) {
-                                  folder = folder.copyWith(color: color);
+                                  //
+                                  final formState = _formKey.currentState;
+                                  if (formState != null) {
+                                    if (formState.validate()) {
+                                      toggleCanAdd(true);
+                                    } else {
+                                      toggleCanAdd(false);
+                                    }
+                                  }
                                 },
                               ),
-                            ),
-                            SizedBox(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    )),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                        vertical: 5.0,
-                                      ),
-                                      child: Text(
-                                        'Cancelar',
-                                        style: TextStyles.textButton(context),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Modular.to.pop();
-                                    },
-                                  ),
-                                  Container(
-                                    width: 1.5,
-                                    height: 12.0,
-                                    color: ColorPalettes.blueGrey,
-                                  ),
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    )),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                        vertical: 5.0,
-                                      ),
-                                      child: Text(
-                                        'Adicionar',
-                                        style: TextStyles.textButton(context)
-                                            .copyWith(
-                                          color: canAdd
-                                              ? Theme.of(context).primaryColor
-                                              : ColorPalettes.grey,
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: GridSelectionColor(
+                                  onChangeColor: (int color) {
+                                    folder = folder.copyWith(color: color);
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      )),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0,
+                                          vertical: 5.0,
+                                        ),
+                                        child: Text(
+                                          'Cancelar',
+                                          style: TextStyles.textButton(context),
                                         ),
                                       ),
+                                      onPressed: () {
+                                        Modular.to.pop();
+                                      },
                                     ),
-                                    onPressed: canAdd
-                                        ? () {
-                                            folder = folder.copyWith(
-                                              name: _textEditingFolder.text,
-                                              dateCreate: DateTime.now(),
-                                              dateModification: DateTime.now(),
-                                            );
-                                            _controller.addFolder(
-                                                context, folder);
-                                            Modular.to.pop();
-                                          }
-                                        : null,
-                                  ),
-                                ],
+                                    Container(
+                                      width: 1.5,
+                                      height: 12.0,
+                                      color: ColorPalettes.blueGrey,
+                                    ),
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      )),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0,
+                                          vertical: 5.0,
+                                        ),
+                                        child: Text(
+                                          'Adicionar',
+                                          style: TextStyles.textButton(context)
+                                              .copyWith(
+                                            color: canAdd
+                                                ? Theme.of(context).primaryColor
+                                                : ColorPalettes.grey,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: canAdd
+                                          ? () {
+                                              folder = folder.copyWith(
+                                                name: _textEditingFolder.text,
+                                                dateCreate: DateTime.now(),
+                                                dateModification:
+                                                    DateTime.now(),
+                                              );
+                                              _controller.addFolder(
+                                                  context, folder);
+                                              Modular.to.pop();
+                                            }
+                                          : null,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

@@ -5,7 +5,7 @@ import '../entities/note_entity.dart';
 @dao
 abstract class NoteDAO {
   @insert
-  Future<int> insertNote(NoteEntity record);
+  Future<List<int>> insertNotes(List<NoteEntity> records);
 
   @update
   Future<int> updateNotes(List<NoteEntity> records);

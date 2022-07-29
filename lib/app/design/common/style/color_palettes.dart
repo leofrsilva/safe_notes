@@ -14,6 +14,7 @@ class ColorPalettes {
   static Color white70 = Colors.white70;
   static Color whiteSemiTransparent = const Color(0xFFF7F6FD);
   static Color grey = Colors.grey;
+  static Color grey50 = Colors.grey.withOpacity(0.5);
   static Color greyBg = const Color(0xfff0f0f0);
   static Color greyDark = const Color(0xFF333333);
   static Color red = Colors.red;

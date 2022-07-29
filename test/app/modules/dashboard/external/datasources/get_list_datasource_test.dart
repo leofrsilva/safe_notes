@@ -49,7 +49,7 @@ void main() {
     test('retorna uma Stream de Lista de FolderEntity ', () async {
       int qtdFolders = listFolders.length;
       for (var folderer in listFolders) {
-        folderDAO.insertFolder(folderer.entity);
+        folderDAO.insertFolders([folderer.entity]);
       }
 
       final result = datasource.getFolders();
@@ -87,12 +87,12 @@ void main() {
       for (var folderer in listFolders) {
         var findFolder = await folderDAO.findFolder(folderer.folderId);
         if (findFolder == null) {
-          await folderDAO.insertFolder(folderer.entity);
+          await folderDAO.insertFolders([folderer.entity]);
         }
       }
       int qtdNotes = listNotes.length;
       for (var note in listNotes) {
-        await noteDAO.insertNote(note.entity);
+        await noteDAO.insertNotes([note.entity]);
       }
 
       final result = datasource.getNotes();

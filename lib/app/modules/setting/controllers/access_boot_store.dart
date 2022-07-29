@@ -36,7 +36,7 @@ class AccessBootStore {
 
   Future _createDefaultFolder() async {
     FolderModel folder = DefaultDatabase.folderDefault;
-    await _folderDAO.insertFolder(folder.entity).then((_) async {
+    await _folderDAO.insertFolders([folder.entity]).then((_) async {
       await _saveValueFirsBoot(isFirstBoot: false);
     }).onError((_, __) async {
       await _saveValueFirsBoot(isFirstBoot: true);

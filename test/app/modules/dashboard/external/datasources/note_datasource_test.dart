@@ -27,7 +27,7 @@ void main() {
     database = await $FloorAppDatabase.inMemoryDatabaseBuilder().build();
     folderDAO = database.folderDao;
     for (var folder in listFolders) {
-      await folderDAO.insertFolder(folder.entity);
+      await folderDAO.insertFolders([folder.entity]);
     }
 
     noteDAO = database.noteDao;
@@ -43,20 +43,20 @@ void main() {
     setUpAll(() => noteEntity = note1.entity);
 
     test('Adicionado uma Nota com Sucesso', () async {
-      final result = await datasource.addNote(noteEntity);
+      final result = await datasource.addNotes([noteEntity]);
 
-      expect(result, equals(noteEntity.id));
+      expect(result, equals([noteEntity.id]));
     });
 
     test('retorna um AddNoteSqliteError', () async {
       final noteDAOMock = NoteDAOMock();
       final datasouceMock = NoteDatasource(noteDAOMock);
 
-      when(() => noteDAOMock.insertNote(noteEntity))
+      when(() => noteDAOMock.insertNotes([noteEntity]))
           .thenThrow(SqliteExceptionMock());
 
       expect(
-        () => datasouceMock.addNote(noteEntity),
+        () => datasouceMock.addNotes([noteEntity]),
         throwsA(isA<AddNoteSqliteError>()),
       );
     });
@@ -65,10 +65,11 @@ void main() {
       final noteDAOMock = NoteDAOMock();
       final datasouceMock = NoteDatasource(noteDAOMock);
 
-      when(() => noteDAOMock.insertNote(noteEntity)).thenAnswer((_) async => 0);
+      when(() => noteDAOMock.insertNotes([noteEntity]))
+          .thenAnswer((_) async => []);
 
       expect(
-        () => datasouceMock.addNote(noteEntity),
+        () => datasouceMock.addNotes([noteEntity]),
         throwsA(isA<NotReturnNoteIdSqliteError>()),
       );
     });
@@ -79,7 +80,7 @@ void main() {
     setUpAll(() => noteModel = note2);
 
     test('Editou a Note com Sucesso', () async {
-      await noteDAO.insertNote(noteModel.entity);
+      await noteDAO.insertNotes([noteModel.entity]);
 
       var noteEdited = noteModel.copyWith(
         body: 'Body Edited',
@@ -123,7 +124,7 @@ void main() {
 
     test('retorna um NoNoteEditedToRestoredSqliteError', () async {
       final note = note3.copyWith(isDeleted: true);
-      await noteDAO.insertNote(note.entity);
+      await noteDAO.insertNotes([note.entity]);
 
       expect(
         () => datasource.restoreNote([note.entity]),
@@ -132,7 +133,7 @@ void main() {
     });
 
     test('atualização da exclusção para false com Sucesso', () async {
-      await noteDAO.insertNote(noteModel.entity);
+      await noteDAO.insertNotes([noteModel.entity]);
 
       noteModel = noteModel.copyWith(isDeleted: false);
       await datasource.restoreNote([noteModel.entity]);
@@ -160,7 +161,7 @@ void main() {
 
     test('retorna um NoNoteEditedToDeletedSqliteError', () async {
       var note = note5.copyWith(isDeleted: false);
-      await noteDAO.insertNote(note.entity);
+      await noteDAO.insertNotes([note.entity]);
 
       expect(
         () => datasource.deleteNote([note.entity]),
@@ -169,7 +170,7 @@ void main() {
     });
 
     test('atualização da exclusção para true com Sucesso', () async {
-      await noteDAO.insertNote(noteModel.entity);
+      await noteDAO.insertNotes([noteModel.entity]);
 
       noteModel = noteModel.copyWith(
         isDeleted: true,
@@ -205,7 +206,7 @@ void main() {
     setUpAll(() => noteModel = note7.copyWith(title: '', body: ''));
 
     test('Deletando a Nota permanentemente com Sucesso', () async {
-      await noteDAO.insertNote(noteModel.entity);
+      await noteDAO.insertNotes([noteModel.entity]);
 
       await datasource.deletePersistentNote([noteModel.entity]);
 

@@ -3,7 +3,7 @@ import 'package:safe_notes/app/shared/database/models/note_model.dart';
 import 'package:safe_notes/app/shared/errors/failure.dart';
 
 abstract class IAddNoteUsecase {
-  Future<Either<Failure, dynamic>> call(NoteModel note);
+  Future<Either<Failure, dynamic>> call(List<NoteModel> notes);
 }
 
 abstract class IEditNoteUsecase {

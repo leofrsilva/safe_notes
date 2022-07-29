@@ -44,6 +44,7 @@ import 'presenter/stores/list_fields_store.dart';
 import 'presenter/stores/list_folders_store.dart';
 import 'presenter/stores/list_notes_store.dart';
 import 'submodules/add_or_edit_note/add_or_edit_note_module.dart';
+import 'submodules/backup/backup_module.dart';
 import 'submodules/folder/folder_module.dart';
 import 'submodules/manager_folders/manager_folders_module.dart';
 import 'submodules/favorites/favorites_module.dart';
@@ -219,6 +220,11 @@ class DashboardModule extends Module {
         ModuleRoute(
           '/register-key',
           module: RegisterKeyModule(),
+          transition: TransitionType.rightToLeft,
+        ),
+        ModuleRoute(
+          '/backup',
+          module: BackupModule(),
           transition: TransitionType.rightToLeft,
         ),
       ];

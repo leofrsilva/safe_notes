@@ -12,9 +12,9 @@ class AddFolderUsecase extends IAddFolderUsecase {
   AddFolderUsecase(this._repository, this._dataEncrypt);
 
   @override
-  Future<Either<Failure, dynamic>> call(FolderModel folder) async {
+  Future<Either<Failure, dynamic>> call(List<FolderModel> folders) async {
     if (_dataEncrypt.isCorrectKey) {
-      return await _repository.addFolder(folder);
+      return await _repository.addFolders(folders);
     } else {
       return left(IncorrectEncryptionError());
     }

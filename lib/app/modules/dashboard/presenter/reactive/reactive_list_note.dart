@@ -30,6 +30,9 @@ class ReactiveListNote extends IReactiveListNote {
 
   //* LISTS
   @override
+  List<NoteModel> get allNotes => _value;
+
+  @override
   List<NoteModel> listAllNote({bool orderByDesc = true}) {
     if (orderByDesc) {
       _value.sort((previous, posterior) {

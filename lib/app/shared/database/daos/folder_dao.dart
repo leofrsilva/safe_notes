@@ -5,7 +5,7 @@ import '../entities/folder_entity.dart';
 @dao
 abstract class FolderDAO {
   @insert
-  Future<int> insertFolder(FolderEntity record);
+  Future<List<int>> insertFolders(List<FolderEntity> records);
 
   @update
   Future<int> updateFolders(List<FolderEntity> records);

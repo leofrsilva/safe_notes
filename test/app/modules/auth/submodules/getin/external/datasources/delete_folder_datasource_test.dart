@@ -31,7 +31,7 @@ void main() {
   group('delete folder datasource deleteAllFolderExcept |', () {
     test('Delete all Except Default Folder', () async {
       for (var folderer in listFolders) {
-        folderDAO.insertFolder(folderer.entity);
+        folderDAO.insertFolders([folderer.entity]);
       }
 
       await datasource.deleteAllFolderExcept(listFolders.first.folderId);

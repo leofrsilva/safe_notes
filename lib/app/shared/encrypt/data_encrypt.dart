@@ -4,6 +4,8 @@ import 'package:encrypt/encrypt.dart' as crypt;
 import 'package:safe_notes/app/design/common/extension/encrypt_extension.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'handle_code.dart';
+
 class DataEncrypt {
   String? _keyInput;
   Future setKey(
@@ -65,7 +67,7 @@ class DataEncrypt {
 
       final encrypted = encrypter.encrypt(text, iv: iv);
       final ciphertext = encrypted.base64;
-      return ciphertext;
+      return _urlEncode(ciphertext);
     }
     return text;
   }
@@ -87,11 +89,25 @@ class DataEncrypt {
         );
 
         final decryptedData = utf8.decode(decrypted);
-        return decryptedData;
+        return _urlDecode(decryptedData);
       } catch (_) {
-        return textCrypted;
+        return _decodeText(textCrypted);
       }
     }
-    return textCrypted;
+    return _decodeText(textCrypted);
+  }
+
+  String _decodeText(String value) {
+    return value.replaceAll('==', '');
+  }
+
+  String _urlEncode(String url) {
+    final encodeUrl = HandleCode.strtr(url, {'+': '-', '/': '_'});
+    return encodeUrl;
+    // return HandleCode.rtrim(encodeUrl, charsToBeRemoved: '=');
+  }
+
+  String _urlDecode(String url) {
+    return HandleCode.strtr(url, {'-': '+', '_': '/'});
   }
 }

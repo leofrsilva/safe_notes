@@ -133,6 +133,11 @@ class ReactiveListFolder implements IReactiveListFolder {
 
   //* -- LIST FOLDER
   @override
+  List<FolderModel> get allFolders {
+    return _listFoldersIsExpanded.keys.toList();
+  }
+
+  @override
   FolderModel getFolder(int id) {
     return _listFoldersIsExpanded.keys.firstWhere((folder) {
       return folder.folderId == id;
