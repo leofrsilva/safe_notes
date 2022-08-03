@@ -70,6 +70,7 @@ class TextFieldOverflowState extends State<TextOverflowField> {
       alignment: AlignmentDirectional.centerStart,
       child: TextField(
         style: style,
+        textCapitalization: TextCapitalization.sentences,
         focusNode: _focusNodeTextField,
         controller: widget.controller,
         maxLines: widget.maxLines,
