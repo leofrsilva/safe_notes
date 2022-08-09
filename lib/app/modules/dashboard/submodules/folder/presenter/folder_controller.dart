@@ -13,12 +13,9 @@ import '../../../presenter/stores/selection_store.dart';
 class FolderController {
   final SelectionStore selection;
   final DrawerMenuController _drawerMenu;
-  final IEditNoteUsecase _editNoteUsecase; //
-  final IDeleteNoteUsecase _deleteNoteUsecase; //
+  final IEditNoteUsecase _editNoteUsecase;
+  final IDeleteNoteUsecase _deleteNoteUsecase;
   final IDeleteFolderUsecase _deleteFolderUsecase;
-
-  // final IEditNoteUsecase _editNoteUsecase;
-  // final IDeleteNoteUsecase _deleteNoteUsecase;
 
   FolderController(
     this._drawerMenu,

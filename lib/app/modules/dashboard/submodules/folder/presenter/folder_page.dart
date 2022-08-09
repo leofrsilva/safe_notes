@@ -5,6 +5,7 @@ import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
+import 'package:safe_notes/app/shared/encrypt/encrypt.dart';
 
 import '../../../presenter/enum/mode_note_enum.dart';
 import '../../../presenter/mixin/template_page_mixin.dart';
@@ -28,6 +29,7 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
   bool ordeByDesc = true;
 
   late FolderController _controller;
+  late DataEncrypt _dataEncrypt;
 
   _exitModeSelection() {
     _controller.selection.toggleSelectable(false);
@@ -40,6 +42,7 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
   void initState() {
     super.initState();
     _controller = Modular.get<FolderController>();
+    _dataEncrypt = Modular.get<DataEncrypt>();
   }
 
   @override
@@ -116,12 +119,16 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
           );
         }
         return AppBar(
-            title: ValueListenableBuilder<FolderModel>(
-              valueListenable: _controller.folderParent,
-              builder: (context, folder, child) {
-                return Text(folder.name);
-              },
-            ),
+            title: ValueListenableBuilder(
+                valueListenable: _dataEncrypt.keyNotifier,
+                builder: (context, folder, child) {
+                  return ValueListenableBuilder<FolderModel>(
+                    valueListenable: _controller.folderParent,
+                    builder: (context, folder, child) {
+                      return Text(folder.name);
+                    },
+                  );
+                }),
             leading: ValueListenableBuilder<bool>(
               valueListenable: super.drawerMenu.isShowDrawer,
               builder: (context, value, child) {
@@ -208,17 +215,21 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
                         if (folder.folderId != DefaultDatabase.folderIdDefault)
                           IgnorePointer(
                             ignoring: selectable,
-                            child: SequenceFolderWidget(
-                              folder: folder,
-                              sequencesFolder: sequencesFolder.toList(),
-                              onTapFolder: (FolderModel seqFolder) {
-                                _controller.folder = seqFolder;
-                              },
-                              onTapSourceFolder: () {
-                                _controller.folder =
-                                    DefaultDatabase.folderDefault;
-                              },
-                            ),
+                            child: ValueListenableBuilder(
+                                valueListenable: _dataEncrypt.keyNotifier,
+                                builder: (context, folderer, child) {
+                                  return SequenceFolderWidget(
+                                    folder: folder,
+                                    sequencesFolder: sequencesFolder.toList(),
+                                    onTapFolder: (FolderModel seqFolder) {
+                                      _controller.folder = seqFolder;
+                                    },
+                                    onTapSourceFolder: () {
+                                      _controller.folder =
+                                          DefaultDatabase.folderDefault;
+                                    },
+                                  );
+                                }),
                           ),
                         const SizedBox(height: 2.0),
                         // FOLDERS

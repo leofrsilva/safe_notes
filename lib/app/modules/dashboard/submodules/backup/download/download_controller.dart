@@ -105,14 +105,14 @@ class DownloadController {
     }
 
     try {
-      String nameFile = "safe-notes-backup.txt";
+      String nameFile = "safe-notes-backup.json";
       String savePath = "${dir.path}/$nameFile";
       File file = File(savePath);
       bool exists = await file.exists();
 
       int count = 1;
       while (exists) {
-        nameFile = "safe-notes-backup-$count.txt";
+        nameFile = "safe-notes-backup-$count.json";
         savePath = "${dir.path}/$nameFile";
         count++;
 

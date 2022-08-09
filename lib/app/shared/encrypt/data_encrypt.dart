@@ -1,18 +1,21 @@
 import 'dart:convert';
 
-import 'package:encrypt/encrypt.dart' as crypt;
 import 'package:safe_notes/app/design/common/extension/encrypt_extension.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/widgets.dart';
+import 'package:encrypt/encrypt.dart' as crypt;
 
 import 'handle_code.dart';
 
 class DataEncrypt {
-  String? _keyInput;
+  final keyNotifier = ValueNotifier<String>('');
+  String get _keyInput => keyNotifier.value;
+
   Future setKey(
     String? value, {
-    Future<bool> Function()? onSaveKey,
+    Future<String?> Function()? onSaveKey,
   }) async {
-    _keyInput = value?.trim();
+    keyNotifier.value = value?.trim() ?? '';
     if (value != null && value.isNotEmpty) {
       await _checkValue(onSaveKey);
     }
@@ -20,13 +23,17 @@ class DataEncrypt {
 
   bool isCorrectKey = false;
 
-  _checkValue(Future<bool> Function()? onSaveKey) async {
+  _checkValue(Future<String?> Function()? onSaveKey) async {
     var valueEncrypted = await _getCheckValue;
     if (valueEncrypted.isEmpty) {
-      isCorrectKey = true;
-      await _setCheckValue();
-      await onSaveKey?.call().then((isSaved) {
-        if (isSaved == false) _deleteCheckValue();
+      await onSaveKey?.call().then((key) async {
+        if (key != null && keyNotifier.value == key) {
+          isCorrectKey = true;
+          await _setCheckValue();
+        } else {
+          isCorrectKey = false;
+          await _deleteCheckValue();
+        }
       });
     } else {
       if (decode(valueEncrypted) != _value) {
@@ -56,9 +63,9 @@ class DataEncrypt {
   }
 
   String encode(String text) {
-    if (_keyInput != null && text.isNotEmpty) {
-      final key = crypt.Key.fromUtf8(_keyInput!.to32Length);
-      final iv = crypt.IV.fromUtf8(_keyInput!.toIVString);
+    if (_keyInput.isNotEmpty && text.isNotEmpty) {
+      final key = crypt.Key.fromUtf8(_keyInput.to32Length);
+      final iv = crypt.IV.fromUtf8(_keyInput.toIVString);
 
       final encrypter = crypt.Encrypter(crypt.AES(
         key,
@@ -73,10 +80,10 @@ class DataEncrypt {
   }
 
   String decode(String textCrypted) {
-    if (_keyInput != null && textCrypted.isNotEmpty) {
+    if (_keyInput.isNotEmpty && textCrypted.isNotEmpty) {
       try {
-        final key = crypt.Key.fromUtf8(_keyInput!.to32Length);
-        final iv = crypt.IV.fromUtf8(_keyInput!.toIVString);
+        final key = crypt.Key.fromUtf8(_keyInput.to32Length);
+        final iv = crypt.IV.fromUtf8(_keyInput.toIVString);
 
         // Decryption
         final decrypter = crypt.Encrypter(crypt.AES(
@@ -84,12 +91,12 @@ class DataEncrypt {
           mode: crypt.AESMode.ctr,
         ));
         final decrypted = decrypter.decryptBytes(
-          crypt.Encrypted.fromBase64(textCrypted),
+          crypt.Encrypted.fromBase64(_urlDecode(textCrypted)),
           iv: iv,
         );
 
         final decryptedData = utf8.decode(decrypted);
-        return _urlDecode(decryptedData);
+        return decryptedData;
       } catch (_) {
         return _decodeText(textCrypted);
       }

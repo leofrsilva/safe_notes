@@ -36,7 +36,7 @@ class SplashController {
     if (page.isNotEmpty) {
       var infoFolder = await _managerRouteNavigatorStore.getFolderParent();
       if (infoFolder.isNotEmpty) {
-        _folder = FolderModel.fromJson(infoFolder);
+        _folder = FolderModel.fromJsonEncrypted(infoFolder);
       }
       return page;
     }

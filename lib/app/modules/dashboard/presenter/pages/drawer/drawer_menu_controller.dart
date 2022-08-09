@@ -15,7 +15,7 @@ class DrawerMenuController extends Disposable {
   final durationNavigateFolder = const Duration(milliseconds: 150);
 
   void moduleFolderSaveFolderParent(FolderModel folder) {
-    _managerRouteNavigatorStore.saveFolderParent(folder.toJson());
+    _managerRouteNavigatorStore.saveFolderParent(folder.toJsonEncrypted());
   }
 
   void onChangeRoute() async {

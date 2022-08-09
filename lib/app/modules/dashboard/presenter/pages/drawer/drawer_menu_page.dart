@@ -53,7 +53,7 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
             () {
               final _controllerFolder = Modular.get<FolderController>();
               _controllerFolder.folder = folder;
-              _drawerMenuController.moduleFolderSaveFolderParent(folder);
+              // _drawerMenuController.moduleFolderSaveFolderParent(folder);
             },
           );
         });

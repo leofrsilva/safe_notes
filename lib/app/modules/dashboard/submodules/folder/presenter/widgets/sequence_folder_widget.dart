@@ -3,7 +3,7 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 
-class SequenceFolderWidget extends StatelessWidget {
+class SequenceFolderWidget extends StatefulWidget {
   final FolderModel folder;
   final Function()? onTapSourceFolder;
   final Function(FolderModel) onTapFolder;
@@ -18,6 +18,27 @@ class SequenceFolderWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<SequenceFolderWidget> createState() => _SequenceFolderWidgetState();
+}
+
+class _SequenceFolderWidgetState extends State<SequenceFolderWidget> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController(initialScrollOffset: 0.0);
+  }
+
+  @override
+  void didUpdateWidget(covariant SequenceFolderWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
@@ -29,10 +50,11 @@ class SequenceFolderWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: onTapSourceFolder,
-            child: Padding(
+            onTap: widget.onTapSourceFolder,
+            child: Container(
+              width: Sizes.width(context) * 0.08,
               padding: const EdgeInsetsDirectional.only(
-                start: 8.0,
+                end: 4.0,
               ),
               child: Icon(
                 Icons.folder_outlined,
@@ -43,14 +65,20 @@ class SequenceFolderWidget extends StatelessWidget {
           Expanded(
             child: ScrollConfiguration(
               behavior: NoGlowBehavior(),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 2.0),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 2.0),
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  scrollDirection: Axis.horizontal,
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: sequencesFolder.map((folderSeq) {
-                      if (folderSeq.name == folder.name) {
+                    children: widget.sequencesFolder.map((folderSeq) {
+                      if (folderSeq.folderId == widget.folder.folderId) {
                         return Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -72,8 +100,10 @@ class SequenceFolderWidget extends StatelessWidget {
                         );
                       }
                       return GestureDetector(
-                        onTap: () => onTapFolder(folderSeq),
+                        onTap: () => widget.onTapFolder(folderSeq),
                         child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(
