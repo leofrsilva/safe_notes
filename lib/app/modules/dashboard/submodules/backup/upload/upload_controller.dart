@@ -63,7 +63,9 @@ class UploadController {
         initialDirectory: pathDownload,
       );
 
-      if (resultFile != null && resultFile.files.single.path != null) {
+      if (resultFile != null && //
+          resultFile.files.single.path != null &&
+          resultFile.files.single.path!.split('.').last == 'json') {
         try {
           File file = File(resultFile.files.single.path!);
 

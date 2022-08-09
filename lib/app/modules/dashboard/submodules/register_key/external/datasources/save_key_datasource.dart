@@ -11,6 +11,17 @@ class SaveKeyDatasource extends ISaveKeyDatasource {
   @override
   Future<dynamic> saveKey(UsuarioModel user, String keyText) async {
     try {
+      var infoUser = await _firestore //
+          .collection('usuario')
+          .doc(user.docRef)
+          .get();
+
+      if (infoUser.data() != null) {
+        if (infoUser.data()!.containsKey('key')) {
+          return infoUser.data()!['key'];
+        }
+      }
+
       var json = user.toJson();
       json.addAll({'key': keyText});
 
@@ -25,7 +36,7 @@ class SaveKeyDatasource extends ISaveKeyDatasource {
           error.message,
         );
       });
-      return dynamic;
+      return keyText;
     } catch (error) {
       throw SaveKeyFirestoreError(
         'SaveKeyDatasource.saveKey',

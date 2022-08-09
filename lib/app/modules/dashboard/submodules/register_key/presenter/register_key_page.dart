@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
-import 'package:safe_notes/app/shared/encrypt/data_encrypt.dart';
 
 import 'register_key_controller.dart';
 
@@ -113,10 +112,13 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
                                     ),
                                   ),
                                   onPressed: canSend
-                                      ? () => controller.sendKey(
+                                      ? () {
+                                          FocusScope.of(context).unfocus();
+                                          controller.sendKey(
                                             context,
                                             _textEditingKey.text,
-                                          )
+                                          );
+                                        }
                                       : null,
                                 ),
                               ],

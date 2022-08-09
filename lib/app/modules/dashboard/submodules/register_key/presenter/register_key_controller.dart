@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/app_core.dart';
 import 'package:safe_notes/app/design/widgets/loading/loading_overlay.dart';
+import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/encrypt/data_encrypt.dart';
 
 import '../domain/usecases/save_key_usecase.dart';
@@ -16,21 +17,31 @@ class RegisterKeyController {
     await _dataEncrypt.setKey(
       keyText,
       onSaveKey: () async {
-        final result = await LoadingOverlay.show<bool>(
+        final result = await LoadingOverlay.show<String?>(
           context,
           _processSaveKey(context, keyText),
         );
-        return result!;
+        return result;
       },
     ).whenComplete(() => Modular.to.pop());
   }
 
-  Future<bool> _processSaveKey(BuildContext context, String keyText) async {
+  Future<String?> _processSaveKey(BuildContext context, String keyText) async {
     var user = _appCore.getUsuario();
     if (user != null) {
       final either = await _saveKeyUsecase.call(user, keyText);
-      if (either.isLeft()) return false;
+      String key = '';
+      either.fold(
+        (failure) {
+          SnackbarError.show(
+            context,
+            message: 'Error ao acessar o Servidor',
+          );
+        },
+        (value) => key = value,
+      );
+      if (either.isRight()) return key;
     }
-    return true;
+    return null;
   }
 }

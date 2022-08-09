@@ -16,9 +16,9 @@ void main() {
     const keyText = 'valKey1';
     const docRef = 'DOCREF';
     UsuarioModel model = UsuarioModel(
-      docRef: docRef,
       email: 'Test_Firestore@gmail.com',
       name: 'Teste Firestore',
+      docRef: docRef,
       senha: '',
       genre: 'M',
       logged: true,
@@ -40,7 +40,40 @@ void main() {
       expect(key, equals(keyText));
     });
 
-    test('retornar um SaveKeyFirestoreError', () async {
+    test('retornar uma chave já existente', () async {
+      // Change in Database
+      firestore
+          .collection('usuario') //
+          .doc(model.docRef)
+          .update({'key': 'already-existing'});
+
+      final result = await datasource.saveKey(model, keyText);
+      final docSnapshot = await firestore //
+          .collection('usuario')
+          .doc(model.docRef)
+          .get();
+      var key = docSnapshot.data()?['key'];
+
+      expect(result, isA<dynamic>());
+      expect(key, isA<String>());
+      expect(key, equals('already-existing'));
+    });
+
+    test('retornar um SaveKeyFirestoreError, no Get DocRef', () async {
+      final firestoreMock = FirebaseFirestoreMock();
+      final datasourceMock = SaveKeyDatasource(firestoreMock);
+
+      when(
+        () => firestoreMock.collection('usuario').doc(model.docRef).get(),
+      ).thenThrow(SaveKeyFirestoreErrorMock());
+
+      expect(
+        () => datasourceMock.saveKey(model, keyText),
+        throwsA(isA<SaveKeyFirestoreError>()),
+      );
+    });
+
+    test('retornar um SaveKeyFirestoreError, no Set DocRef', () async {
       final firestoreMock = FirebaseFirestoreMock();
       final datasourceMock = SaveKeyDatasource(firestoreMock);
 

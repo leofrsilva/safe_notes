@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
@@ -159,6 +160,9 @@ class _AddFolderPageState extends State<AddFolderPage> {
                                 hint: 'Nome da Pasta',
                                 focusNode: _focusNode,
                                 validator: validatorName,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(30),
+                                ],
                                 onChanged: (String name) {
                                   if (name.isEmpty) {
                                     toggleCanAdd(false);
