@@ -50,8 +50,8 @@ class SplashController {
         await Future.delayed(
           const Duration(milliseconds: 200),
           () async {
-            final _controllerFolder = Modular.get<FolderController>();
-            _controllerFolder.folder = _folder!;
+            final controllerFolder = Modular.get<FolderController>();
+            controllerFolder.folder = _folder!;
           },
         );
       });
@@ -69,7 +69,7 @@ class SplashController {
         _appCore.setUsuario(usuario);
         strPage = await redirectRoute();
       } else {
-        await logout(context);
+        if (context.mounted) await logout(context);
       }
     }
     navigateToModule();
@@ -80,15 +80,17 @@ class SplashController {
     final either = await _leaveAuthUsecase.call();
     if (either.isLeft()) {
       final failure = either.fold(id, id);
-      if (failure.exception is String) {
-        if (failure.exception == 'network-request-failed') {
-          SnackbarError.show(context, message: failure.errorMessage);
+      if (context.mounted) {
+        if (failure.exception is String) {
+          if (failure.exception == 'network-request-failed') {
+            SnackbarError.show(context, message: failure.errorMessage);
+          }
+        } else {
+          SnackbarError.show(
+            context,
+            message: 'Falha ao registrar como Deslogado!',
+          );
         }
-      } else {
-        SnackbarError.show(
-          context,
-          message: 'Falha ao registrar como Deslogado!',
-        );
       }
     }
   }

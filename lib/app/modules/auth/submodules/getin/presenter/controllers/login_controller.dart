@@ -52,42 +52,44 @@ class LoginController {
         );
 
         if (failure != null) {
-          // Login Authentication
-          if (failure is NoFoundUserInLoginAuthFirebase) {
-            SnackbarError.show(
-              context,
-              title: 'Erro ao Logar',
-              message: 'Usuário cadastrado não retornado!',
-            );
-          } else if (failure is LoginAuthFirebaseError) {
-            if (failure!.exception.code == 'network-request-failed') {
-              SnackbarError.show(context, message: failure!.errorMessage);
+          if (context.mounted) {
+            // Login Authentication
+            if (failure is NoFoundUserInLoginAuthFirebase) {
+              SnackbarError.show(
+                context,
+                title: 'Erro ao Logar',
+                message: 'Usuário cadastrado não retornado!',
+              );
+            } else if (failure is LoginAuthFirebaseError) {
+              if (failure!.exception.code == 'network-request-failed') {
+                SnackbarError.show(context, message: failure!.errorMessage);
+              } else {
+                SnackbarError.show(
+                  context,
+                  title: failure?.exception.code == '' ? null : 'Erro ao Logar',
+                  message: failure!.errorMessage,
+                );
+              }
+            }
+            // Get Firestore
+            else if (failure is GetinFirestoreError) {
+              SnackbarError.show(
+                context,
+                message: failure!.errorMessage,
+              );
+            } else if (failure is GetinNoDataFoundFirestoreError) {
+              SnackbarError.show(
+                context,
+                title: 'Erro ao Logar',
+                message: 'Dados do Usuário não encontrado!',
+              );
             } else {
               SnackbarError.show(
                 context,
-                title: failure?.exception.code == '' ? null : 'Erro ao Logar',
+                title: 'Erro',
                 message: failure!.errorMessage,
               );
             }
-          }
-          // Get Firestore
-          else if (failure is GetinFirestoreError) {
-            SnackbarError.show(
-              context,
-              message: failure!.errorMessage,
-            );
-          } else if (failure is GetinNoDataFoundFirestoreError) {
-            SnackbarError.show(
-              context,
-              title: 'Erro ao Logar',
-              message: 'Dados do Usuário não encontrado!',
-            );
-          } else {
-            SnackbarError.show(
-              context,
-              title: 'Erro',
-              message: failure!.errorMessage,
-            );
           }
         }
       }

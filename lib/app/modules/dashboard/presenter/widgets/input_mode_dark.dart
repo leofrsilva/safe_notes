@@ -21,10 +21,10 @@ class InputModeDark extends StatelessWidget {
           context: context,
           builder: (context) {
             bool? optionSelected;
-            final _formKey = GlobalKey<FormState>();
+            final formKey = GlobalKey<FormState>();
 
             return Form(
-              key: _formKey,
+              key: formKey,
               child: AlertDialog(
                 contentPadding:
                     const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0.0),
@@ -49,7 +49,7 @@ class InputModeDark extends StatelessWidget {
                   TextButton(
                     child: const Text('OK'),
                     onPressed: () {
-                      _formKey.currentState?.save();
+                      formKey.currentState?.save();
                       if (optionSelected == isDark) {
                         isDark = optionSelected ?? isDark;
                         Navigator.pop(context);

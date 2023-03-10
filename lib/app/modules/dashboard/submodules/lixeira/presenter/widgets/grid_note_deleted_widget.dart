@@ -92,7 +92,7 @@ class GridNoteDeletedWidget extends StatelessWidget {
                     child: Text(
                       '${note.deletionExpiration} dias',
                       style: TextStyle(
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                       ),
                     ),
                   ),
@@ -117,7 +117,7 @@ class GridNoteDeletedWidget extends StatelessWidget {
                   child: Text(
                     '${note.deletionExpiration} dias',
                     style: TextStyle(
-                      color: Theme.of(context).backgroundColor,
+                      color: Theme.of(context).colorScheme.background,
                     ),
                   ),
                 ),

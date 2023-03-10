@@ -36,7 +36,7 @@ class CardFolder extends StatelessWidget {
         height: size * 0.765,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(size * 0.2),
           ),

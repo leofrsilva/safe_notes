@@ -16,6 +16,7 @@ class CustomButtonInline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+      onPressed: onTap,
       child: Text(
         text,
         style: TextStyle(
@@ -25,7 +26,6 @@ class CustomButtonInline extends StatelessWidget {
           decoration: underline ? TextDecoration.underline : null,
         ),
       ),
-      onPressed: onTap,
     );
   }
 }

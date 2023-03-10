@@ -140,10 +140,12 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
             );
             if (action != null) {
               if (action == ActionFolder.createSubpasta) {
-                _managerFoldersController.callAddSubFolderPage(
-                  context,
-                  folderers!.current,
-                );
+                if (context.mounted) {
+                  _managerFoldersController.callAddSubFolderPage(
+                    context,
+                    folderers!.current,
+                  );
+                }
               }
             }
           }
@@ -245,26 +247,28 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
                 position: RelativeRectPosition.getRelativeRect(popupKey),
               );
               if (action != null) {
-                if (action == ActionFolder.createSubpasta) {
-                  _managerFoldersController.callAddSubFolderPage(
-                    context,
-                    folderChild.current,
-                  );
-                } else if (action == ActionFolder.rename) {
-                  _managerFoldersController.callEditNameFolderPage(
-                    context,
-                    folderChild.current,
-                  );
-                } else if (action == ActionFolder.delete) {
-                  _managerFoldersController.callDeleteFolderPage(
-                    context,
-                    [folderChild.current],
-                  );
-                } else if (action == ActionFolder.alterColor) {
-                  _managerFoldersController.callEditColorFolderPage(
-                    context,
-                    folderChild.current,
-                  );
+                if (context.mounted) {
+                  if (action == ActionFolder.createSubpasta) {
+                    _managerFoldersController.callAddSubFolderPage(
+                      context,
+                      folderChild.current,
+                    );
+                  } else if (action == ActionFolder.rename) {
+                    _managerFoldersController.callEditNameFolderPage(
+                      context,
+                      folderChild.current,
+                    );
+                  } else if (action == ActionFolder.delete) {
+                    _managerFoldersController.callDeleteFolderPage(
+                      context,
+                      [folderChild.current],
+                    );
+                  } else if (action == ActionFolder.alterColor) {
+                    _managerFoldersController.callEditColorFolderPage(
+                      context,
+                      folderChild.current,
+                    );
+                  }
                 }
               }
             }

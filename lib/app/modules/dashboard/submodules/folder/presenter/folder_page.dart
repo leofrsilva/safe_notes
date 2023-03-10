@@ -315,7 +315,7 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
       if (noteSelecteds.isNotEmpty || folderSelecteds.isNotEmpty) {
         return Container(
           height: 70.0,
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,

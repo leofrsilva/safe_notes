@@ -20,10 +20,12 @@ class DeletedNoteController {
   Future restoreNotes(BuildContext context, NoteModel note) async {
     final either = await _restoreNoteUsecase.call([note]);
     if (either.isLeft()) {
-      SnackbarError.show(
-        context,
-        message: 'Error ao restaurar a Nota!',
-      );
+      if (context.mounted) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao restaurar a Nota!',
+        );
+      }
     } else {
       Modular.to.pop();
     }
@@ -32,10 +34,12 @@ class DeletedNoteController {
   Future deletePersistentNotes(BuildContext context, NoteModel note) async {
     final either = await _deleteNotePersistentUsecase.call([note]);
     if (either.isLeft()) {
-      SnackbarError.show(
-        context,
-        message: 'Error ao excluir a Nota!',
-      );
+      if (context.mounted) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao excluir a Nota!',
+        );
+      }
     } else {
       Modular.to.pop();
     }

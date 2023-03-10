@@ -114,8 +114,8 @@ class FolderExpansionTileWithPopupState
 
     _heightFactor = _controller.drive(_heightFactorTween);
     _iconTurns = _controller.drive(_halfTween.chain(_turnsTween));
-    _isExpanded = PageStorage.of(context)?.readState(context) as bool? ??
-        widget.initiallyExpanded;
+    _isExpanded = PageStorage.of(context).readState(context) as bool? ??
+        widget.initiallyExpanded; //! WARNING
     if (_isExpanded) {
       _controller.value = 1.0;
     } else {
@@ -157,7 +157,7 @@ class FolderExpansionTileWithPopupState
             });
           });
         }
-        PageStorage.of(context)?.writeState(context, _isExpanded);
+        PageStorage.of(context).writeState(context, _isExpanded); //! WARNING
       });
       if (widget.onExpansionChanged != null) {
         widget.onExpansionChanged!(_isExpanded);

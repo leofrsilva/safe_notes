@@ -35,4 +35,6 @@ abstract class NoInternetConnection extends Failure {
   NoInternetConnection() : super(errorMessage: 'Sem conexão com a Internet');
 }
 
-class NoDataFound extends Failure {}
+class NoDataFound extends Failure {
+  NoDataFound() : super(errorMessage: 'Resultado não encontrado!');
+}

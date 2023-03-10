@@ -149,7 +149,7 @@ class _RelogarPageState extends State<RelogarPage> {
             Container(
               width: Sizes.width(context),
               height: Sizes.heightStatusBar(context),
-              color: Theme.of(context).backgroundColor,
+              color: Theme.of(context).colorScheme.background,
             ),
             form,
           ],

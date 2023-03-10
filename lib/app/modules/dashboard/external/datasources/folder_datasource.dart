@@ -1,9 +1,10 @@
+import 'package:sqlite3/sqlite3.dart';
+import 'package:floor/floor.dart';
+
 import 'package:safe_notes/app/shared/database/daos/note_dao.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
-import 'package:sqlite3/sqlite3.dart';
-// ignore: implementation_imports
-import 'package:sqflite_common/src/exception.dart' as exception;
+
 import 'package:safe_notes/app/shared/database/daos/folder_dao.dart';
 import 'package:safe_notes/app/shared/database/entities/folder_entity.dart';
 import 'package:safe_notes/app/design/common/extension/extension.dart';
@@ -31,7 +32,7 @@ class FolderDatasource extends IFolderDatasource {
         error,
         error.message,
       );
-    } on exception.SqfliteDatabaseException catch (error, stackTrace) {
+    } on SqfliteDatabaseException catch (error, stackTrace) {
       throw AddFolderSqliteError(
         stackTrace,
         'FolderDatasource.addFolder',
@@ -63,7 +64,7 @@ class FolderDatasource extends IFolderDatasource {
         error,
         error.message,
       );
-    } on exception.SqfliteDatabaseException catch (error, stackTrace) {
+    } on SqfliteDatabaseException catch (error, stackTrace) {
       throw EditFolderSqliteError(
         stackTrace,
         'FolderDatasource.editFolder',
@@ -115,7 +116,7 @@ class FolderDatasource extends IFolderDatasource {
         error,
         error.message,
       );
-    } on exception.SqfliteDatabaseException catch (error, stackTrace) {
+    } on SqfliteDatabaseException catch (error, stackTrace) {
       throw DeleteFolderSqliteError(
         stackTrace,
         'FolderDatasource.deleteFolder',
@@ -142,7 +143,7 @@ class FolderDatasource extends IFolderDatasource {
         error,
         error.message,
       );
-    } on exception.SqfliteDatabaseException catch (error, stackTrace) {
+    } on SqfliteDatabaseException catch (error, stackTrace) {
       throw RestoreFolderSqliteError(
         stackTrace,
         'FolderDatasource.restoreFolder',
@@ -166,7 +167,7 @@ class FolderDatasource extends IFolderDatasource {
         error,
         error.message,
       );
-    } on exception.SqfliteDatabaseException catch (error, stackTrace) {
+    } on SqfliteDatabaseException catch (error, stackTrace) {
       throw DeleteFolderPersistentSqliteError(
         stackTrace,
         'FolderDatasource.deletePersistentFolder',

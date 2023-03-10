@@ -40,7 +40,7 @@ class ConfirmDeletionWidget extends StatelessWidget {
                       bottom: 8.0,
                     ),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).backgroundColor,
+                      color: Theme.of(context).colorScheme.background,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Column(

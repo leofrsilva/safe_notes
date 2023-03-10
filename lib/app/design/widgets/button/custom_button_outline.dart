@@ -72,7 +72,7 @@ class _CustomButtonOutlineState extends State<CustomButtonOutline>
             : Sizes.width(context) * .3,
         height: 37,
         decoration: BoxDecoration(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(Sizes.dp10(context)),
           border: BorderDirectional(
             top: BorderSide(color: Theme.of(context).primaryColor, width: 2),
@@ -83,7 +83,7 @@ class _CustomButtonOutlineState extends State<CustomButtonOutline>
         ),
         child: TextButton(
           style: TextButton.styleFrom(
-            primary: Theme.of(context).primaryColor,
+            foregroundColor: Theme.of(context).primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
                 Sizes.dp10(context),

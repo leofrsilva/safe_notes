@@ -81,7 +81,7 @@ class _EditNamePageState extends State<EditNamePage> {
     _formKey = GlobalKey<FormState>();
     _focusNode = FocusNode();
     _focusNode.addListener(toggleFocus);
-    WidgetsBinding.instance?.addPostFrameCallback((timings) {
+    WidgetsBinding.instance.addPostFrameCallback((timings) {
       if (Sizes.orientation(context) == Orientation.portrait) {
         _focusNode.requestFocus();
       }
@@ -129,7 +129,7 @@ class _EditNamePageState extends State<EditNamePage> {
                       ),
                       margin: EdgeInsets.only(bottom: bottomPadding),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Form(
@@ -207,6 +207,18 @@ class _EditNamePageState extends State<EditNamePage> {
                                         borderRadius:
                                             BorderRadius.circular(20.0),
                                       )),
+                                      onPressed: canAdd
+                                          ? () {
+                                              folder = folder.copyWith(
+                                                name: _textEditingFolder.text,
+                                                dateModification:
+                                                    DateTime.now(),
+                                              );
+                                              _controller.editFolder(
+                                                  context, folder);
+                                              Modular.to.pop();
+                                            }
+                                          : null,
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8.0,
@@ -222,18 +234,6 @@ class _EditNamePageState extends State<EditNamePage> {
                                           ),
                                         ),
                                       ),
-                                      onPressed: canAdd
-                                          ? () {
-                                              folder = folder.copyWith(
-                                                name: _textEditingFolder.text,
-                                                dateModification:
-                                                    DateTime.now(),
-                                              );
-                                              _controller.editFolder(
-                                                  context, folder);
-                                              Modular.to.pop();
-                                            }
-                                          : null,
                                     ),
                                   ],
                                 ),

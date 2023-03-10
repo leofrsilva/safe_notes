@@ -59,7 +59,7 @@ class _DownloadPageState extends State<DownloadPage> {
                     ),
                     margin: const EdgeInsets.only(bottom: 12.0),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).backgroundColor,
+                      color: Theme.of(context).colorScheme.background,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Column(
@@ -124,6 +124,15 @@ class _DownloadPageState extends State<DownloadPage> {
                                     shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 )),
+                                onPressed: _controller.canNotDownload
+                                    ? null
+                                    : () {
+                                        _controller
+                                            .download(context)
+                                            .whenComplete(() {
+                                          Modular.to.pop();
+                                        });
+                                      },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 8.0,
@@ -139,15 +148,6 @@ class _DownloadPageState extends State<DownloadPage> {
                                     ),
                                   ),
                                 ),
-                                onPressed: _controller.canNotDownload
-                                    ? null
-                                    : () {
-                                        _controller
-                                            .download(context)
-                                            .whenComplete(() {
-                                          Modular.to.pop();
-                                        });
-                                      },
                               ),
                             ],
                           ),

@@ -53,12 +53,14 @@ class RelogarController {
     );
 
     if (failure != null) {
-      if (failure is DeleteAllFolderExceptSqliteError) {
-        SnackbarError.show(
-          context,
-          title: 'Erro ao Deslogar',
-          message: 'Falha ao deletar pastas dos Usuários!',
-        );
+      if (context.mounted) {
+        if (failure is DeleteAllFolderExceptSqliteError) {
+          SnackbarError.show(
+            context,
+            title: 'Erro ao Deslogar',
+            message: 'Falha ao deletar pastas dos Usuários!',
+          );
+        }
       }
     }
   }

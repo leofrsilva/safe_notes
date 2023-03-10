@@ -82,10 +82,12 @@ class DownloadController {
         var dir = await DownloadsPath.downloadsDirectory();
 
         if (dir != null) {
-          LoadingOverlay.show(
-            context,
-            _processDownload(context, dir),
-          );
+          if (context.mounted) {
+            LoadingOverlay.show(
+              context,
+              _processDownload(context, dir),
+            );
+          }
         }
       }
     }

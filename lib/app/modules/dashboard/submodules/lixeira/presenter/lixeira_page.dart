@@ -46,12 +46,12 @@ class _LixeiraPageState extends State<LixeiraPage>
   void initState() {
     super.initState();
     _controller = Modular.get<LixeiraController>();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -312,7 +312,7 @@ class _LixeiraPageState extends State<LixeiraPage>
       if (noteSelecteds.isNotEmpty || folderSelecteds.isNotEmpty) {
         return Container(
           height: 70.0,
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -328,10 +328,12 @@ class _LixeiraPageState extends State<LixeiraPage>
                     noteSelecteds,
                     folderSelecteds,
                   );
-                  SnackbarWarning.show(
-                    context,
-                    message: 'Os itens foram restaurados.',
-                  );
+                  if (context.mounted) {
+                    SnackbarWarning.show(
+                      context,
+                      message: 'Os itens foram restaurados.',
+                    );
+                  }
                 },
               ),
               CustomButtonIcon(

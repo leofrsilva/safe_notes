@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart';
+import 'package:floor/floor.dart';
 import 'package:safe_notes/app/shared/database/daos/folder_dao.dart';
 
 import '../../domain/errors/getin_failures.dart';
@@ -13,12 +13,12 @@ class DeleteFolderDatasource extends IDeleteFolderDatasource {
     try {
       await _folderDAO.deleteAllExcept(folderId);
       return dynamic;
-    } on SqliteException catch (error, stackTrace) {
+    } on SqfliteDatabaseException catch (error, stackTrace) {
       throw DeleteAllFolderExceptSqliteError(
         stackTrace,
         'DeleteFolderDatasource.deleteAllFolderExcept',
         error,
-        error.message,
+        error.message ?? '',
       );
     }
   }

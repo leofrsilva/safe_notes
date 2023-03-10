@@ -89,10 +89,12 @@ class FolderController {
     final either = await _editNoteUsecase.call(noteEditable);
     if (either.isLeft()) {
       if (either.fold(id, id) is! IncorrectEncryptionError) {
-        SnackbarError.show(
-          context,
-          message: 'Error ao editar a Nota!',
-        );
+        if (context.mounted) {
+          SnackbarError.show(
+            context,
+            message: 'Error ao editar a Nota!',
+          );
+        }
       }
     }
   }
@@ -126,10 +128,12 @@ class FolderController {
     final either = await _deleteNoteUsecase.call(notes);
     if (either.isLeft()) {
       if (either.fold(id, id) is! IncorrectEncryptionError) {
-        SnackbarError.show(
-          context,
-          message: 'Error ao deletar a Nota!',
-        );
+        if (context.mounted) {
+          SnackbarError.show(
+            context,
+            message: 'Error ao deletar a Nota!',
+          );
+        }
       }
     }
   }
@@ -139,10 +143,12 @@ class FolderController {
     final either = await _deleteFolderUsecase.call(folders);
     if (either.isLeft()) {
       if (either.fold(id, id) is! IncorrectEncryptionError) {
-        SnackbarError.show(
-          context,
-          message: 'Error ao deletar a Pasta!',
-        );
+        if (context.mounted) {
+          SnackbarError.show(
+            context,
+            message: 'Error ao deletar a Pasta!',
+          );
+        }
       }
     }
   }

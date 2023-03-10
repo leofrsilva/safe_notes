@@ -47,8 +47,7 @@ class DetailsNoteWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Última modificação: ' +
-                    noteModel.dateModification.toStrDateTime,
+                'Última modificação: ${noteModel.dateModification.toStrDateTime}',
                 style: TextStyle(
                   fontSize: 11,
                   color: ColorPalettes.grey,
@@ -56,7 +55,7 @@ class DetailsNoteWidget extends StatelessWidget {
               ),
               const SizedBox(height: 1.0),
               Text(
-                'Criado: ' + noteModel.dateCreate.toStrDate,
+                'Criado: ${noteModel.dateCreate.toStrDate}',
                 style: TextStyle(
                   fontSize: 11,
                   color: ColorPalettes.grey,

@@ -231,7 +231,7 @@ class _FavoritesPageState extends State<FavoritesPage> with TemplatePageMixin {
 
         return Container(
           height: 70.0,
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,

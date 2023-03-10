@@ -90,40 +90,42 @@ class AdicionarUserController {
         );
 
         if (failure != null) {
-          if (failure is NoFoundUserInCreateUserAuthFirebase) {
-            SnackbarError.show(
-              context,
-              title: 'Erro ao Criar Usuário',
-              message: 'Nenhum Usuário retornado!',
-            );
-          }
-          // Create Authentication
-          else if (failure is CreateUserAuthFirebaseError) {
-            if (failure!.exception.code == 'network-request-failed') {
-              SnackbarError.show(context, message: failure!.errorMessage);
-            } else if (failure!.exception.code == 'email-already-in-use') {
-              checkEmailErrorMessage = failure!.errorMessage;
-              formState.validate();
-            } else {
+          if (context.mounted) {
+            if (failure is NoFoundUserInCreateUserAuthFirebase) {
               SnackbarError.show(
                 context,
                 title: 'Erro ao Criar Usuário',
+                message: 'Nenhum Usuário retornado!',
+              );
+            }
+            // Create Authentication
+            else if (failure is CreateUserAuthFirebaseError) {
+              if (failure!.exception.code == 'network-request-failed') {
+                SnackbarError.show(context, message: failure!.errorMessage);
+              } else if (failure!.exception.code == 'email-already-in-use') {
+                checkEmailErrorMessage = failure!.errorMessage;
+                formState.validate();
+              } else {
+                SnackbarError.show(
+                  context,
+                  title: 'Erro ao Criar Usuário',
+                  message: failure!.errorMessage,
+                );
+              }
+            }
+            // Set Firestore
+            else if (failure is SignupFirestoreError) {
+              SnackbarError.show(
+                context,
+                message: failure!.errorMessage,
+              );
+            } else {
+              SnackbarError.show(
+                context,
+                title: 'Erro',
                 message: failure!.errorMessage,
               );
             }
-          }
-          // Set Firestore
-          else if (failure is SignupFirestoreError) {
-            SnackbarError.show(
-              context,
-              message: failure!.errorMessage,
-            );
-          } else {
-            SnackbarError.show(
-              context,
-              title: 'Erro',
-              message: failure!.errorMessage,
-            );
           }
         }
       }

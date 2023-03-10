@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class LoadingOverlay {
   static Future<T?> show<T>(BuildContext context, Future<T> future) async {
-    final _overlay = OverlayEntry(
+    final overlay = OverlayEntry(
       opaque: false,
       maintainState: true,
       builder: (_) => const _FullScreenLoader(),
     );
-    Overlay.of(context)?.insert(_overlay);
+    Overlay.of(context).insert(overlay);
 
     T? result;
     await future.then((value) {
       result = value;
-      _overlay.remove();
+      overlay.remove();
     });
 
     return result;
@@ -57,7 +57,7 @@ class _FullScreenLoaderState extends State<_FullScreenLoader>
             child: Icon(
               Icons.lock,
               size: 28,
-              color: Theme.of(context).backgroundColor,
+              color: Theme.of(context).colorScheme.background,
             ),
           ),
           Center(
@@ -66,13 +66,13 @@ class _FullScreenLoaderState extends State<_FullScreenLoader>
               child: Icon(
                 Icons.refresh_rounded,
                 size: 85,
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).colorScheme.background,
               ),
-              builder: (context, _widget) {
+              builder: (context, widget) {
                 return Transform.rotate(
                   alignment: AlignmentDirectional.center,
                   angle: animationController.value * 6.3,
-                  child: _widget,
+                  child: widget,
                 );
               },
             ),

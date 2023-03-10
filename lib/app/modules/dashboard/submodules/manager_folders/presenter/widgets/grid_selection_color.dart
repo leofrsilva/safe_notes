@@ -96,7 +96,7 @@ class _GridSelectionColorState extends State<GridSelectionColor> {
                           ? Center(
                               child: Icon(
                                 Icons.check,
-                                color: Theme.of(context).backgroundColor,
+                                color: Theme.of(context).colorScheme.background,
                               ),
                             )
                           : Container(),

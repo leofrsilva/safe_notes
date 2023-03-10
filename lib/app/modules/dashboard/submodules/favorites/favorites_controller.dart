@@ -34,10 +34,12 @@ class FavoritesController {
     final either = await _editNoteUsecase.call(noteEditable);
     if (either.isLeft()) {
       if (either.fold(id, id) is! IncorrectEncryptionError) {
-        SnackbarError.show(
-          context,
-          message: 'Error ao editar a Nota!',
-        );
+        if (context.mounted) {
+          SnackbarError.show(
+            context,
+            message: 'Error ao editar a Nota!',
+          );
+        }
       }
     }
   }
@@ -46,10 +48,12 @@ class FavoritesController {
     final either = await _deleteNoteUsecase.call(notes);
     if (either.isLeft()) {
       if (either.fold(id, id) is! IncorrectEncryptionError) {
-        SnackbarError.show(
-          context,
-          message: 'Error ao deletar a Nota!',
-        );
+        if (context.mounted) {
+          SnackbarError.show(
+            context,
+            message: 'Error ao deletar a Nota!',
+          );
+        }
       }
     }
   }

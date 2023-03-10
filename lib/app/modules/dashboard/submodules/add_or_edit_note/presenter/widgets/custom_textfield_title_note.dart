@@ -81,7 +81,7 @@ class CustomTextFieldTitleNote extends StatelessWidget {
       height: expanded ? heightExpanded : heightNotExpanded,
       decoration: BoxDecoration(
         // color:  ColorPalettes.transparent,
-        color: Theme.of(context).backgroundColor,
+        color: Theme.of(context).colorScheme.background,
         border: Border(
           bottom: BorderSide(
             width: 1.0,

@@ -51,8 +51,8 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
           await Future.delayed(
             _drawerMenuController.durationNavigateFolder,
             () {
-              final _controllerFolder = Modular.get<FolderController>();
-              _controllerFolder.folder = folder;
+              final controllerFolder = Modular.get<FolderController>();
+              controllerFolder.folder = folder;
               // _drawerMenuController.moduleFolderSaveFolderParent(folder);
             },
           );
@@ -207,7 +207,8 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                               );
                             }),
                         //
-                        Divider(color: Theme.of(context).backgroundColor),
+                        Divider(
+                            color: Theme.of(context).colorScheme.background),
                         //
                         AnimatedBuilder(
                           animation:
@@ -233,7 +234,8 @@ class _DrawerMenuPageState extends State<DrawerMenuPage> {
                             );
                           },
                         ),
-                        Divider(color: Theme.of(context).backgroundColor),
+                        Divider(
+                            color: Theme.of(context).colorScheme.background),
                         ItemMenu(
                           selected: 9999 == value,
                           text: 'Sair',

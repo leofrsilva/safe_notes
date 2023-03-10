@@ -32,8 +32,8 @@ class _DashboardPageState extends State<DashboardPage>
     super.initState();
     drawerMenuController = Modular.get<DrawerMenuController>();
     dashboardController = Modular.get<DashboardController>();
-    WidgetsBinding.instance?.addObserver(this);
-    WidgetsBinding.instance?.addPostFrameCallback((timings) {
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((timings) {
       Future.delayed(timings, () {
         dashboardController.deleteExpiration();
       });
@@ -43,7 +43,7 @@ class _DashboardPageState extends State<DashboardPage>
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -75,6 +75,8 @@ class _DashboardPageState extends State<DashboardPage>
                   }
                 },
                 child: ClipViewPortWidget(
+                  duration: drawerMenuController.duration,
+                  isShowDrawer: drawerMenuController.isShowDrawer.value,
                   child: Stack(
                     children: [
                       const RouterOutlet(),
@@ -101,8 +103,6 @@ class _DashboardPageState extends State<DashboardPage>
                       ),
                     ],
                   ),
-                  duration: drawerMenuController.duration,
-                  isShowDrawer: drawerMenuController.isShowDrawer.value,
                 ),
               ),
             );

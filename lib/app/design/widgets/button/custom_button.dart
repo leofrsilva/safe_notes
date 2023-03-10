@@ -88,7 +88,7 @@ class _CustomButtonState extends State<CustomButton>
             ]),
         child: TextButton(
           style: TextButton.styleFrom(
-            primary: ColorPalettes.lightBG,
+            foregroundColor: ColorPalettes.lightBG,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
                 Sizes.dp10(context),

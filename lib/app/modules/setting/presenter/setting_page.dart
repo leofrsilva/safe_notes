@@ -49,7 +49,7 @@ class _SettingPageState extends State<SettingPage> {
                     horizontal: 16.0,
                   ),
                   child: Text(
-                    'v' + (snapshot.data ?? ''),
+                    'v${snapshot.data ?? ''}',
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                     ),

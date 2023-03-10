@@ -69,7 +69,7 @@ class _EditColorPageState extends State<EditColorPage> {
                         bottom: 6.0,
                       ),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Form(

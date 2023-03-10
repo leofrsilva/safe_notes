@@ -69,17 +69,21 @@ class LixeiraController {
     List<FolderModel> folders,
   ) async {
     if (notes.isNotEmpty) await _restoreNotes(context, notes);
-    if (folders.isNotEmpty) await _restoreFolders(context, folders);
+    if (context.mounted) {
+      if (folders.isNotEmpty) await _restoreFolders(context, folders);
+    }
   }
 
   Future _restoreNotes(BuildContext context, List<NoteModel> notes) async {
     final either = await _restoreNoteUsecase.call(notes);
     if (either.isLeft()) {
       String field = notes.length > 1 ? 'Notas' : 'Nota';
-      SnackbarError.show(
-        context,
-        message: 'Error ao restaurar a $field!',
-      );
+      if (context.mounted) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao restaurar a $field!',
+        );
+      }
     }
   }
 
@@ -100,10 +104,12 @@ class LixeiraController {
     final either = await _restoreFolderUsecase.call(folders);
     if (either.isLeft()) {
       String field = folders.length > 1 ? 'Pastas' : 'Pasta';
-      SnackbarError.show(
-        context,
-        message: 'Error ao restaurar a $field!',
-      );
+      if (context.mounted) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao restaurar a $field!',
+        );
+      }
     }
   }
 
@@ -127,7 +133,9 @@ class LixeiraController {
     List<FolderModel> folders,
   ) async {
     if (notes.isNotEmpty) await _deletePersistentNotes(context, notes);
-    if (folders.isNotEmpty) await _deletePersistentFolders(context, folders);
+    if (context.mounted) {
+      if (folders.isNotEmpty) await _deletePersistentFolders(context, folders);
+    }
   }
 
   Future _deletePersistentNotes(
@@ -135,10 +143,12 @@ class LixeiraController {
     final either = await _deleteNotePersistentUsecase.call(notes);
     if (either.isLeft()) {
       String field = notes.length > 1 ? 'Notas' : 'Nota';
-      SnackbarError.show(
-        context,
-        message: 'Error ao excluir a $field!',
-      );
+      if (context.mounted) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao excluir a $field!',
+        );
+      }
     }
   }
 
@@ -161,10 +171,12 @@ class LixeiraController {
     final either = await _deleteFolderPersistentUsecase.call(folders);
     if (either.isLeft()) {
       String field = folders.length > 1 ? 'Pastas' : 'Pasta';
-      SnackbarError.show(
-        context,
-        message: 'Error ao excluir a $field!',
-      );
+      if (context.mounted) {
+        SnackbarError.show(
+          context,
+          message: 'Error ao excluir a $field!',
+        );
+      }
     }
   }
 }

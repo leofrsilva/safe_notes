@@ -29,7 +29,7 @@ class HeaderLogin extends StatelessWidget {
                     alignment: AlignmentDirectional.center,
                     child: Image.asset(
                       ImagesAssets.imgLoginBg,
-                      color: Theme.of(context).backgroundColor,
+                      color: Theme.of(context).colorScheme.background,
                       fit: BoxFit.cover,
                       width: Sizes.height(context) * 0.12,
                     ),
@@ -43,7 +43,7 @@ class HeaderLogin extends StatelessWidget {
                         size: Sizes.height(context) * 0.12 / 4,
                         text: 'Safe Notes',
                         fontWeight: FontWeight.w600,
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                       ),
                       const SizedBox(height: 4.0),
                       Text(
@@ -52,7 +52,7 @@ class HeaderLogin extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'JosefinSans',
                           fontWeight: FontWeight.normal,
-                          color: Theme.of(context).backgroundColor,
+                          color: Theme.of(context).colorScheme.background,
                           fontSize: Sizes.height(context) * 0.12 / 6,
                         ),
                       ),

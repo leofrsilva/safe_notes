@@ -92,10 +92,12 @@ class AddOrEditNoteController {
     final either = await _editNoteUsecase.call([noteFields.model]);
     if (either.isLeft()) {
       if (either.fold(id, id) is! IncorrectEncryptionError) {
-        SnackbarError.show(
-          context,
-          message: 'Error ao editar a Nota!',
-        );
+        if (context.mounted) {
+          SnackbarError.show(
+            context,
+            message: 'Error ao editar a Nota!',
+          );
+        }
       }
     }
   }
@@ -106,10 +108,12 @@ class AddOrEditNoteController {
           await _deleteNotePersistentUsecase.call([noteFields.model]);
       if (either.isLeft()) {
         if (either.fold(id, id) is! IncorrectEncryptionError) {
-          SnackbarError.show(
-            context,
-            message: 'Error ao deletar Nota!',
-          );
+          if (context.mounted) {
+            SnackbarError.show(
+              context,
+              message: 'Error ao deletar Nota!',
+            );
+          }
         }
       }
     }

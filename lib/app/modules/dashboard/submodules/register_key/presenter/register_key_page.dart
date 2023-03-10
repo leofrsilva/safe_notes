@@ -25,7 +25,7 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
     controller = Modular.get<RegisterKeyController>();
     _textEditingKey = TextEditingController();
     _focusNode = FocusNode();
-    WidgetsBinding.instance?.addPostFrameCallback((timings) {
+    WidgetsBinding.instance.addPostFrameCallback((timings) {
       _focusNode.requestFocus();
     });
   }
@@ -63,7 +63,7 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
                       ),
                       margin: const EdgeInsets.only(bottom: 12.0),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Column(
@@ -96,6 +96,15 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
                                       shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20.0),
                                   )),
+                                  onPressed: canSend
+                                      ? () {
+                                          FocusScope.of(context).unfocus();
+                                          controller.sendKey(
+                                            context,
+                                            _textEditingKey.text,
+                                          );
+                                        }
+                                      : null,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0,
@@ -111,15 +120,6 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
                                       ),
                                     ),
                                   ),
-                                  onPressed: canSend
-                                      ? () {
-                                          FocusScope.of(context).unfocus();
-                                          controller.sendKey(
-                                            context,
-                                            _textEditingKey.text,
-                                          );
-                                        }
-                                      : null,
                                 ),
                               ],
                             ),
