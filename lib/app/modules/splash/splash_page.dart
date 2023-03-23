@@ -32,6 +32,7 @@ class _SplashPageState extends State<SplashPage> {
       Modular.isModuleReady<AppModule>(),
       Modular.isModuleReady<SplashModule>(),
       Future.delayed(const Duration(milliseconds: 500)),
+      Future.delayed(const Duration(milliseconds: 10000)),
     ]).then((_) async {
       await store.checkLoggedInUser(context);
     });
@@ -91,7 +92,7 @@ class _SplashPageState extends State<SplashPage> {
                   var seeInfo = '';
                   if (snapshot.hasData) {
                     if (snapshot.data!.isNotEmpty) {
-                      seeInfo = 'v ${snapshot.data}';
+                      seeInfo = 'v${snapshot.data}';
                     }
                   }
 

@@ -58,9 +58,8 @@ class PopupMenuState<T, W extends PopupMenu<T>> extends State<W> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
-    TextStyle style = widget.textStyle ??
-        popupMenuTheme.textStyle ??
-        theme.textTheme.subtitle1!;
+    TextStyle style =
+        widget.textStyle ?? popupMenuTheme.textStyle ?? const TextStyle();
 
     if (!widget.enabled) style = style.copyWith(color: theme.disabledColor);
 
