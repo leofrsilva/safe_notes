@@ -10,12 +10,14 @@ part of 'database.dart';
 class $FloorAppDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
+  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder databaseBuilder(String name) =>
       _$AppDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
+  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder inMemoryDatabaseBuilder() =>
       _$AppDatabaseBuilder(null);
 }
@@ -67,8 +69,11 @@ class _$AppDatabase extends AppDatabase {
 
   TagDAO? _tagDaoInstance;
 
-  Future<sqflite.Database> open(String path, List<Migration> migrations,
-      [Callback? callback]) async {
+  Future<sqflite.Database> open(
+    String path,
+    List<Migration> migrations, [
+    Callback? callback,
+  ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
       version: 1,
       onConfigure: (database) async {
@@ -119,8 +124,10 @@ class _$AppDatabase extends AppDatabase {
 }
 
 class _$FolderDAO extends FolderDAO {
-  _$FolderDAO(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+  _$FolderDAO(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
         _folderEntityInsertionAdapter = InsertionAdapter(
             database,
             'Folder',
@@ -262,8 +269,10 @@ class _$FolderDAO extends FolderDAO {
 }
 
 class _$NoteDAO extends NoteDAO {
-  _$NoteDAO(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+  _$NoteDAO(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
         _noteEntityInsertionAdapter = InsertionAdapter(
             database,
             'Note',
@@ -412,8 +421,10 @@ class _$NoteDAO extends NoteDAO {
 }
 
 class _$TagDAO extends TagDAO {
-  _$TagDAO(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database),
+  _$TagDAO(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
         _tagEntityInsertionAdapter = InsertionAdapter(
             database,
             'Tag',

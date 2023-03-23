@@ -4,16 +4,20 @@ import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/folder_list_model.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
+import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
 import '../../../../presenter/pages/drawer/drawer_menu_controller.dart';
+// import '../../../../presenter/pages/move/move_record_page.dart';
+import '../../../../presenter/pages/move/move_record_page.dart';
 import '../../../../presenter/reactive/i_reactive_list.dart';
 import '../manager_folders_controller.dart';
 
 enum ActionFolder {
   createSubpasta,
+  alterColor,
   rename,
   delete,
-  alterColor,
+  moveFor,
 }
 
 class LadderFolderManager extends StatefulWidget {
@@ -68,7 +72,6 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
   }
 
   String qtdChildrenFolder(int qtd) {
-    // print(qtd);
     if (qtd == 0) return '';
     return qtd.toString();
   }
@@ -108,16 +111,19 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
           folderers!.current.folderId,
         ),
         title: folderers!.current.name,
-        fontColor: ColorPalettes.blueGrey,
-        backgroundColor: ColorPalettes.transparent,
+        fontColor: Theme.of(context).colorScheme.tertiary,
+        backgroundColor: Colors.transparent,
         iconColor: Color(folderers!.current.color),
-        turnsColor: ColorPalettes.secondy.withOpacity(0.5),
-        selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
+        turnsColor: Theme.of(context).colorScheme.inversePrimary,
+        selectedColor:
+            Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.2),
         trailing: Text(
           qtdChildrenFolder(
             _reactiveList.numberChildrenInFolder(folderers!.current),
           ),
-          style: TextStyle(color: ColorPalettes.secondy),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.inversePrimary,
+          ),
         ),
         children: generaterWidgetsFolders(context, folderers!.childrens),
         onExpansionChanged: (bool isExpanded) {
@@ -142,6 +148,13 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
               if (action == ActionFolder.createSubpasta) {
                 if (context.mounted) {
                   _managerFoldersController.callAddSubFolderPage(
+                    context,
+                    folderers!.current,
+                  );
+                }
+              } else if (action == ActionFolder.alterColor) {
+                if (context.mounted) {
+                  _managerFoldersController.callEditColorFolderPage(
                     context,
                     folderers!.current,
                   );
@@ -179,9 +192,10 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
             folderChild.current.folderId,
           ),
           spaceStart: padding,
-          backgroundColor: ColorPalettes.transparent,
-          turnsColor: ColorPalettes.secondy.withOpacity(0.5),
-          selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
+          backgroundColor: Colors.transparent,
+          turnsColor: Theme.of(context).colorScheme.inversePrimary,
+          selectedColor:
+              Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.2),
           leading: Icon(
             Icons.folder_outlined,
             color: Color(folderChild.current.color),
@@ -192,16 +206,17 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
             textAlign: TextAlign.start,
             style: TextStyle(
               height: 1.7,
-              fontFamily: 'JosefinSans',
               fontWeight: FontWeight.w600,
-              color: ColorPalettes.blueGrey,
+              color: Theme.of(context).colorScheme.tertiary,
             ),
           ),
           trailing: Text(
             qtdChildrenFolder(
               _reactiveList.numberChildrenInFolder(folderChild.current),
             ),
-            style: TextStyle(color: ColorPalettes.secondy),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.inversePrimary,
+            ),
           ),
           children: generaterWidgetsFolders(context, folderChild.childrens),
           onExpansionChanged: (bool isExpanded) {
@@ -268,6 +283,30 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
                       context,
                       folderChild.current,
                     );
+                  } else if (action == ActionFolder.moveFor) {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return MoveRecordPage(
+                            allFolders: _reactiveList.listFolder,
+                            selectFolders: [folderChild.current],
+                            selectNotes: List<NoteModel>.empty(),
+                            updateFolders: (
+                              BuildContext context,
+                              List<FolderModel> listFolder,
+                            ) {
+                              if (listFolder.isNotEmpty) {
+                                for (var folder in listFolder) {
+                                  _managerFoldersController.editFolder(
+                                    context,
+                                    folder,
+                                  );
+                                }
+                              }
+                            },
+                            updateNotes: (_, __) => null,
+                          );
+                        });
                   }
                 }
               }
@@ -290,7 +329,19 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         ),
         child: Text(
           'Criar subpasta',
-          style: TextStyles.titleFolderList,
+          style: TextStyles.titleFolderList(context),
+        ),
+      ),
+      PopupMenu<ActionFolder>(
+        height: 38.0,
+        value: ActionFolder.alterColor,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(20.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        child: Text(
+          'Alterar cor da pasta',
+          style: TextStyles.titleFolderList(context),
         ),
       ),
     ];
@@ -307,7 +358,15 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         ),
         child: Text(
           'Criar subpasta',
-          style: TextStyles.titleFolderList,
+          style: TextStyles.titleFolderList(context),
+        ),
+      ),
+      PopupMenu<ActionFolder>(
+        height: 38.0,
+        value: ActionFolder.moveFor,
+        child: Text(
+          'Mover para',
+          style: TextStyles.titleFolderList(context),
         ),
       ),
       PopupMenu<ActionFolder>(
@@ -315,27 +374,27 @@ class _LadderFolderManagerState extends State<LadderFolderManager> {
         value: ActionFolder.rename,
         child: Text(
           'Renomear',
-          style: TextStyles.titleFolderList,
-        ),
-      ),
-      PopupMenu<ActionFolder>(
-        height: 38.0,
-        value: ActionFolder.delete,
-        child: Text(
-          'Excluir',
-          style: TextStyles.titleFolderList,
+          style: TextStyles.titleFolderList(context),
         ),
       ),
       PopupMenu<ActionFolder>(
         height: 38.0,
         value: ActionFolder.alterColor,
+        child: Text(
+          'Alterar cor da pasta',
+          style: TextStyles.titleFolderList(context),
+        ),
+      ),
+      PopupMenu<ActionFolder>(
+        height: 38.0,
+        value: ActionFolder.delete,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(20.0),
           bottomRight: Radius.circular(20.0),
         ),
         child: Text(
-          'Alterar cor da pasta',
-          style: TextStyles.titleFolderList,
+          'Excluir',
+          style: TextStyles.titleFolderList(context),
         ),
       ),
     ];

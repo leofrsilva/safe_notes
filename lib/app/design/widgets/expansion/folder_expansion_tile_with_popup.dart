@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 
 class FolderExpansionTileWithPopup extends StatefulWidget {
   const FolderExpansionTileWithPopup({
@@ -212,9 +211,11 @@ class FolderExpansionTileWithPopupState
               style: TextStyle(
                 height: 1.6,
                 fontSize: widget.selected ? 16 : null,
-                fontFamily: 'JosefinSans',
                 fontWeight: widget.selected ? FontWeight.bold : FontWeight.w600,
-                color: widget.fontColor ?? ColorPalettes.white,
+                color: widget.fontColor ??
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Theme.of(context).colorScheme.inverseSurface
+                        : Theme.of(context).colorScheme.onInverseSurface),
               ),
             ),
             trailing: widget.trailing,
@@ -231,7 +232,10 @@ class FolderExpansionTileWithPopupState
                 onTap: onExpanded,
                 borderRadius: BorderRadius.circular(8.0),
                 child: Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 16),
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 16,
+                    bottom: 8.0,
+                  ),
                   child: Stack(
                     alignment: AlignmentDirectional.center,
                     children: [
@@ -264,8 +268,12 @@ class FolderExpansionTileWithPopupState
   @override
   void didChangeDependencies() {
     final ThemeData theme = Theme.of(context);
-    _selectColor = widget.selectedColor ?? theme.primaryColor.withOpacity(0.25);
-    _materialColor = widget.backgroundColor ?? theme.primaryColor;
+    _selectColor =
+        widget.selectedColor ?? theme.colorScheme.primary.withOpacity(0.2);
+    _materialColor = widget.backgroundColor ??
+        Theme.of(context).drawerTheme.backgroundColor ??
+        Theme.of(context).colorScheme.background;
+
     super.didChangeDependencies();
   }
 

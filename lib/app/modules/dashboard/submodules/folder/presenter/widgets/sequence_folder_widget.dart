@@ -58,7 +58,7 @@ class _SequenceFolderWidgetState extends State<SequenceFolderWidget> {
               ),
               child: Icon(
                 Icons.folder_outlined,
-                color: ColorPalettes.blueGrey,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
@@ -80,20 +80,20 @@ class _SequenceFolderWidgetState extends State<SequenceFolderWidget> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
                                 horizontal: 10.0,
                               ),
                               child: Icon(
                                 Icons.arrow_forward_ios_rounded,
-                                color: ColorPalettes.grey,
                                 size: 16,
                               ),
                             ),
                             Text(
                               folderSeq.name,
                               style: TextStyle(
-                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
                           ],
@@ -105,20 +105,19 @@ class _SequenceFolderWidgetState extends State<SequenceFolderWidget> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
                                 horizontal: 10.0,
                               ),
                               child: Icon(
                                 Icons.arrow_forward_ios_rounded,
-                                color: ColorPalettes.grey,
                                 size: 16,
                               ),
                             ),
                             Text(
                               folderSeq.name,
                               style: TextStyle(
-                                color: ColorPalettes.grey,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
                           ],

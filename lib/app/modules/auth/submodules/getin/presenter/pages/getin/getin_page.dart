@@ -22,6 +22,8 @@ class _GetInPageState extends State<GetInPage> {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+    var height = Sizes.height(context) - Sizes.heightStatusBar(context);
+
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -44,8 +46,8 @@ class _GetInPageState extends State<GetInPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const HeaderLogin(),
-                      form(context),
-                      buttons(context),
+                      form(context, height),
+                      buttons(context, height),
                     ],
                   ),
                 ),
@@ -57,13 +59,13 @@ class _GetInPageState extends State<GetInPage> {
     );
   }
 
-  Widget form(BuildContext context) => Container(
-        height: Sizes.height(context) * 0.375,
+  Widget form(BuildContext context, double height) => Container(
+        height: height * 0.375,
         alignment: AlignmentDirectional.center,
         padding: EdgeInsets.only(
           left: 20.0,
           right: 20.0,
-          top: Sizes.height(context) * 0.02,
+          top: height * 0.02,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -91,7 +93,7 @@ class _GetInPageState extends State<GetInPage> {
                 _controller.email = val?.trim() ?? '';
               },
             ),
-            SizedBox(height: Sizes.height(context) * 0.025),
+            SizedBox(height: height * 0.025),
             CustomTextField(
               title: 'Senha',
               isPass: true,
@@ -126,20 +128,24 @@ class _GetInPageState extends State<GetInPage> {
         ),
       );
 
-  Widget buttons(BuildContext context) => Container(
-        // color: Colors.deepPurple,
-        height: Sizes.height(context) * 0.2875,
+  Widget buttons(BuildContext context, double height) => Container(
+        height: height * 0.2875,
         alignment: AlignmentDirectional.bottomCenter,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: Sizes.height(context) * 0.025),
+            SizedBox(height: height * 0.025),
             CustomButton(
               text: 'Entrar',
-              onTap: () => _controller.login(context),
+              onTap: () {
+                if (FocusScope.of(context).focusedChild != null) {
+                  FocusScope.of(context).focusedChild?.unfocus();
+                }
+                _controller.login(context);
+              },
             ),
-            SizedBox(height: Sizes.height(context) * 0.05),
+            SizedBox(height: height * 0.05),
             Stack(
               children: [
                 Align(
@@ -149,7 +155,7 @@ class _GetInPageState extends State<GetInPage> {
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'JosefinSans',
-                      color: ColorPalettes.greyDark,
+                      color: Theme.of(context).colorScheme.inverseSurface,
                     ),
                   ),
                 ),

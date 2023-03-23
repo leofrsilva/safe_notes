@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 
 import 'adicionar_user_store.dart';
@@ -41,9 +40,12 @@ class _AdicionarUserPageState extends State<AdicionarUserPage> {
                 return BarStatus(
                   titleChild: TextTitle(
                     text: title,
-                    color: ColorPalettes.whiteSemiTransparent,
+                    color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                   onTapIconButtonPrevius: () {
+                    if (FocusScope.of(context).focusedChild != null) {
+                      FocusScope.of(context).focusedChild?.unfocus();
+                    }
                     if (value == 0) {
                       Modular.to.navigate('/auth/getin/');
                     } else if (value == 1) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../common/common.dart';
 
 // ignore: must_be_immutable
 class WaveRight extends StatelessWidget {
@@ -24,8 +23,8 @@ class WaveRight extends StatelessWidget {
           gradient: isGradient
               ? LinearGradient(
                   colors: <Color>[
-                    Theme.of(context).primaryColor,
-                    ColorPalettes.secondy,
+                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context).colorScheme.tertiary,
                   ],
                   begin: AlignmentDirectional.topStart,
                   end: AlignmentDirectional.bottomEnd,

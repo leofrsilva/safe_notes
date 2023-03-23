@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 
 class ButtonManageFolders extends StatelessWidget {
   final Function() onTap;
@@ -12,10 +11,11 @@ class ButtonManageFolders extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(50),
       child: Container(
         decoration: BoxDecoration(
-          // color: ColorPalettes.secondy,
-          color: ColorPalettes.blueGrey.withOpacity(0.25),
+          color:
+              Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.4),
           borderRadius: BorderRadius.circular(50),
         ),
         padding: const EdgeInsets.all(10.0),
@@ -23,9 +23,10 @@ class ButtonManageFolders extends StatelessWidget {
         child: Text(
           'Gerenciar pasta',
           style: TextStyle(
-            fontFamily: 'JosefinSans',
-            color: ColorPalettes.white,
             fontWeight: FontWeight.w600,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).colorScheme.inverseSurface
+                : Theme.of(context).colorScheme.onInverseSurface,
           ),
         ),
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
@@ -34,7 +33,7 @@ class GridNoteDeletedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (listNotes.isNotEmpty && haveOrdenation)
           Padding(
@@ -46,15 +45,16 @@ class GridNoteDeletedWidget extends StatelessWidget {
                 Icon(
                   Icons.align_horizontal_left_rounded,
                   color:
-                      selectable ? ColorPalettes.black12 : ColorPalettes.grey,
+                      selectable ? Theme.of(context).colorScheme.outline : null,
                   size: 15,
                 ),
                 const SizedBox(width: 1.0),
                 Text(
                   'Data de Modificação |',
                   style: TextStyle(
-                    color:
-                        selectable ? ColorPalettes.black12 : ColorPalettes.grey,
+                    color: selectable
+                        ? Theme.of(context).colorScheme.outline
+                        : null,
                   ),
                 ),
                 IconButton(
@@ -63,8 +63,6 @@ class GridNoteDeletedWidget extends StatelessWidget {
                     ordeByDesc
                         ? Icons.arrow_downward_outlined
                         : Icons.arrow_upward_outlined,
-                    color:
-                        selectable ? ColorPalettes.black12 : ColorPalettes.grey,
                     size: 20,
                   ),
                   onPressed: selectable ? null : onPressedOrder,
@@ -73,7 +71,9 @@ class GridNoteDeletedWidget extends StatelessWidget {
             ),
           ),
         Wrap(
-          alignment: WrapAlignment.start,
+          alignment: listNotes.length > 2
+              ? WrapAlignment.spaceAround
+              : WrapAlignment.start,
           children: listNotes.map((note) {
             if (selectable) {
               return CardNoteEditable(
@@ -87,12 +87,13 @@ class GridNoteDeletedWidget extends StatelessWidget {
                 },
                 foreground: Container(
                   height: 30,
-                  color: ColorPalettes.blueGrey50,
+                  color: Theme.of(context).colorScheme.tertiaryContainer,
                   child: Center(
                     child: Text(
                       '${note.deletionExpiration} dias',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.background,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
                       ),
                     ),
                   ),
@@ -112,12 +113,12 @@ class GridNoteDeletedWidget extends StatelessWidget {
               onTap: () => onTap(note),
               foreground: Container(
                 height: 30,
-                color: ColorPalettes.blueGrey50,
+                color: Theme.of(context).colorScheme.tertiaryContainer,
                 child: Center(
                   child: Text(
                     '${note.deletionExpiration} dias',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
                     ),
                   ),
                 ),

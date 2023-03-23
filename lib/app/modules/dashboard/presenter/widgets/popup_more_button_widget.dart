@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/style/styles.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
 class PopupMoreButtonWidget extends StatelessWidget {
@@ -55,18 +54,12 @@ class PopupMoreButtonWidget extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Icon(
-                Icons.more_vert,
-                color: ColorPalettes.black,
-              ),
-              const SizedBox(height: 5.0),
+            children: const [
+              Icon(Icons.more_vert),
+              SizedBox(height: 5.0),
               Text(
                 'Mais',
-                style: TextStyle(
-                  fontSize: 12.0,
-                  color: ColorPalettes.black54,
-                ),
+                style: TextStyle(fontSize: 12.0),
               ),
             ],
           ),

@@ -14,9 +14,10 @@ class SnackbarError {
         title,
         style: TextStyle(
           fontSize: 15,
-          fontFamily: 'JosefinSans',
-          color: ColorPalettes.white,
           fontWeight: FontWeight.w600,
+          color: Theme.of(context).brightness == Brightness.light
+              ? Theme.of(context).colorScheme.onSurfaceVariant
+              : Theme.of(context).colorScheme.inverseSurface,
         ),
       );
     } else {
@@ -24,7 +25,7 @@ class SnackbarError {
     }
     final snackBar = SnackBar(
       padding: const EdgeInsets.all(18.0),
-      backgroundColor: ColorPalettes.redLight,
+      backgroundColor: Theme.of(context).colorScheme.errorContainer,
       content: SizedBox(
         height: Sizes.height(context) * 0.065,
         child: Row(
@@ -37,7 +38,9 @@ class SnackbarError {
                 padding: const EdgeInsets.only(right: 18.0),
                 child: Icon(
                   Icons.error_outline,
-                  color: ColorPalettes.whiteSemiTransparent,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Theme.of(context).colorScheme.onSurfaceVariant
+                      : Theme.of(context).colorScheme.inverseSurface,
                 ),
               ),
             ),
@@ -55,8 +58,7 @@ class SnackbarError {
                           message,
                           style: TextStyle(
                             fontSize: 13,
-                            fontFamily: 'JosefinSans',
-                            color: ColorPalettes.whiteSemiTransparent,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         ),
                       ),

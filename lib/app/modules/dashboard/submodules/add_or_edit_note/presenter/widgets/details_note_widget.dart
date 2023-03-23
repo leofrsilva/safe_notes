@@ -32,7 +32,11 @@ class DetailsNoteWidget extends StatelessWidget {
           padding: const EdgeInsets.only(top: 4.0),
           child: Text(
             folder.name,
-            style: TextStyles.cardTitleFolder,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
           ),
         ),
       ],
@@ -50,7 +54,7 @@ class DetailsNoteWidget extends StatelessWidget {
                 'Última modificação: ${noteModel.dateModification.toStrDateTime}',
                 style: TextStyle(
                   fontSize: 11,
-                  color: ColorPalettes.grey,
+                  color: Theme.of(context).colorScheme.outline,
                 ),
               ),
               const SizedBox(height: 1.0),
@@ -58,7 +62,7 @@ class DetailsNoteWidget extends StatelessWidget {
                 'Criado: ${noteModel.dateCreate.toStrDate}',
                 style: TextStyle(
                   fontSize: 11,
-                  color: ColorPalettes.grey,
+                  color: Theme.of(context).colorScheme.outline,
                 ),
               ),
             ],

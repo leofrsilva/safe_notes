@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 
 import 'card_folder.dart';
 
@@ -50,7 +49,10 @@ class CardFolderEditable extends StatelessWidget {
                 padding: const EdgeInsets.all(11.0),
                 child: CircleAvatar(
                   radius: 8.5,
-                  backgroundColor: ColorPalettes.white,
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.white60
+                          : Colors.black38,
                 ),
               ),
             ),
@@ -61,9 +63,9 @@ class CardFolderEditable extends StatelessWidget {
                 child: Checkbox(
                   fillColor: MaterialStateProperty.resolveWith((states) {
                     if (states.contains(MaterialState.selected)) {
-                      return ColorPalettes.secondy;
+                      return Theme.of(context).colorScheme.primary;
                     }
-                    return ColorPalettes.grey;
+                    return Theme.of(context).colorScheme.secondary;
                   }),
                   side: MaterialStateBorderSide.resolveWith(
                       (Set<MaterialState> states) {
@@ -71,7 +73,7 @@ class CardFolderEditable extends StatelessWidget {
                       return null;
                     }
                     return BorderSide(
-                      color: ColorPalettes.grey,
+                      color: Theme.of(context).colorScheme.secondary,
                       width: 1.25,
                     );
                   }),

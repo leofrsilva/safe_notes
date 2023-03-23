@@ -59,49 +59,94 @@ class _CustomButtonState extends State<CustomButton>
           offset: Offset(
               _animationTween.value * (widget.isInvertAnimation ? -387 : 385),
               0),
-          child: Opacity(opacity: opacity(), child: child),
+          child: Opacity(
+            opacity: opacity(),
+            child: child,
+          ),
         );
       },
+
+      // child: SizedBox(
+      //   width: Sizes.width(context) * .9,
+      //   child: InkWell(
+      //     onTap: widget.onTap,
+      // splashColor: Theme.of(context).colorScheme.tertiary,
+      // highlightColor: Theme.of(context).colorScheme.primary,
+      // borderRadius: BorderRadius.circular(Sizes.dp10(context)),
+      // child: Ink(
+      // decoration: BoxDecoration(
+      //   color: Theme.of(context).colorScheme.primary,
+      //   borderRadius: BorderRadius.circular(Sizes.dp10(context)),
+      //   gradient: widget.isGradient
+      //       ? LinearGradient(
+      //           colors: <Color>[
+      //             Theme.of(context).colorScheme.primary,
+      //             Theme.of(context).colorScheme.tertiary,
+      //           ],
+      //           begin: AlignmentDirectional.topStart,
+      //           end: AlignmentDirectional.bottomEnd,
+      //         )
+      //       : null,
+      // ),
+      // child: Container(
+      //   constraints: BoxConstraints(
+      //     minWidth: Sizes.width(context) * .9,
+      //     minHeight: 45.0,
+      //   ),
+      //   alignment: Alignment.center,
+      //   child: Text(
+      //     widget.text,
+      //     textAlign: TextAlign.center,
+      //     style: TextStyle(
+      //       fontSize: 18,
+      //       fontWeight: FontWeight.bold,
+      //       color: Theme.of(context).colorScheme.onInverseSurface,
+      //     ),
+      //   ),
+      // ),
+      // ),
+      // ),
+      // ),
       child: Container(
+        height: 45.0,
         width: Sizes.width(context) * .9,
-        height: 45,
         decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(Sizes.dp10(context)),
+          gradient: widget.isGradient
+              ? LinearGradient(
+                  colors: <Color>[
+                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context).colorScheme.tertiary,
+                  ],
+                  begin: AlignmentDirectional.topStart,
+                  end: AlignmentDirectional.bottomEnd,
+                )
+              : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            splashColor: Theme.of(context).colorScheme.tertiary,
+            highlightColor: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(Sizes.dp10(context)),
-            gradient: widget.isGradient
-                ? LinearGradient(
-                    colors: <Color>[
-                      Theme.of(context).primaryColor,
-                      ColorPalettes.secondy,
-                    ],
-                    begin: AlignmentDirectional.topStart,
-                    end: AlignmentDirectional.bottomEnd,
-                  )
-                : null,
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: ColorPalettes.black.withOpacity(0.2),
-                blurRadius: 10.0,
-                spreadRadius: 0.0,
-                offset: const Offset(2.0, 2.0),
+            onTap: widget.onTap,
+            child: Align(
+              // child: Container(
+              // constraints: BoxConstraints(
+              //   minWidth: Sizes.width(context) * .9,
+              //   minHeight: 45.0,
+              // ),
+              alignment: Alignment.center,
+              child: Text(
+                widget.text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                ),
               ),
-            ]),
-        child: TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: ColorPalettes.lightBG,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                Sizes.dp10(context),
-              ),
-            ),
-          ),
-          onPressed: widget.onTap,
-          child: Text(
-            widget.text,
-            style: const TextStyle(
-              fontFamily: 'JosefinSans',
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
             ),
           ),
         ),

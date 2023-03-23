@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/style/styles.dart';
 
 class CustomExpansionTileWithPopup extends StatefulWidget {
   const CustomExpansionTileWithPopup({
@@ -12,7 +11,7 @@ class CustomExpansionTileWithPopup extends StatefulWidget {
     this.selected = false,
     this.selectedColor,
     this.onLongPress,
-    required this.onChangedCheck,
+    this.onChangedCheck,
     this.onExpansionChanged,
     this.children = const <Widget>[],
     this.trailing,
@@ -48,7 +47,7 @@ class CustomExpansionTileWithPopup extends StatefulWidget {
 
   final Function()? onLongPress;
 
-  final Function(bool?) onChangedCheck;
+  final Function(bool?)? onChangedCheck;
 
   /// Called when the tile expands or collapses.
   ///
@@ -213,7 +212,8 @@ class CustomExpansionTileWithPopupState
             if (states.contains(MaterialState.selected)) {
               return _selectColor;
             }
-            return ColorPalettes.blueGrey;
+            // return ColorPalettes.blueGrey;
+            return Colors.blueGrey;
           }),
           visualDensity: VisualDensity.compact,
           shape: RoundedRectangleBorder(
@@ -221,7 +221,7 @@ class CustomExpansionTileWithPopupState
           ),
           onChanged: (newValue) {
             setState(() => _check = newValue ?? _check);
-            widget.onChangedCheck(newValue);
+            widget.onChangedCheck?.call(newValue);
           },
         ),
       ),
@@ -263,7 +263,11 @@ class CustomExpansionTileWithPopupState
                       borderRadius: BorderRadius.circular(8.0),
                       onTap: onExpanded,
                       child: Padding(
-                        padding: const EdgeInsets.all(6.0),
+                        padding: const EdgeInsets.only(
+                          left: 6.0,
+                          right: 6.0,
+                          bottom: 6.0,
+                        ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -293,8 +297,11 @@ class CustomExpansionTileWithPopupState
   @override
   void didChangeDependencies() {
     final ThemeData theme = Theme.of(context);
-    _selectColor = widget.selectedColor ?? theme.primaryColor.withOpacity(0.25);
-    _materialColor = widget.backgroundColor ?? theme.primaryColor;
+    _selectColor =
+        widget.selectedColor ?? theme.colorScheme.primary.withOpacity(0.20);
+    _materialColor = widget.backgroundColor ??
+        Theme.of(context).drawerTheme.backgroundColor ??
+        Theme.of(context).colorScheme.background;
     super.didChangeDependencies();
   }
 

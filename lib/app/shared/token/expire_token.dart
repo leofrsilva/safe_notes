@@ -68,7 +68,7 @@ class ExpireToken extends IExpireToken {
 
     int issuedAt = DateTime.now().millisecondsSinceEpoch;
     int expire = DateTime.fromMillisecondsSinceEpoch(issuedAt)
-        .add(const Duration(minutes: 300))
+        .add(const Duration(minutes: 480))
         .millisecondsSinceEpoch;
 
     final payload = {

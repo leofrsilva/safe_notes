@@ -1,35 +1,27 @@
-import 'package:flutter_triple/flutter_triple.dart';
-import 'package:safe_notes/app/shared/errors/failure.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ThemeStore extends StreamStore<Failure, bool> {
-  final String _theme = 'theme';
+class ThemeStore {
+  final _key = 'brightness';
 
-  ThemeStore() : super(false) {
-    loadTheme();
-  }
+  ValueNotifier<bool> brightnessDark = ValueNotifier<bool>(false);
 
   Future<void> loadTheme() async {
-    setLoading(true);
-    final isDark = await getValueDarkTheme();
-    update(isDark, force: true);
-    setLoading(false);
+    brightnessDark.value = await getBrightnessDark();
   }
 
   Future<void> changeTheme(bool isDark) async {
-    setLoading(true);
-    await saveValueDarkTheme(isDark: isDark);
-    update(isDark, force: true);
-    setLoading(false);
+    await _setPreferences(isDark);
+    brightnessDark.value = isDark;
   }
 
-  Future saveValueDarkTheme({bool isDark = false}) async {
-    var shared = await SharedPreferences.getInstance();
-    shared.setBool(_theme, isDark);
+  Future<bool> _setPreferences(bool value) async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setBool(_key, value);
   }
 
-  Future<bool> getValueDarkTheme() async {
-    var shared = await SharedPreferences.getInstance();
-    return shared.getBool(_theme) ?? false;
+  Future<bool> getBrightnessDark() async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(_key) ?? false;
   }
 }

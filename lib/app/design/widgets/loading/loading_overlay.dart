@@ -50,14 +50,16 @@ class _FullScreenLoaderState extends State<_FullScreenLoader>
   Widget build(BuildContext context) {
     return Container(
       alignment: AlignmentDirectional.center,
-      decoration: const BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.5)),
+      decoration: const BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.6)),
       child: Stack(
         children: [
           Center(
             child: Icon(
               Icons.lock,
               size: 28,
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Theme.of(context).colorScheme.surfaceVariant
+                  : Theme.of(context).colorScheme.inverseSurface,
             ),
           ),
           Center(
@@ -66,7 +68,9 @@ class _FullScreenLoaderState extends State<_FullScreenLoader>
               child: Icon(
                 Icons.refresh_rounded,
                 size: 85,
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Theme.of(context).colorScheme.surfaceVariant
+                    : Theme.of(context).colorScheme.inverseSurface,
               ),
               builder: (context, widget) {
                 return Transform.rotate(

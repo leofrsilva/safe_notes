@@ -48,6 +48,7 @@ class CardNote extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             width: width,
@@ -79,7 +80,7 @@ class CardNote extends StatelessWidget {
                           maxLines: 12,
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.fade,
-                          style: TextStyles.cardBodyNote,
+                          style: TextStyles.cardBodyNote(context),
                         ),
                       ),
                     ),
@@ -107,7 +108,7 @@ class CardNote extends StatelessWidget {
               maxLines: 2,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style: TextStyles.cardTitleNote,
+              style: TextStyles.cardTitleNote(context),
             ),
           ),
           Container(
@@ -117,15 +118,18 @@ class CardNote extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 3.0),
-                  child: Text(
-                    date.day == DateTime.now().day
-                        ? '${date.hour}:${date.minute.toString().padLeft(2, '0')}'
-                        : DateConvert.dateToString(date),
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.cardDateNote,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 3.0),
+                    child: Text(
+                      date.day == DateTime.now().day
+                          ? '${date.hour}:${date.minute.toString().padLeft(2, '0')}'
+                          : DateConvert.dateToString(date),
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyles.cardDateNote,
+                    ),
                   ),
                 ),
                 if (favorite)
@@ -135,7 +139,7 @@ class CardNote extends StatelessWidget {
                     ),
                     child: Icon(
                       Icons.star_rounded,
-                      color: ColorPalettes.yellow,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 14,
                     ),
                   ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/style/styles.dart';
 import 'package:safe_notes/app/design/common/util/utils.dart';
 import 'package:safe_notes/app/design/widgets/textfield/text_overflow_field.dart';
 
@@ -62,13 +61,15 @@ class CustomTextFieldTitleNote extends StatelessWidget {
     if (onPressedModelView != null) {
       if (modeView == ModeViewEnum.reading) {
         iconActions.add(IconButton(
-          color: ColorPalettes.grey,
+          color: Colors.grey,
+          // color: ColorPalettes.grey,
           icon: const Icon(Icons.menu_book_rounded),
           onPressed: onPressedModelView,
         ));
       } else {
         iconActions.add(IconButton(
-          color: ColorPalettes.grey,
+          color: Colors.grey,
+          // color: ColorPalettes.grey,
           icon: const Icon(Icons.edit_note),
           onPressed: onPressedModelView,
         ));
@@ -82,10 +83,11 @@ class CustomTextFieldTitleNote extends StatelessWidget {
       decoration: BoxDecoration(
         // color:  ColorPalettes.transparent,
         color: Theme.of(context).colorScheme.background,
+        // color: Colors.amber,
         border: Border(
           bottom: BorderSide(
             width: 1.0,
-            color: ColorPalettes.grey.withOpacity(0.2),
+            color: Colors.grey.withOpacity(0.2),
           ),
         ),
       ),
@@ -120,14 +122,12 @@ class CustomTextFieldTitleNote extends StatelessWidget {
           AnimatedOpacity(
             opacity: expanded ? 0.0 : 1.0,
             duration: duration,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: SizedBox(
-                width: widthActions,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: iconActions,
-                ),
+            child: SizedBox(
+              width: widthActions,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: iconActions,
               ),
             ),
           ),
@@ -136,7 +136,7 @@ class CustomTextFieldTitleNote extends StatelessWidget {
             duration: duration,
             child: Align(
               alignment: Alignment.topRight,
-              child: iconFavorite(),
+              child: iconFavorite(context),
             ),
           ),
           Align(
@@ -148,12 +148,13 @@ class CustomTextFieldTitleNote extends StatelessWidget {
     );
   }
 
-  Widget iconFavorite() {
+  Widget iconFavorite(BuildContext context) {
     return IconButton(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
       icon: Icon(
         isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
-        color: isFavorite ? ColorPalettes.yellow : ColorPalettes.grey,
+        color: isFavorite ? Theme.of(context).colorScheme.primary : null,
+        // color: isFavorite ? ColorPalettes.yellow : ColorPalettes.grey,
         size: 30,
       ),
       onPressed: onTapFavorite,
@@ -171,7 +172,7 @@ class CustomTextFieldTitleNote extends StatelessWidget {
           duration: duration,
           child: Icon(
             Icons.keyboard_arrow_left,
-            color: turnsColor ?? Theme.of(context).primaryColor,
+            color: turnsColor,
             size: 32,
           ),
         ),
@@ -204,20 +205,16 @@ class CustomTextFieldTitleNote extends StatelessWidget {
       spaceRight: 12,
       onTapTextField: onTapTextField,
       onChanged: onChanged,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 24,
         // height: expanded ? null : 3.5,
         overflow: TextOverflow.ellipsis,
-        fontFamily: 'JosefinSans',
         fontWeight: FontWeight.w600,
-        color: ColorPalettes.blueGrey,
       ),
       hintText: 'Título',
-      hintStyle: TextStyle(
+      hintStyle: const TextStyle(
         fontSize: 24,
-        fontFamily: 'JosefinSans',
         fontWeight: FontWeight.w600,
-        color: ColorPalettes.grey.withOpacity(0.2),
       ),
       border: InputBorder.none,
     );

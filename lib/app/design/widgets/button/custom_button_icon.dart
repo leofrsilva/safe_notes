@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/style/styles.dart';
 
 class CustomButtonIcon extends StatelessWidget {
   final String text;
@@ -24,17 +23,11 @@ class CustomButtonIcon extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Icon(
-              icon,
-              color: ColorPalettes.black,
-            ),
+            Icon(icon),
             const SizedBox(height: 5.0),
             Text(
               text,
-              style: TextStyle(
-                fontSize: 12.0,
-                color: ColorPalettes.black54,
-              ),
+              style: const TextStyle(fontSize: 12.0),
             ),
           ],
         ),

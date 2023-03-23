@@ -102,7 +102,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: paddingTop),
-      height: 70 + paddingTop,
+      height: 72 + paddingTop,
       child: FormField<String>(
           autovalidateMode: widget.autovalidateMode,
           initialValue: widget.controller != null
@@ -118,18 +118,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
+                      SizedBox(
                         height: state.hasError ? 30 : 45,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                              color: ColorPalettes.black.withOpacity(0.035),
-                              blurRadius: 10.0,
-                              spreadRadius: 0.0,
-                            ),
-                          ],
-                        ),
                         child: TextField(
                           controller: widget.controller,
                           keyboardType: widget.isEmail
@@ -137,11 +127,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
                               : null,
                           focusNode: focusNode,
                           obscureText: isNotVisible,
-                          style: TextStyles.fieldStyle.copyWith(
-                            height: 0.9,
+                          style: TextStyles.fieldStyle(context).copyWith(
+                            height: state.hasError ? 1.1 : 0.9,
                           ),
+                          cursorColor:
+                              Theme.of(context).colorScheme.inverseSurface,
                           inputFormatters: widget.inputFormatters,
-                          cursorColor: Theme.of(context).primaryColor,
                           onChanged: (text) {
                             currentText = text;
                             state.didChange(text);
@@ -156,36 +147,37 @@ class _CustomTextFieldState extends State<CustomTextField> {
                               : null,
                           decoration: InputDecoration(
                             hintText: widget.hint,
-                            hintStyle: TextStyles.fieldStyle.copyWith(
-                              color: ColorPalettes.grey,
+                            hintStyle: TextStyles.fieldStyle(context).copyWith(
                               height: 3.5,
                             ),
                             filled: true,
-                            fillColor: ColorPalettes.whiteSemiTransparent,
-                            hoverColor: ColorPalettes.whiteSemiTransparent,
+                            fillColor:
+                                Theme.of(context).colorScheme.surfaceVariant,
+                            hoverColor:
+                                Theme.of(context).colorScheme.surfaceVariant,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide.none,
                             ),
                             suffixIcon: widget.isPass
                                 ? isNotVisible
-                                    ? GestureDetector(
-                                        child: const Icon(
+                                    ? IconButton(
+                                        visualDensity: VisualDensity.compact,
+                                        icon: const Icon(
                                           Icons.visibility_outlined,
                                           size: 22,
                                         ),
-                                        onTap: () {
-                                          setState(() => isNotVisible = false);
-                                        },
+                                        onPressed: () => setState(
+                                            () => isNotVisible = false),
                                       )
-                                    : GestureDetector(
-                                        child: const Icon(
+                                    : IconButton(
+                                        visualDensity: VisualDensity.compact,
+                                        icon: const Icon(
                                           Icons.visibility_off_outlined,
                                           size: 22,
                                         ),
-                                        onTap: () {
-                                          setState(() => isNotVisible = true);
-                                        },
+                                        onPressed: () =>
+                                            setState(() => isNotVisible = true),
                                       )
                                 : null,
                           ),
@@ -197,7 +189,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                           padding: const EdgeInsets.only(top: 6.0),
                           child: Text(
                             " ${state.errorText}",
-                            style: TextStyles.errorFieldStyle,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
                           ),
                         ),
                     ],
@@ -211,10 +205,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       curve: Curves.linearToEaseOut,
                       start: value ? 2.0 : 7.0,
                       bottom: value
-                          ? 50.0
+                          ? state.hasError
+                              ? 52.0
+                              : 50.0
                           : state.hasError
-                              ? 24.0
-                              : 13.0,
+                              ? 28.0
+                              : 11.0,
                       child: IgnorePointer(
                         child: Text(
                           widget.title,

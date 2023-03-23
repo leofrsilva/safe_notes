@@ -11,7 +11,7 @@ class SnackbarWarning {
     height = height ?? Sizes.height(context) * 0.03;
     final snackBar = SnackBar(
       padding: const EdgeInsets.all(18.0),
-      backgroundColor: ColorPalettes.blueGrey,
+      backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
       content: SizedBox(
         height: height,
         child: Center(
@@ -19,8 +19,7 @@ class SnackbarWarning {
             message,
             style: TextStyle(
               fontSize: 14,
-              fontFamily: 'JosefinSans',
-              color: ColorPalettes.whiteSemiTransparent,
+              color: Theme.of(context).colorScheme.surfaceVariant,
             ),
           ),
         ),

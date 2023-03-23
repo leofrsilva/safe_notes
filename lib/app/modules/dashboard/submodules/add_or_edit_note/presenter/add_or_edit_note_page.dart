@@ -131,8 +131,8 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
                 children: [
                   RawScrollbar(
                     thickness: 8.0,
-                    //! isAlwaysShown: isFocusBody(context) ? true : false,
-                    thumbColor: ColorPalettes.secondy,
+                    thumbColor:
+                        Theme.of(context).colorScheme.outline.withOpacity(0.35),
                     radius: const Radius.circular(20),
                     child: TextField(
                       scrollController:
@@ -141,6 +141,9 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
                       controller: _editingControllerBody,
                       focusNode: _focusNodeBody,
                       maxLines: _maxLines,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(4903),
                       ],
@@ -164,7 +167,7 @@ class _AddOrEditNotePageState extends State<AddOrEditNotePage> {
                     return GestureDetector(
                       onTap: () => unFocusTitle(),
                       child: Container(
-                        color: ColorPalettes.black26,
+                        color: Colors.black45,
                         width: Sizes.width(context),
                         height: Sizes.height(context) -
                             (50.0 + Sizes.heightStatusBar(context)),

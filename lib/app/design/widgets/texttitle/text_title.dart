@@ -24,14 +24,14 @@ class TextTitle extends StatelessWidget {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: size ?? 22,
-        fontFamily: 'JosefinSans',
         fontWeight: fontWeight ?? FontWeight.bold,
-        color: color ?? Theme.of(context).primaryColor,
+        color: color,
       ),
     );
     if (gradient == null) {
       return textWidget;
     }
+
     return ShaderMask(
       blendMode: BlendMode.srcIn,
       shaderCallback: (bounds) => gradient!.createShader(

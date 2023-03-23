@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:safe_notes/app/app_core.dart';
-import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 import 'package:safe_notes/app/design/widgets/snackbar/snackbar_error.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
 import 'package:safe_notes/app/shared/database/models/folder_model.dart';
@@ -37,6 +36,11 @@ class ManagerFoldersController extends Disposable {
 
   String get userUId => _appCore.getUsuario()?.docRef ?? '';
 
+  callMoveForFolderPage(
+    BuildContext context,
+    FolderModel folderModel,
+  ) {}
+
   callAddSubFolderPage(
     BuildContext context,
     FolderModel folderModel,
@@ -44,7 +48,7 @@ class ManagerFoldersController extends Disposable {
     showDialog(
       context: context,
       barrierDismissible: true,
-      barrierColor: ColorPalettes.black26,
+      // barrierColor: ColorPalettes.black26,
       builder: (context) {
         return AddFolderPage(
           folderModel: folderModel,
@@ -61,7 +65,7 @@ class ManagerFoldersController extends Disposable {
     showDialog(
       context: context,
       barrierDismissible: true,
-      barrierColor: ColorPalettes.black26,
+      // barrierColor: ColorPalettes.black26,
       builder: (context) {
         return EditNamePage(
           folderModel: folderModel,
@@ -78,7 +82,7 @@ class ManagerFoldersController extends Disposable {
     showDialog(
       context: context,
       barrierDismissible: true,
-      barrierColor: ColorPalettes.black26,
+      // barrierColor: ColorPalettes.black26,
       builder: (context) {
         return EditColorPage(
           folderModel: folderModel,
@@ -94,7 +98,7 @@ class ManagerFoldersController extends Disposable {
     showDialog(
       context: context,
       barrierDismissible: true,
-      barrierColor: ColorPalettes.black26,
+      // barrierColor: ColorPalettes.black26,
       builder: (context) {
         return DeleteFolderPage(
           listFolderModel: folders,

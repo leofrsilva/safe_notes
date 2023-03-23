@@ -40,6 +40,18 @@ class LoginController {
   }
 
   Future<void> login(BuildContext context) async {
+    // await LoadingOverlay.show(
+    //   context,
+    //   Future.delayed(const Duration(milliseconds: 2000), () {
+    //     SnackbarError.show(
+    //       context,
+    //       title: 'Erro ao Logar',
+    //       message: 'A senha está está errada!',
+    //     );
+    //   }),
+    // );
+
+    // return;
     failure = null;
     final formState = formKey.currentState;
     if (formState != null) {

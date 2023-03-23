@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/design/common/util/utils.dart';
 
@@ -24,24 +23,24 @@ class HeaderRelogar extends StatelessWidget {
     late AlignmentDirectional alignmentClose;
     late AlignmentDirectional alignmentContainer;
 
+    var heightTotal = Sizes.height(context) - Sizes.heightStatusBar(context);
     if (Sizes.orientation(context) == Orientation.portrait) {
-      height = Sizes.height(context) * 0.35;
-      sizeLogo = Sizes.height(context) * 0.12;
+      height = heightTotal * 0.30;
+      sizeLogo = heightTotal * 0.12;
       heightSubTitle = Sizes.width(context) / 1.5;
-      fontSizeNameUser = Sizes.height(context) * 0.15 / 6;
+      fontSizeNameUser = heightTotal * 0.15 / 6;
 
       mainAxisAlignment = MainAxisAlignment.end;
       alignmentClose = AlignmentDirectional.topEnd;
-      alignmentContainer = AlignmentDirectional.bottomCenter;
+      alignmentContainer = AlignmentDirectional.center;
     } else {
-      height = (Sizes.height(context) - Sizes.heightStatusBar(context)) *
-          (1 - 0.015);
-      sizeLogo = Sizes.height(context) * 0.2;
+      height = (heightTotal - Sizes.heightStatusBar(context)) * (1 - 0.015);
+      sizeLogo = heightTotal * 0.2;
       heightSubTitle = (Sizes.width(context) * 0.4) / 1.5;
       fontSizeNameUser = sizeLogo / 5;
 
       mainAxisAlignment = MainAxisAlignment.center;
-      alignmentClose = AlignmentDirectional.topStart;
+      alignmentClose = AlignmentDirectional.topEnd;
       alignmentContainer = AlignmentDirectional.center;
     }
 
@@ -50,10 +49,9 @@ class HeaderRelogar extends StatelessWidget {
         Align(
           alignment: alignmentClose,
           child: IconButton(
-            color: ColorPalettes.secondy,
             icon: Icon(
               Icons.close_outlined,
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.primary,
             ),
             onPressed: onPressedIcon,
           ),
@@ -77,7 +75,7 @@ class HeaderRelogar extends StatelessWidget {
                       alignment: AlignmentDirectional.center,
                       child: Image.asset(
                         ImagesAssets.imgLoginBg,
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         width: sizeLogo,
                         fit: BoxFit.cover,
                       ),
@@ -87,7 +85,7 @@ class HeaderRelogar extends StatelessWidget {
                       size: sizeLogo / 4,
                       text: 'Safe Notes',
                       fontWeight: FontWeight.w600,
-                      color: ColorPalettes.blueGrey,
+                      color: Theme.of(context).colorScheme.inverseSurface,
                     ),
                   ],
                 ),
@@ -103,7 +101,9 @@ class HeaderRelogar extends StatelessWidget {
                               style: TextStyle(
                                 fontFamily: 'JosefinSans',
                                 fontWeight: FontWeight.w600,
-                                color: ColorPalettes.blueGrey,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface,
                                 fontSize: sizeLogo / 6,
                               ),
                               children: [
@@ -113,7 +113,8 @@ class HeaderRelogar extends StatelessWidget {
                                     fontFamily: 'JosefinSans',
                                     fontWeight: FontWeight.w600,
                                     height: 1.2,
-                                    color: Theme.of(context).primaryColor,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                     fontSize: fontSizeNameUser,
                                   ),
                                 ),

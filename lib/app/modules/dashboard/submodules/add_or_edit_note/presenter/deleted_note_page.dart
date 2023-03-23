@@ -71,7 +71,8 @@ class _DeletedNotePageState extends State<DeletedNotePage> {
               children: [
                 RawScrollbar(
                   thickness: 8.0,
-                  thumbColor: ColorPalettes.secondy,
+                  thumbColor:
+                      Theme.of(context).colorScheme.outline.withOpacity(0.35),
                   radius: const Radius.circular(20),
                   child: TextField(
                     readOnly: true,
@@ -83,6 +84,9 @@ class _DeletedNotePageState extends State<DeletedNotePage> {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(4903),
                     ],
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                     decoration: const InputDecoration(
                       contentPadding: EdgeInsets.all(12.0),
                       border: InputBorder.none,
@@ -105,39 +109,12 @@ class _DeletedNotePageState extends State<DeletedNotePage> {
                 isFavorite: widget.note.favorite,
                 controller: _editingControllerTitle,
                 onTapIcon: () => Modular.to.pop(),
-                widthActions: 180.0,
+                widthActions: Sizes.width(context) * 0.3,
                 actions: [
-                  TextButton(
-                    child: const Padding(
-                      padding: EdgeInsets.only(top: 4.0),
-                      child: Text(
-                        'Restaurar',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+                  IconButton(
+                    icon: const Icon(Icons.replay_rounded),
                     onPressed: () {
                       _controller.restoreNotes(context, widget.note);
-                    },
-                  ),
-                  TextButton(
-                    child: const Padding(
-                      padding: EdgeInsets.only(top: 4.0),
-                      child: Text(
-                        'Excluir',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      _controller.deletePersistentNotes(
-                        context,
-                        widget.note,
-                      );
                     },
                   ),
                 ],
@@ -146,25 +123,44 @@ class _DeletedNotePageState extends State<DeletedNotePage> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 15.0,
-          horizontal: 12.0,
+      bottomNavigationBar: Card(
+        margin: EdgeInsets.zero,
+        shadowColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
         ),
-        decoration: BoxDecoration(
-          border: BorderDirectional(
-            top: BorderSide(
-              width: 1,
-              color: ColorPalettes.grey,
-            ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 15.0,
+            horizontal: 12.0,
           ),
-        ),
-        child: Row(
-          children: const [
-            Expanded(
-              child: Text('Este conteúdo excluído em 30 dias.'),
-            ),
-          ],
+          decoration: BoxDecoration(
+            border: Border(
+                top: BorderSide(
+              color: Theme.of(context).colorScheme.surfaceVariant,
+            )),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text(
+                'Este conteúdo excluído em ${widget.note.deletionExpiration} dias.',
+              )),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  visualDensity: VisualDensity.compact,
+                  icon: const Icon(Icons.delete_outline_rounded),
+                  onPressed: () {
+                    _controller.deletePersistentNotes(
+                      context,
+                      widget.note,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

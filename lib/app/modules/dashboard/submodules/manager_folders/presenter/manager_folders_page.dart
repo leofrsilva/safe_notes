@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 
 import '../../../presenter/reactive/i_reactive_list.dart';
 import '../../../presenter/reactive/reactive_list.dart';
@@ -60,42 +59,44 @@ class _ManagerFoldersPageState extends State<ManagerFoldersPage> {
                 ),
                 child: Divider(
                   thickness: 2.0,
-                  color: ColorPalettes.whiteSemiTransparent,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                 ),
               ),
-              InkWell(
-                onTap: () => _controller.callAddSubFolderPage(
-                    context, _reactiveList.listFolder.first),
-                child: Container(
-                  height: 48,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton.icon(
+                      onPressed: () => _controller.callAddSubFolderPage(
+                        context,
+                        _reactiveList.listFolder.first,
+                      ),
+                      style: TextButton.styleFrom(
+                        alignment: Alignment.centerLeft,
+                      ),
+                      icon: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 14.0,
+                          right: 14.0,
+                          bottom: 5.0,
+                        ),
                         child: Icon(
                           Icons.add_outlined,
                           size: 30,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                      const SizedBox(width: 2.0),
-                      Text(
+                      label: Text(
                         'Criar Pasta',
                         style: TextStyle(
                           height: 1.5,
                           fontSize: 16.0,
-                          fontFamily: 'JosefinSans',
                           fontWeight: FontWeight.w600,
-                          color: ColorPalettes.blueGrey,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
               const SizedBox(height: 5.0),
             ],

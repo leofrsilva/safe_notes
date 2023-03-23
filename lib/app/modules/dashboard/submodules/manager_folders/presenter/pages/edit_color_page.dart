@@ -40,7 +40,7 @@ class _EditColorPageState extends State<EditColorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorPalettes.transparent,
+      backgroundColor: Colors.transparent,
       body: SizedBox(
         height: Sizes.height(context),
         child: Stack(
@@ -57,72 +57,70 @@ class _EditColorPageState extends State<EditColorPage> {
                     },
                   ),
                   GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: Container(
-                      width: 330.0,
-                      padding: const EdgeInsets.only(
-                        top: 15.0,
-                        left: 20.0,
-                        right: 20.0,
-                        bottom: 6.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Form(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: GridSelectionColor(
-                                title: 'Alterar cor da pasta',
-                                initalColor: folder.color,
-                                onChangeColor: (int color) {
-                                  folder = folder.copyWith(
-                                    color: color,
-                                    dateModification: DateTime.now(),
-                                  );
-                                  _controller.editFolder(context, folder);
-                                  Modular.to.pop();
-                                },
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    child: Card(
+                      child: Container(
+                        width: 330.0,
+                        padding: const EdgeInsets.only(
+                          top: 15.0,
+                          left: 20.0,
+                          right: 20.0,
+                          bottom: 6.0,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Form(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
+                                child: GridSelectionColor(
+                                  title: 'Alterar cor da pasta',
+                                  initalColor: folder.color,
+                                  onChangeColor: (int color) {
+                                    folder = folder.copyWith(
+                                      color: color,
+                                      dateModification: DateTime.now(),
+                                    );
+                                    _controller.editFolder(context, folder);
+                                    Modular.to.pop();
+                                  },
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      )),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 5.0,
+                              SizedBox(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        )),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 5.0,
+                                          ),
+                                          child: Text(
+                                            'Cancelar',
+                                            style:
+                                                TextStyles.textButton(context),
+                                          ),
                                         ),
-                                        child: Text(
-                                          'Cancelar',
-                                          style: TextStyles.textButton(context),
-                                        ),
+                                        onPressed: () => Modular.to.pop(),
                                       ),
-                                      onPressed: () {
-                                        Modular.to.pop();
-                                      },
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

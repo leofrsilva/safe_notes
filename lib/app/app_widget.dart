@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 import 'package:safe_notes/app/design/common/common.dart';
 
 import 'modules/setting/controllers/theme_store.dart';
-import 'shared/errors/failure.dart';
 
 class AppWidget extends StatefulWidget {
   const AppWidget({Key? key}) : super(key: key);
@@ -26,18 +24,13 @@ class _AppWidgetState extends State<AppWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedBuilder<ThemeStore, Failure, bool>.transition(
-      store: themeStore,
-      onLoading: (context) => Container(
-        color: ColorPalettes.secondy,
-      ),
-      onState: (context, isDark) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: Modular.get<ThemeStore>().brightnessDark,
+      builder: (context, isDark, child) {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'Safe Notes',
-          themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-          theme: Themes.lightTheme,
-          darkTheme: Themes.darkTheme,
+          theme: isDark ? Themes.darkTheme : Themes.lightTheme,
           localizationsDelegates: const [
             GlobalWidgetsLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,

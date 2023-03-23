@@ -29,40 +29,36 @@ class GridFolderDeletedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        bottom: 8.0,
-      ),
-      child: Wrap(
-        alignment: WrapAlignment.start,
-        children: listFolders.map((folder) {
-          if (selectable) {
-            return CardFolderEditable(
-              qtd: reactive.numberChildrenInFolder(folder),
-              title: folder.name,
-              background: Color(folder.color),
-              selected: folderSelecteds.contains(folder),
-              onDeselect: () {
-                selection.removeItemFolderSelection(folder);
-              },
-              onLongPress: () {
-                selection.addItemFolderToSelection(folder);
-              },
-            );
-          }
-          return CardFolder(
-            qtd: reactive.numberChildrenInFolderDeleted(folder),
+    return Wrap(
+      alignment: WrapAlignment.start,
+      crossAxisAlignment: WrapCrossAlignment.start,
+      children: listFolders.map((folder) {
+        if (selectable) {
+          return CardFolderEditable(
+            qtd: reactive.numberChildrenInFolder(folder),
             title: folder.name,
             background: Color(folder.color),
-            onTap: () => onTap(folder),
+            selected: folderSelecteds.contains(folder),
+            onDeselect: () {
+              selection.removeItemFolderSelection(folder);
+            },
             onLongPress: () {
-              onLongPressCardFolder.call();
-              selection.toggleSelectable(true);
               selection.addItemFolderToSelection(folder);
             },
           );
-        }).toList(),
-      ),
+        }
+        return CardFolder(
+          qtd: reactive.numberChildrenInFolderDeleted(folder),
+          title: folder.name,
+          background: Color(folder.color),
+          onTap: () => onTap(folder),
+          onLongPress: () {
+            onLongPressCardFolder.call();
+            selection.toggleSelectable(true);
+            selection.addItemFolderToSelection(folder);
+          },
+        );
+      }).toList(),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:safe_notes/app/design/common/common.dart';
@@ -49,10 +48,6 @@ class _DashboardPageState extends State<DashboardPage>
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: ColorPalettes.transparent),
-    );
-
     return Scaffold(
       body: Stack(
         children: [
@@ -92,7 +87,7 @@ class _DashboardPageState extends State<DashboardPage>
                           width: Sizes.width(context),
                           height: Sizes.height(context),
                           child: ModalBarrier(
-                            color: ColorPalettes.black26,
+                            color: Colors.black26,
                             onDismiss: () {
                               if (drawerMenuController.isShowDrawer.value) {
                                 drawerMenuController.closeDrawer();

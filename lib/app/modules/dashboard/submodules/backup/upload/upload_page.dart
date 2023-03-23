@@ -23,7 +23,7 @@ class _UploadPageState extends State<UploadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorPalettes.black54,
+      backgroundColor: Colors.black54,
       body: SizedBox(
         height: Sizes.height(context),
         child: Stack(
@@ -59,9 +59,8 @@ class _UploadPageState extends State<UploadPage> {
                             TextSpan(
                               text:
                                   'Ao fazer Upload, as Pastas e Notas atuais serão Deletadas!',
-                              style: TextStyles.fieldStyle.copyWith(
+                              style: TextStyles.fieldStyle(context).copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: ColorPalettes.blueGrey,
                               ),
                             ),
                             textAlign: TextAlign.start,
@@ -93,11 +92,7 @@ class _UploadPageState extends State<UploadPage> {
                                         ),
                                         child: Text(
                                           'Cancelar',
-                                          style: TextStyles.textButton(context)
-                                              .copyWith(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
+                                          style: TextStyles.textButton(context),
                                         ),
                                       ),
                                       onPressed: () => Modular.to.pop(),
@@ -115,11 +110,7 @@ class _UploadPageState extends State<UploadPage> {
                                         ),
                                         child: Text(
                                           'Confirmar',
-                                          style: TextStyles.textButton(context)
-                                              .copyWith(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
+                                          style: TextStyles.textButton(context),
                                         ),
                                       ),
                                       onPressed: () {

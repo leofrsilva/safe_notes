@@ -38,7 +38,7 @@ class _DownloadPageState extends State<DownloadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorPalettes.black54,
+      backgroundColor: Colors.black54,
       body: SizedBox(
         height: Sizes.height(context),
         child: Stack(
@@ -73,9 +73,7 @@ class _DownloadPageState extends State<DownloadPage> {
                           child: Text.rich(
                             TextSpan(
                               text: 'Baixar Backup?',
-                              style: TextStyles.fieldStyle.copyWith(
-                                color: ColorPalettes.blueGrey,
-                              ),
+                              style: TextStyles.fieldStyle(context),
                             ),
                             textAlign: TextAlign.start,
                           ),
@@ -87,9 +85,7 @@ class _DownloadPageState extends State<DownloadPage> {
                                 const EdgeInsets.only(top: 5.0, bottom: 15.0),
                             child: Text(
                               'Nenhuma Pasta e Nota para efetura o Backup!',
-                              style: TextStyles.fieldStyle.copyWith(
-                                color: ColorPalettes.redLight,
-                              ),
+                              style: TextStyles.fieldStyle(context),
                               textAlign: TextAlign.start,
                             ),
                           ),
@@ -111,10 +107,7 @@ class _DownloadPageState extends State<DownloadPage> {
                                   ),
                                   child: Text(
                                     'Cancelar',
-                                    style:
-                                        TextStyles.textButton(context).copyWith(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
+                                    style: TextStyles.textButton(context),
                                   ),
                                 ),
                                 onPressed: () => Modular.to.pop(),
@@ -140,12 +133,7 @@ class _DownloadPageState extends State<DownloadPage> {
                                   ),
                                   child: Text(
                                     'Download',
-                                    style:
-                                        TextStyles.textButton(context).copyWith(
-                                      color: _controller.canNotDownload
-                                          ? ColorPalettes.grey
-                                          : Theme.of(context).primaryColor,
-                                    ),
+                                    style: TextStyles.textButton(context),
                                   ),
                                 ),
                               ),

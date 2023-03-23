@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 
 class ItemMenu extends StatelessWidget {
   final String text;
@@ -27,12 +26,13 @@ class ItemMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: selected
-          ? ColorPalettes.blueGrey.withOpacity(0.2)
-          : Theme.of(context).primaryColor,
+          ? Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.2)
+          : Theme.of(context).drawerTheme.backgroundColor,
       shape: ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       child: ListTile(
+        minLeadingWidth: 0.0,
         leading: Padding(
           padding: EdgeInsetsDirectional.only(
             start: paddingStart,
@@ -40,21 +40,25 @@ class ItemMenu extends StatelessWidget {
           ),
           child: Icon(
             icon,
-            color:
-                colorIcon != null ? Color(colorIcon!) : ColorPalettes.secondy,
+            color: colorIcon != null
+                ? Color(colorIcon!)
+                : Theme.of(context).colorScheme.inversePrimary,
             size: sizeIcon,
           ),
         ),
-        minLeadingWidth: 0.0,
         title: Text(
           text,
           textAlign: TextAlign.start,
           style: TextStyle(
             fontSize: selected ? 16 : null,
-            fontFamily: 'JosefinSans',
             fontWeight: selected ? FontWeight.bold : FontWeight.w600,
-            color: ColorPalettes.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).colorScheme.inverseSurface
+                : Theme.of(context).colorScheme.onInverseSurface,
           ),
+        ),
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
         trailing: trailing,
         onTap: onTap,

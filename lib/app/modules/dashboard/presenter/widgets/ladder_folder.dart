@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 import 'package:safe_notes/app/design/widgets/expansion/custom_expansion_tile.dart';
 import 'package:safe_notes/app/design/widgets/expansion/folder_expansion_tile.dart';
 import 'package:safe_notes/app/shared/database/models/folder_list_model.dart';
@@ -87,19 +86,22 @@ class _LadderFolderState extends State<LadderFolder> {
   @override
   Widget build(BuildContext context) {
     if (widget.listFolders.isEmpty) return Container();
-
     return FolderExpansionTile(
       initiallyExpanded: isExpanded(folderers!.current.folderId),
       selected: widget.selected == folderers!.current.folderId,
       title: folderers!.current.name,
       iconColor: Color(folderers!.current.color),
-      turnsColor: ColorPalettes.secondy.withOpacity(0.5),
-      selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
+      //
+      turnsColor: Theme.of(context).colorScheme.inversePrimary,
+      selectedColor:
+          Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.2),
       trailing: Text(
         qtdChildrenFolder(
           _reactiveList.numberChildrenInFolder(folderers!.current),
         ),
-        style: TextStyle(color: ColorPalettes.secondy),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.inversePrimary,
+        ),
       ),
       children: generaterWidgetsFolders(folderers!.childrens),
       onExpansionChanged: (bool isExpanded) {
@@ -109,9 +111,7 @@ class _LadderFolderState extends State<LadderFolder> {
           _reactiveList.notExpanded(folderId: folderers!.current.folderId);
         }
       },
-      onPressed: () {
-        widget.onTapFolder(folderers!.current);
-      },
+      onPressed: () => widget.onTapFolder(folderers!.current),
     );
   }
 
@@ -130,32 +130,47 @@ class _LadderFolderState extends State<LadderFolder> {
         initiallyExpanded: isExpanded(folderChild.current.folderId),
         selected: widget.selected == folderChild.current.folderId,
         spaceStart: padding,
-        turnsColor: ColorPalettes.secondy.withOpacity(0.5),
-        selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
+        // turnsColor: ColorPalettes.secondy.withOpacity(0.5),
+        // selectedColor: ColorPalettes.blueGrey.withOpacity(0.2),
+        // turnsColor: Colors.red.withOpacity(0.5),
+        // selectedColor: Colors.blueGrey.withOpacity(0.2),
+        //
+        // turnsColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.2),
+        // selectedColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.2),
+        //
+        // turnsColor: Color(folderChild.current.color),
+        // selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+        //
+        turnsColor: Theme.of(context).colorScheme.inversePrimary,
+        selectedColor:
+            Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.2),
         leading: Icon(
           Icons.folder_outlined,
           color: Color(folderChild.current.color),
         ),
         title: Text(
           folderChild.current.name,
-          maxLines: 3,
           textAlign: TextAlign.start,
+          maxLines: 3,
           style: TextStyle(
             height: 1.6,
             fontSize:
                 widget.selected == folderChild.current.folderId ? 16 : null,
-            fontFamily: 'JosefinSans',
             fontWeight: widget.selected == folderChild.current.folderId
                 ? FontWeight.bold
                 : FontWeight.w600,
-            color: ColorPalettes.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).colorScheme.inverseSurface
+                : Theme.of(context).colorScheme.onInverseSurface,
           ),
         ),
         trailing: Text(
           qtdChildrenFolder(
             _reactiveList.numberChildrenInFolder(folderChild.current),
           ),
-          style: TextStyle(color: ColorPalettes.secondy),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.inversePrimary,
+          ),
         ),
         children: generaterWidgetsFolders(folderChild.childrens),
         onExpansionChanged: (bool isExpanded) {
@@ -165,9 +180,7 @@ class _LadderFolderState extends State<LadderFolder> {
             _reactiveList.notExpanded(folderId: folderChild.current.folderId);
           }
         },
-        onPressed: () {
-          widget.onTapFolder(folderChild.current);
-        },
+        onPressed: () => widget.onTapFolder(folderChild.current),
       ));
     }
     return list;

@@ -48,6 +48,9 @@ class CardFolder extends StatelessWidget {
               child: Container(
                 width: size * 0.75,
                 height: size * 0.64,
+                margin: const EdgeInsetsDirectional.only(
+                  start: 2.0,
+                ),
                 decoration: BoxDecoration(
                   color: background,
                   borderRadius: BorderRadius.only(
@@ -66,14 +69,17 @@ class CardFolder extends StatelessWidget {
                     top: 0.75,
                     child: Icon(
                       Icons.folder_rounded,
-                      color: ColorPalettes.blueGrey.withOpacity(0.2),
-                      //? color: ColorPalettes.grey.withOpacity(0.2),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withOpacity(0.5),
                       size: size + 0.25,
                     ),
                   ),
                   Icon(
                     Icons.folder_rounded,
-                    color: color ?? ColorPalettes.white,
+                    color:
+                        color ?? Theme.of(context).colorScheme.onInverseSurface,
                     size: size,
                   ),
                   Positioned(
@@ -89,7 +95,7 @@ class CardFolder extends StatelessWidget {
                       child: Text(
                         qtd.toString(),
                         textAlign: TextAlign.start,
-                        style: TextStyles.cardTitleFolder,
+                        style: TextStyles.cardTitleFolder(context),
                       ),
                     ),
                   ),
@@ -111,7 +117,7 @@ class CardFolder extends StatelessWidget {
                         maxLines: 2,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyles.cardTitleFolder,
+                        style: TextStyles.cardTitleFolder(context),
                       ),
                     ),
                   ),

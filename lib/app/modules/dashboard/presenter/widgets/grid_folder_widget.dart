@@ -35,6 +35,7 @@ class GridFolderWidget extends StatelessWidget {
       ),
       child: Wrap(
         alignment: WrapAlignment.start,
+        crossAxisAlignment: WrapCrossAlignment.start,
         children: listFolders.map((folder) {
           if (selectable) {
             return CardFolderEditable(

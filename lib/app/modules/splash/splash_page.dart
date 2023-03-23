@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -15,7 +16,9 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends ModularState<SplashPage, SplashController> {
+class _SplashPageState extends State<SplashPage> {
+  late SplashController store;
+
   Future<String> _getVersion() async {
     if (Platform.isAndroid || Platform.isIOS) {
       final info = await PackageInfo.fromPlatform();
@@ -37,13 +40,25 @@ class _SplashPageState extends ModularState<SplashPage, SplashController> {
   @override
   void initState() {
     super.initState();
+    store = Modular.get<SplashController>();
     _startSplashPage(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Theme.of(context).brightness,
+      statusBarBrightness: Theme.of(context).brightness,
+      statusBarIconBrightness: Theme.of(context).brightness == Brightness.light
+          ? Brightness.dark
+          : Brightness.light,
+    ));
+
     return Material(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).brightness == Brightness.light
+          ? Theme.of(context).colorScheme.primary
+          : Theme.of(context).colorScheme.onPrimary,
       child: Column(
         children: [
           Expanded(
@@ -60,7 +75,9 @@ class _SplashPageState extends ModularState<SplashPage, SplashController> {
                   ),
                   SizedBox(height: Sizes.dp30(context)),
                   CircularProgressIndicator(
-                    color: ColorPalettes.white,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Theme.of(context).colorScheme.onBackground
+                        : Theme.of(context).colorScheme.background,
                   ),
                 ],
               ),
@@ -84,7 +101,9 @@ class _SplashPageState extends ModularState<SplashPage, SplashController> {
                       seeInfo,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: ColorPalettes.white,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Theme.of(context).colorScheme.onBackground
+                            : Theme.of(context).colorScheme.background,
                       ),
                     ),
                   );

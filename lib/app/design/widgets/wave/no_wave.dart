@@ -18,13 +18,13 @@ class NoWave extends StatelessWidget {
   Widget build(BuildContext context) {
     if (invertedColor) {
       gradient = <Color>[
-        ColorPalettes.secondy,
-        Theme.of(context).primaryColor,
+        Theme.of(context).colorScheme.tertiary,
+        Theme.of(context).colorScheme.primary,
       ];
     } else {
       gradient = <Color>[
-        Theme.of(context).primaryColor,
-        ColorPalettes.secondy,
+        Theme.of(context).colorScheme.primary,
+        Theme.of(context).colorScheme.tertiary,
       ];
     }
 

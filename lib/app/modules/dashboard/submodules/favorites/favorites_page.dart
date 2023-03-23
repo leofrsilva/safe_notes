@@ -154,22 +154,16 @@ class _FavoritesPageState extends State<FavoritesPage> with TemplatePageMixin {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: const [
                           Text(
                             'Nenhuma Anotação',
-                            style: TextStyle(
-                              color: ColorPalettes.blueGrey,
-                              fontSize: 20,
-                            ),
+                            style: TextStyle(fontSize: 20),
                           ),
-                          const SizedBox(height: 10.0),
+                          SizedBox(height: 10.0),
                           Text(
                             'Toque no botão Adicionar para criar uma nota.',
                             maxLines: 2,
-                            style: TextStyle(
-                              color: ColorPalettes.grey,
-                              fontSize: 15,
-                            ),
+                            style: TextStyle(fontSize: 15),
                           ),
                         ],
                       ),
@@ -181,8 +175,10 @@ class _FavoritesPageState extends State<FavoritesPage> with TemplatePageMixin {
                   behavior: NoGlowBehavior(),
                   child: SingleChildScrollView(
                     controller: super.scrollController,
-                    child: Padding(
+                    child: Container(
+                      width: Sizes.width(context),
                       padding: const EdgeInsets.only(bottom: 75.0),
+                      // padding: const EdgeInsets.only(),
                       child: GridNoteWidget(
                         selectable: selectable,
                         selection: _controller.selection,

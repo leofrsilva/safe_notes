@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:safe_notes/app/design/common/util/sizes.dart';
-import 'package:safe_notes/app/design/common/style/color_palettes.dart';
 import 'package:safe_notes/app/design/widgets/wave/wave_left.dart';
 
 class BarStatus extends StatelessWidget {
@@ -34,8 +33,8 @@ class BarStatus extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  ColorPalettes.secondy,
-                  Theme.of(context).primaryColor,
+                  Theme.of(context).colorScheme.tertiary,
+                  Theme.of(context).colorScheme.primary,
                 ],
                 begin: AlignmentDirectional.topStart,
                 end: AlignmentDirectional.bottomEnd,
@@ -55,7 +54,7 @@ class BarStatus extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
                     onPressed: onTapIconButtonPrevius,
                   ),

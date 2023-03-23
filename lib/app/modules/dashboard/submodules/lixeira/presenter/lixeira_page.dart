@@ -69,14 +69,8 @@ class _LixeiraPageState extends State<LixeiraPage>
                 .reactive
                 .listNoteDeleted
                 .isNotEmpty)
-          TextButton(
-            child: const Text(
-              'Editar',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+          IconButton(
+            icon: const Icon(Icons.edit_square),
             onPressed: () {
               _controller.selection.toggleSelectable(true);
             },
@@ -183,7 +177,7 @@ class _LixeiraPageState extends State<LixeiraPage>
           return true;
         },
         child: Padding(
-          padding: const EdgeInsets.all(14.0),
+          padding: const EdgeInsets.only(top: 14.0),
           child: AnimatedBuilder(
               animation: super.drawerMenu.listFieldsStore.reactive,
               builder: (context, child) {
@@ -198,22 +192,16 @@ class _LixeiraPageState extends State<LixeiraPage>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: const [
                           Text(
                             'Nenhum item',
-                            style: TextStyle(
-                              color: ColorPalettes.blueGrey,
-                              fontSize: 20,
-                            ),
+                            style: TextStyle(fontSize: 20),
                           ),
-                          const SizedBox(height: 10.0),
+                          SizedBox(height: 10.0),
                           Text(
                             'Qualquer item na Lixeira será excluído permanentemente após 30 dias.',
                             maxLines: 2,
-                            style: TextStyle(
-                              color: ColorPalettes.grey,
-                              fontSize: 15,
-                            ),
+                            style: TextStyle(fontSize: 15),
                           ),
                         ],
                       ),
@@ -226,24 +214,25 @@ class _LixeiraPageState extends State<LixeiraPage>
                   child: SingleChildScrollView(
                     controller: super.scrollController,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text(
                             'Os itens exibem os dias que restam para eles serem excluídos para sempre.',
-                            style: TextStyle(
-                              color: ColorPalettes.blueGrey,
-                              fontSize: 16,
-                            ),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                         const SizedBox(height: 10.0),
                         //?
                         //? FOLDERS
-                        Padding(
+                        Container(
+                          width: Sizes.width(context),
                           padding: EdgeInsets.only(
                             top: foldersDeleted.isEmpty ? 0.0 : 15.0,
+                            bottom: 12.0,
+                            right: 15.0,
+                            left: 15.0,
                           ),
                           child: GridFolderDeletedWidget(
                             selection: _controller.selection,
@@ -265,10 +254,13 @@ class _LixeiraPageState extends State<LixeiraPage>
                         ),
                         //?
                         //? NOTES
-                        Padding(
+                        Container(
+                          width: Sizes.width(context),
                           padding: const EdgeInsets.only(
                             top: 15.0,
                             bottom: 75.0,
+                            right: 12.0,
+                            left: 12.0,
                           ),
                           child: GridNoteDeletedWidget(
                             selectable: selectable,
@@ -329,9 +321,15 @@ class _LixeiraPageState extends State<LixeiraPage>
                     folderSelecteds,
                   );
                   if (context.mounted) {
+                    var msg = '';
+                    if ((noteSelecteds.length + folderSelecteds.length) > 1) {
+                      msg = 'Os itens foram restaurados.';
+                    } else {
+                      msg = 'O iten foi restaurado.';
+                    }
                     SnackbarWarning.show(
                       context,
-                      message: 'Os itens foram restaurados.',
+                      message: msg,
                     );
                   }
                 },

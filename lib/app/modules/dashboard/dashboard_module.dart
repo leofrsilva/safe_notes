@@ -202,11 +202,6 @@ class DashboardModule extends Module {
             ),
           ],
         ),
-        // ChildRoute(
-        //   '/perfil',
-        //   child: (_, __) => const PerfilPage(),
-        //   transition: TransitionType.rightToLeft,
-        // ),
         ModuleRoute(
           '/manager-folder',
           module: ManagerFoldersModule(),

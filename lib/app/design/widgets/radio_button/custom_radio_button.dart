@@ -62,7 +62,7 @@ class CustomRadioButton<T> extends StatelessWidget {
                         },
                         child: Text(
                           textOption1,
-                          style: TextStyles.fieldStyle,
+                          style: TextStyles.fieldStyle(context),
                         ),
                       ),
                     ],
@@ -84,7 +84,7 @@ class CustomRadioButton<T> extends StatelessWidget {
                         },
                         child: Text(
                           textOption2,
-                          style: TextStyles.fieldStyle,
+                          style: TextStyles.fieldStyle(context),
                         ),
                       ),
                     ],
@@ -94,7 +94,9 @@ class CustomRadioButton<T> extends StatelessWidget {
                       alignment: AlignmentDirectional.centerStart,
                       child: Text(
                         " ${state.errorText}",
-                        style: TextStyles.errorFieldStyle,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     ),
                 ],

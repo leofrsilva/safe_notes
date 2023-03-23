@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:safe_notes/app/design/common/common.dart';
-import 'package:safe_notes/app/shared/errors/failure.dart';
 
 import '../controllers/setting_controller.dart';
-import '../controllers/theme_store.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -51,7 +47,8 @@ class _SettingPageState extends State<SettingPage> {
                   child: Text(
                     'v${snapshot.data ?? ''}',
                     style: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ));
@@ -61,7 +58,7 @@ class _SettingPageState extends State<SettingPage> {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -69,36 +66,28 @@ class _SettingPageState extends State<SettingPage> {
               title: Text(
                 _controller.user?.name ?? '',
                 style: TextStyle(
-                  color: ColorPalettes.blueGrey,
                   fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               subtitle: Text(
                 _controller.user?.email ?? '',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-              ),
-              child: Divider(
-                thickness: 1.0,
-                color: ColorPalettes.blueGrey50,
-              ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.0),
+              child: Divider(thickness: 1.0),
             ),
-            ScopedBuilder<ThemeStore, Failure, bool>.transition(
-              store: _controller.theme,
-              onLoading: (context) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              },
-              onState: (context, isDark) {
+            ValueListenableBuilder<bool>(
+              valueListenable: _controller.theme.brightnessDark,
+              builder: (context, isDark, child) {
                 return SwitchListTile(
-                  title: Text(
+                  title: const Text(
                     'Modo Dark',
                     style: TextStyle(
-                      color: ColorPalettes.blueGrey,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -109,23 +98,15 @@ class _SettingPageState extends State<SettingPage> {
                 );
               },
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-              ),
-              child: Divider(
-                thickness: 1.0,
-                color: ColorPalettes.blueGrey50,
-              ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.0),
+              child: Divider(thickness: 1.0),
             ),
             const SizedBox(height: 16.0),
             ListTile(
-              title: Text(
+              title: const Text(
                 'Backup',
-                style: TextStyle(
-                  color: ColorPalettes.blueGrey,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
               subtitle: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -141,15 +122,21 @@ class _SettingPageState extends State<SettingPage> {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: _controller.dataEncrypt.isCorrectKey
-                            ? ColorPalettes.blueGrey
-                            : ColorPalettes.blueGrey50,
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.5),
                       ),
                     ),
                     subtitle: Text(
                       'Recuperar Backup e adicionar Pastas e Notas',
                       style: _controller.dataEncrypt.isCorrectKey
                           ? null
-                          : TextStyle(color: ColorPalettes.grey50),
+                          : TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                            ),
                     ),
                     onTap: () =>
                         Modular.to.pushNamed('/dashboard/backup/upload'),
@@ -162,15 +149,21 @@ class _SettingPageState extends State<SettingPage> {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: _controller.dataEncrypt.isCorrectKey
-                            ? ColorPalettes.blueGrey
-                            : ColorPalettes.blueGrey50,
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.5),
                       ),
                     ),
                     subtitle: Text(
                       'Gerar Backup das Pastas e suas Notas',
                       style: _controller.dataEncrypt.isCorrectKey
                           ? null
-                          : TextStyle(color: ColorPalettes.grey50),
+                          : TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                            ),
                     ),
                     onTap: () =>
                         Modular.to.pushNamed('/dashboard/backup/download'),

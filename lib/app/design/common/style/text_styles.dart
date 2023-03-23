@@ -1,71 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 
 class TextStyles {
-  static TextStyle errorFieldStyle = TextStyle(
-    fontSize: 13,
-    fontFamily: 'JosefinSans',
-    color: ColorPalettes.red,
-  );
+  static TextStyle errorFieldStyle(BuildContext context) => TextStyle(
+        fontSize: 13,
+        color: Theme.of(context).colorScheme.error,
+      );
 
-  static TextStyle fieldStyle = TextStyle(
-    fontSize: 14,
-    fontFamily: 'JosefinSans',
-    color: ColorPalettes.greyDark,
-  );
+  static TextStyle fieldStyle(BuildContext context) => TextStyle(
+        fontSize: 14,
+        color: Theme.of(context).colorScheme.inverseSurface,
+      );
 
   static TextStyle titleFieldStyle(BuildContext context) => TextStyle(
         fontSize: 15,
-        fontFamily: 'JosefinSans',
         fontWeight: FontWeight.w600,
-        color: Theme.of(context).primaryColor,
-      );
-
-  static TextStyle titleError(BuildContext context) => TextStyle(
-        fontSize: 15,
-        fontFamily: 'JosefinSans',
-        fontWeight: FontWeight.w600,
-        color: ColorPalettes.grey,
+        color: Theme.of(context).colorScheme.primary,
       );
 
   static TextStyle textButton(BuildContext context) => TextStyle(
         fontSize: 18,
-        fontFamily: 'JosefinSans',
         fontWeight: FontWeight.w600,
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).colorScheme.primary,
       );
 
-  static TextStyle titleFolderList = TextStyle(
-    fontSize: 13,
-    fontFamily: 'JosefinSans',
-    fontWeight: FontWeight.w600,
-    color: ColorPalettes.blueGrey,
-  );
+  static TextStyle titleFolderList(BuildContext context) => TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w600,
+        color: Theme.of(context).colorScheme.secondary,
+      );
 
   // CARDS
-  static TextStyle cardTitleFolder = TextStyle(
-    fontSize: 12,
-    fontFamily: 'JosefinSans',
-    fontWeight: FontWeight.w600,
-    color: ColorPalettes.blueGrey,
-  );
+  static TextStyle cardTitleFolder(BuildContext context) => TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        color: Theme.of(context).colorScheme.secondary,
+      );
 
-  static TextStyle cardTitleNote = const TextStyle(
-    fontSize: 15,
-    fontFamily: 'JosefinSans',
-    fontWeight: FontWeight.w600,
-    // color: ColorPalettes.blueGrey,
-  );
+  static TextStyle cardBodyNote(BuildContext context) => TextStyle(
+        fontSize: 12,
+        color: Theme.of(context).colorScheme.secondary,
+      );
 
-  static TextStyle cardDateNote = TextStyle(
-    fontSize: 12,
-    fontFamily: 'JosefinSans',
-    color: ColorPalettes.grey,
-  );
+  static TextStyle cardTitleNote(BuildContext context) => TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        color: Theme.of(context).colorScheme.tertiary,
+      );
 
-  static TextStyle cardBodyNote = TextStyle(
+  static TextStyle cardDateNote = const TextStyle(
     fontSize: 12,
-    fontFamily: 'JosefinSans',
-    color: ColorPalettes.blueGrey,
+    color: Colors.grey,
   );
 }

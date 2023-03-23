@@ -16,6 +16,7 @@ class FolderModule extends Module {
               i<SelectionStore>(),
               i<IEditNoteUsecase>(),
               i<IDeleteNoteUsecase>(),
+              i<IEditFolderUsecase>(),
               i<IDeleteFolderUsecase>(),
             )),
       ];

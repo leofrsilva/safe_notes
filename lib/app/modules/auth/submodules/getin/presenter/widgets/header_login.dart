@@ -7,8 +7,9 @@ class HeaderLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var height = Sizes.height(context) - Sizes.heightStatusBar(context);
     return SizedBox(
-      height: Sizes.height(context) * 0.30 - Sizes.heightStatusBar(context),
+      height: height * 0.30,
       width: Sizes.width(context),
       child: Stack(
         children: [
@@ -18,8 +19,8 @@ class HeaderLogin extends StatelessWidget {
               top: Sizes.heightStatusBar(context),
             ),
             alignment: AlignmentDirectional.center,
-            height:
-                Sizes.height(context) * 0.24 - Sizes.heightStatusBar(context),
+            height: height * 0.24,
+            // height: height * 0.24 - Sizes.heightStatusBar(context),
             child: Align(
               alignment: AlignmentDirectional.center,
               child: Row(
@@ -31,7 +32,7 @@ class HeaderLogin extends StatelessWidget {
                       ImagesAssets.imgLoginBg,
                       color: Theme.of(context).colorScheme.background,
                       fit: BoxFit.cover,
-                      width: Sizes.height(context) * 0.12,
+                      width: height * 0.12,
                     ),
                   ),
                   const SizedBox(width: 10.0),
@@ -40,10 +41,10 @@ class HeaderLogin extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextTitle(
-                        size: Sizes.height(context) * 0.12 / 4,
+                        size: height * 0.12 / 4,
                         text: 'Safe Notes',
                         fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.background,
+                        color: Theme.of(context).colorScheme.onInverseSurface,
                       ),
                       const SizedBox(height: 4.0),
                       Text(
@@ -52,8 +53,8 @@ class HeaderLogin extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'JosefinSans',
                           fontWeight: FontWeight.normal,
-                          color: Theme.of(context).colorScheme.background,
-                          fontSize: Sizes.height(context) * 0.12 / 6,
+                          color: Theme.of(context).colorScheme.onInverseSurface,
+                          fontSize: height * 0.12 / 6,
                         ),
                       ),
                     ],

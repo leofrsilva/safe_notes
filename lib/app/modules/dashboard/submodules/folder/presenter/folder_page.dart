@@ -13,10 +13,11 @@ import '../../../presenter/pages/search/custom_search_delegate.dart';
 import '../../../presenter/widgets/checkbox_all_widget.dart';
 import '../../../presenter/widgets/confirm_deletion_widget.dart';
 import '../../../presenter/widgets/popup_more_button_widget.dart';
-import 'folder_controller.dart';
 import '../../../presenter/widgets/grid_folder_widget.dart';
 import '../../../presenter/widgets/grid_note_widget.dart';
+import '../../../presenter/pages/move/move_record_page.dart';
 import 'widgets/sequence_folder_widget.dart';
+import 'folder_controller.dart';
 
 class FolderPage extends StatefulWidget {
   const FolderPage({Key? key}) : super(key: key);
@@ -209,6 +210,7 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
                   return ScrollConfiguration(
                     behavior: NoGlowBehavior(),
                     child: ListView(
+                      controller: super.scrollController,
                       children: [
                         const SizedBox(height: 22.0),
                         // SEQUENCE OF FOLDER
@@ -320,6 +322,49 @@ class _FolderPageState extends State<FolderPage> with TemplatePageMixin {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                ),
+                child: CustomButtonIcon(
+                  icon: Icons.drive_file_move_outline,
+                  text: 'Mover para',
+                  onPressed: () async {
+                    final result = await showModalBottomSheet<bool>(
+                        context: context,
+                        builder: (context) {
+                          return MoveRecordPage(
+                            allFolders: super
+                                .drawerMenu
+                                .listFieldsStore
+                                .reactive
+                                .listFolder,
+                            selectFolders: folderSelecteds,
+                            selectNotes: noteSelecteds,
+                            updateFolders: (
+                              BuildContext context,
+                              List<FolderModel> listFolder,
+                            ) {
+                              if (listFolder.isNotEmpty) {
+                                for (var folder in listFolder) {
+                                  _controller.editFolder(context, folder);
+                                }
+                              }
+                            },
+                            updateNotes: (
+                              BuildContext context,
+                              List<NoteModel> listNote,
+                            ) {
+                              _controller.editNote(context, listNote);
+                            },
+                          );
+                        });
+                    if (result != null) {
+                      if (result) _exitModeSelection();
+                    }
+                  },
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8.0,

@@ -42,7 +42,7 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
     return GestureDetector(
       onTap: () => _focusNode.unfocus(),
       child: Scaffold(
-        backgroundColor: ColorPalettes.black54,
+        backgroundColor: Colors.black54,
         body: SizedBox(
           height: Sizes.height(context),
           child: Stack(
@@ -53,78 +53,84 @@ class _RegisterKeyPageState extends State<RegisterKeyPage> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Container(
-                      width: 330.0,
-                      padding: const EdgeInsets.only(
-                        top: 20.0,
-                        left: 20.0,
-                        right: 20.0,
-                        bottom: 8.0,
-                      ),
-                      margin: const EdgeInsets.only(bottom: 12.0),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CustomTextFieldWithHint(
-                            controller: _textEditingKey,
-                            title: 'Chave de acesso as Notas',
-                            hint: '###########',
-                            focusNode: _focusNode,
-                            onChanged: (String key) {
-                              if (key.isEmpty) {
-                                setState(() => canSend = false);
-                              } else {
-                                if (canSend != true) {
-                                  setState(() => canSend = true);
+                    Card(
+                      child: Container(
+                        width: 330.0,
+                        padding: const EdgeInsets.only(
+                          top: 20.0,
+                          left: 20.0,
+                          right: 20.0,
+                          bottom: 8.0,
+                        ),
+                        margin: const EdgeInsets.only(bottom: 12.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CustomTextFieldWithHint(
+                              isPass: true,
+                              controller: _textEditingKey,
+                              title: 'Chave de acesso as Notas',
+                              hint: '###########',
+                              focusNode: _focusNode,
+                              onChanged: (String key) {
+                                if (key.isEmpty) {
+                                  setState(() => canSend = false);
+                                } else {
+                                  if (canSend != true) {
+                                    setState(() => canSend = true);
+                                  }
                                 }
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 15.0),
-                          SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  )),
-                                  onPressed: canSend
-                                      ? () {
-                                          FocusScope.of(context).unfocus();
-                                          controller.sendKey(
-                                            context,
-                                            _textEditingKey.text,
-                                          );
-                                        }
-                                      : null,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                      vertical: 5.0,
-                                    ),
-                                    child: Text(
-                                      'Enviar',
-                                      style: TextStyles.textButton(context)
-                                          .copyWith(
-                                        color: canSend
-                                            ? Theme.of(context).primaryColor
-                                            : ColorPalettes.grey,
+                              },
+                            ),
+                            const SizedBox(height: 15.0),
+                            SizedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    )),
+                                    onPressed: canSend
+                                        ? () {
+                                            FocusScope.of(context).unfocus();
+                                            controller.sendKey(
+                                              context,
+                                              _textEditingKey.text,
+                                            );
+                                          }
+                                        : null,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                        vertical: 5.0,
+                                      ),
+                                      child: Text(
+                                        'Enviar',
+                                        style: TextStyles.textButton(context)
+                                            .copyWith(
+                                          color: canSend
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .surfaceVariant,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],

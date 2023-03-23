@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/common.dart';
 import 'package:safe_notes/app/design/widgets/glow_behavior/no_glow_behavior.dart';
 import 'package:safe_notes/app/shared/database/default.dart';
 
@@ -56,7 +55,8 @@ class _GridSelectionColorState extends State<GridSelectionColor> {
                   fontSize: 15,
                   fontFamily: 'JosefinSans',
                   fontWeight: FontWeight.w600,
-                  color: ColorPalettes.grey,
+                  // color: Colors.grey,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
               const SizedBox(
@@ -65,7 +65,7 @@ class _GridSelectionColorState extends State<GridSelectionColor> {
               Expanded(
                 child: Container(
                   height: 1.1,
-                  color: ColorPalettes.grey,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
             ],

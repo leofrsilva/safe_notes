@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../common/common.dart';
 
 // ignore: must_be_immutable
 class WaveLeft extends StatelessWidget {
@@ -21,13 +20,13 @@ class WaveLeft extends StatelessWidget {
   Widget build(BuildContext context) {
     if (invertedColor) {
       gradient = <Color>[
-        ColorPalettes.secondy,
-        Theme.of(context).primaryColor,
+        Theme.of(context).colorScheme.tertiary,
+        Theme.of(context).colorScheme.primary,
       ];
     } else {
       gradient = <Color>[
-        Theme.of(context).primaryColor,
-        ColorPalettes.secondy,
+        Theme.of(context).colorScheme.primary,
+        Theme.of(context).colorScheme.tertiary,
       ];
     }
 
@@ -35,7 +34,7 @@ class WaveLeft extends StatelessWidget {
       clipper: ClipWaveLeft(fractionHeight: fractionHeight),
       child: Container(
         decoration: BoxDecoration(
-          color: color ?? Theme.of(context).primaryColor,
+          color: color ?? Theme.of(context).colorScheme.primary,
           gradient: isGradient
               ? LinearGradient(
                   colors: gradient,

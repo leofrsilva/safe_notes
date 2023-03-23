@@ -32,9 +32,7 @@ class _RelogarPageState extends State<RelogarPage> {
     required double heightHead,
   }) {
     return Padding(
-      padding: EdgeInsets.only(
-        top: Sizes.heightStatusBar(context),
-      ),
+      padding: EdgeInsets.only(top: Sizes.heightStatusBar(context)),
       child: Form(
         key: _controller.formKey,
         child: SingleChildScrollView(
@@ -96,13 +94,6 @@ class _RelogarPageState extends State<RelogarPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: ColorPalettes.transparent,
-      systemNavigationBarIconBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.light,
-    ));
-
     late Widget form;
     late double heightHead;
     late double heightFields;
@@ -110,10 +101,10 @@ class _RelogarPageState extends State<RelogarPage> {
     late double padding;
     if (Sizes.orientation(context) == Orientation.portrait) {
       padding = 0.0;
-      heightButton = Sizes.height(context) * 0.20;
-      heightFields = Sizes.height(context) * 0.35;
-      heightHead =
-          Sizes.height(context) * 0.45 - Sizes.heightStatusBar(context);
+      var heightTotal = Sizes.height(context) - Sizes.heightStatusBar(context);
+      heightButton = heightTotal * 0.20;
+      heightFields = heightTotal * 0.35;
+      heightHead = heightTotal * 0.45;
       form = portrait(
         context,
         padding: padding,
@@ -161,20 +152,16 @@ class _RelogarPageState extends State<RelogarPage> {
   header(BuildContext context, double height) {
     return SizedBox(
       height: height,
-      child: Column(
-        children: [
-          ValueListenableBuilder<String>(
-            valueListenable: _controller.name,
-            builder: (context, value, child) {
-              return HeaderRelogar(
-                name: value,
-                onPressedIcon: () {
-                  _controller.closeRelogar(context);
-                },
-              );
+      child: ValueListenableBuilder<String>(
+        valueListenable: _controller.name,
+        builder: (context, value, child) {
+          return HeaderRelogar(
+            name: value,
+            onPressedIcon: () {
+              _controller.closeRelogar(context);
             },
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -234,7 +221,7 @@ class _RelogarPageState extends State<RelogarPage> {
       padding: EdgeInsets.symmetric(horizontal: padding),
       alignment: AlignmentDirectional.center,
       child: Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomButton(

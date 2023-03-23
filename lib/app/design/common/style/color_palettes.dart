@@ -1,35 +1,65 @@
 import 'package:flutter/material.dart';
 
-class ColorPalettes {
-  //Colors for theme
-  static Color secondy = const Color(0xFF28EDDA); // Color(0xFF16E7FF);
-  static Color lightPrimary = const Color(0xFF289EED);
-  static Color darkPrimary = const Color(0xFF0C4271); //Color(0xFF041C32);
-  static Color lightAccent = const Color(0xFF289EED);
-  static Color darkAccent = const Color(0xFF0C4271); //Color(0xFF041C32);
-  static Color lightBG = const Color(0xFFF0F3FF);
-  static Color darkBG = const Color(0xFF222831); //Color(0xff212121);
+const colorSchemeLight = ColorScheme(
+  brightness: Brightness.light,
+  primary: Color(0xff00639a),
+  onPrimary: Color(0xffffffff),
+  primaryContainer: Color(0xffcee5ff),
+  onPrimaryContainer: Color(0xff001d32),
+  secondary: Color(0xff51606f),
+  onSecondary: Color(0xffffffff),
+  secondaryContainer: Color(0xffd5e4f7),
+  onSecondaryContainer: Color(0xff0e1d2a),
+  tertiary: Color(0xff68587a),
+  onTertiary: Color(0xffffffff),
+  tertiaryContainer: Color(0xffeedbff),
+  onTertiaryContainer: Color(0xff231533),
+  error: Color(0xffba1a1a),
+  onError: Color(0xffffffff),
+  errorContainer: Color(0xffffdad6),
+  onErrorContainer: Color(0xff410002),
+  background: Color(0xfffcfcff),
+  onBackground: Color(0xff1a1c1e),
+  surface: Color(0xfffcfcff),
+  onSurface: Color(0xff1a1c1e),
+  surfaceVariant: Color(0xffdee3eb),
+  onSurfaceVariant: Color(0xff42474e),
+  outline: Color(0xff72777f),
+  outlineVariant: Color(0xffc2c7cf),
+  inverseSurface: Color(0xff2f3033),
+  onInverseSurface: Color(0xfff0f0f4),
+  inversePrimary: Color(0xff96ccff),
+  surfaceTint: Color(0xff00639a),
+);
 
-  static Color white = const Color(0xffffffff);
-  static Color white70 = Colors.white70;
-  static Color whiteSemiTransparent = const Color(0xFFF7F6FD);
-  static Color grey = Colors.grey;
-  static Color grey50 = Colors.grey.withOpacity(0.5);
-  static Color greyBg = const Color(0xfff0f0f0);
-  static Color greyDark = const Color(0xFF333333);
-  static Color red = Colors.red;
-  static Color redLight = const Color(0xFFFF5E5E);
-  static Color yellow = const Color(0xFFB6A400);
-  static Color green = Colors.green;
-  static Color setActive = Colors.grey[500] ?? const Color(0xFF9E9E9E);
-  static Color blueGrey = Colors.blueGrey;
-  static Color blueGrey50 = Colors.blueGrey.withOpacity(0.5);
-  static Color black = const Color(0xFF000000);
-  static Color black12 = Colors.black12;
-  static Color black18 = const Color.fromARGB(55, 0, 0, 0);
-  static Color black26 = Colors.black26;
-  static Color black54 = Colors.black54;
-  static Color transparent = const Color(0x00000000);
-
-  static Color fontColor = const Color.fromARGB(255, 82, 82, 82);
-}
+const colorSchemeDark = ColorScheme(
+  brightness: Brightness.dark,
+  primary: Color(0xff96ccff),
+  onPrimary: Color(0xff003353),
+  primaryContainer: Color(0xff004a76),
+  onPrimaryContainer: Color(0xffcee5ff),
+  secondary: Color(0xffb9c8da),
+  onSecondary: Color(0xff233240),
+  secondaryContainer: Color(0xff3a4857),
+  onSecondaryContainer: Color(0xffd5e4f7),
+  tertiary: Color(0xffd3bfe6),
+  onTertiary: Color(0xff382a49),
+  tertiaryContainer: Color(0xff4f4061),
+  onTertiaryContainer: Color(0xffeedbff),
+  error: Color(0xffffb4ab),
+  onError: Color(0xff690005),
+  errorContainer: Color(0xff93000a),
+  onErrorContainer: Color(0xffffb4ab),
+  background: Color(0xff1a1c1e),
+  onBackground: Color(0xffe2e2e5),
+  surface: Color(0xff1a1c1e),
+  onSurface: Color(0xffe2e2e5),
+  surfaceVariant: Color(0xff42474e),
+  onSurfaceVariant: Color(0xffc2c7cf),
+  outline: Color(0xff8c9198),
+  outlineVariant: Color(0xff42474e),
+  inverseSurface: Color(0xffe2e2e5),
+  onInverseSurface: Color(0xff2f3033),
+  inversePrimary: Color(0xff00639a),
+  surfaceTint: Color(0xff96ccff),
+);

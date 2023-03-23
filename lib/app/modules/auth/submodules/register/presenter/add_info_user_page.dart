@@ -86,9 +86,14 @@ class AddInfoUserPage extends StatelessWidget {
               ),
               SizedBox(height: Sizes.height(context) * 0.075),
               CustomButton(
-                text: 'Avançar',
-                onTap: _controller.savedInfoUser,
-              ),
+                  text: 'Avançar',
+                  onTap: () async {
+                    if (FocusScope.of(context).focusedChild != null) {
+                      FocusScope.of(context).focusedChild?.unfocus();
+                      await Future.delayed(const Duration(milliseconds: 400));
+                    }
+                    _controller.savedInfoUser();
+                  }),
             ],
           ),
         ),

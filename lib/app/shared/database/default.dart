@@ -1,11 +1,15 @@
-import 'package:safe_notes/app/design/common/common.dart';
-
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:safe_notes/app/design/common/style/styles.dart';
+import 'package:safe_notes/app/modules/setting/controllers/theme_store.dart';
 import 'models/folder_model.dart';
 
 class DefaultDatabase {
   static const folderIdDefault = 999;
 
-  static final colorFolderDefault = ColorPalettes.secondy.value;
+  static final colorFolderDefault =
+      Modular.get<ThemeStore>().brightnessDark.value
+          ? Themes.darkTheme.colorScheme.inversePrimary.value
+          : Themes.lightTheme.colorScheme.inversePrimary.value;
 
   static final listColors = <int>[
     colorFolderDefault,
@@ -22,15 +26,15 @@ class DefaultDatabase {
     0xFFD0B84F,
   ];
 
-  static FolderModel get folderDefault => FolderModel(
-        level: 0,
-        folderParent: null,
-        folderId: folderIdDefault,
-        userId: '',
-        name: 'Pastas',
-        isDeleted: false,
-        color: colorFolderDefault,
-        dateCreate: DateTime.now(),
-        dateModification: DateTime.now(),
-      );
+  static final FolderModel folderDefault = FolderModel(
+    level: 0,
+    folderParent: null,
+    folderId: folderIdDefault,
+    userId: '',
+    name: 'Pastas',
+    isDeleted: false,
+    color: colorFolderDefault,
+    dateCreate: DateTime.now(),
+    dateModification: DateTime.now(),
+  );
 }

@@ -15,6 +15,7 @@ class FolderController {
   final DrawerMenuController _drawerMenu;
   final IEditNoteUsecase _editNoteUsecase;
   final IDeleteNoteUsecase _deleteNoteUsecase;
+  final IEditFolderUsecase _editFolderUsecase;
   final IDeleteFolderUsecase _deleteFolderUsecase;
 
   FolderController(
@@ -22,6 +23,7 @@ class FolderController {
     this.selection,
     this._editNoteUsecase,
     this._deleteNoteUsecase,
+    this._editFolderUsecase,
     this._deleteFolderUsecase,
   ) {
     _folderParent = ValueNotifier<FolderModel>(
@@ -79,20 +81,33 @@ class FolderController {
   void editFavorite(BuildContext context, List<NoteModel> notes) async {
     List<NoteModel> noteEditable = [];
     if (_strAddOrRemoveFavorite(notes).contains('Remover')) {
-      noteEditable
-          .addAll(notes.map((note) => note.copyWith(favorite: false)).toList());
+      noteEditable.addAll(notes.map((note) {
+        return note.copyWith(
+          favorite: false,
+          dateModification: DateTime.now(),
+        );
+      }).toList());
     } else {
-      noteEditable
-          .addAll(notes.map((note) => note.copyWith(favorite: true)).toList());
+      noteEditable.addAll(notes.map((note) {
+        return note.copyWith(
+          favorite: true,
+          dateModification: DateTime.now(),
+        );
+      }).toList());
     }
 
-    final either = await _editNoteUsecase.call(noteEditable);
+    editNote(context, noteEditable);
+  }
+
+  void editNote(BuildContext context, List<NoteModel> notes) async {
+    final either = await _editNoteUsecase.call(notes);
     if (either.isLeft()) {
       if (either.fold(id, id) is! IncorrectEncryptionError) {
         if (context.mounted) {
+          var str = notes.length > 1 ? 'as Notas' : 'a Nota';
           SnackbarError.show(
             context,
-            message: 'Error ao editar a Nota!',
+            message: 'Error ao editar $str!',
           );
         }
       }
@@ -132,6 +147,22 @@ class FolderController {
           SnackbarError.show(
             context,
             message: 'Error ao deletar a Nota!',
+          );
+        }
+      }
+    }
+  }
+
+  //? EDIT FOLDER
+  Future editFolder(BuildContext context, FolderModel folder) async {
+    final either = await _editFolderUsecase.call(folder);
+
+    if (either.isLeft()) {
+      if (either.fold(id, id) is! IncorrectEncryptionError) {
+        if (context.mounted) {
+          SnackbarError.show(
+            context,
+            message: 'Erro ao atualizar Pasta!',
           );
         }
       }

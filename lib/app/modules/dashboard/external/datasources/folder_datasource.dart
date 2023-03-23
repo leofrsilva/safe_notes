@@ -49,7 +49,7 @@ class FolderDatasource extends IFolderDatasource {
       if (recordFolder != null) {
         var folder = model.copyWith(
           userId: recordFolder.userId,
-          folderParent: recordFolder.folderParent,
+          // folderParent: recordFolder.folderParent,
           dateCreate: recordFolder.dateCreate.toDateTime,
           dateModification: DateTime.now(),
         );

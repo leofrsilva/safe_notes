@@ -71,7 +71,7 @@ class _CustomInputDateState extends State<CustomInputDate> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: paddingTop),
-      height: 70 + paddingTop,
+      height: 72 + paddingTop,
       child: FormField<String>(
           initialValue: widget.controller.text,
           onSaved: widget.onSaved,
@@ -96,33 +96,33 @@ class _CustomInputDateState extends State<CustomInputDate> {
                         height: state.hasError ? 30 : 45,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                              color: ColorPalettes.black.withOpacity(0.035),
-                              blurRadius: 10.0,
-                              spreadRadius: 0.0,
-                            ),
-                          ],
                         ),
                         child: TextField(
                           focusNode: focusNode,
-                          style: TextStyles.fieldStyle,
                           controller: widget.controller,
-                          cursorColor: Theme.of(context).primaryColor,
+                          style: TextStyles.fieldStyle(context).copyWith(
+                            height: state.hasError ? 1.1 : 0.9,
+                          ),
+                          cursorColor:
+                              Theme.of(context).colorScheme.inverseSurface,
                           inputFormatters: [DataInputFormatter()],
+                          keyboardType: TextInputType.number,
                           onChanged: (String text) => state.didChange(text),
                           onEditingComplete: widget.nextFocus
                               ? () => FocusScope.of(context).nextFocus()
                               : null,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: ColorPalettes.whiteSemiTransparent,
-                            hoverColor: ColorPalettes.whiteSemiTransparent,
+                            fillColor:
+                                Theme.of(context).colorScheme.surfaceVariant,
+                            hoverColor:
+                                Theme.of(context).colorScheme.surfaceVariant,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide.none,
                             ),
                             suffixIcon: IconButton(
+                              visualDensity: VisualDensity.compact,
                               icon: const Icon(
                                 Icons.date_range_outlined,
                                 size: 22,
@@ -155,7 +155,9 @@ class _CustomInputDateState extends State<CustomInputDate> {
                           padding: const EdgeInsets.only(top: 6.0),
                           child: Text(
                             " ${state.errorText}",
-                            style: TextStyles.errorFieldStyle,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
                           ),
                         ),
                     ],
@@ -169,10 +171,12 @@ class _CustomInputDateState extends State<CustomInputDate> {
                       curve: Curves.linearToEaseOut,
                       start: value ? 2.0 : 7.0,
                       bottom: value
-                          ? 50.0
+                          ? state.hasError
+                              ? 52.0
+                              : 50.0
                           : state.hasError
-                              ? 24.0
-                              : 13.0,
+                              ? 28.0
+                              : 11.0,
                       child: IgnorePointer(
                         child: Text(
                           widget.title,

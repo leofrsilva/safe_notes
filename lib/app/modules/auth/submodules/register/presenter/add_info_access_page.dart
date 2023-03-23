@@ -106,13 +106,23 @@ class AddInfoAccessPage extends StatelessWidget {
               SizedBox(height: Sizes.height(context) * 0.075),
               CustomButton(
                 text: 'Registrar',
-                onTap: () => _controller.savedInfoAccess(context),
+                onTap: () {
+                  if (FocusScope.of(context).focusedChild != null) {
+                    FocusScope.of(context).focusedChild?.unfocus();
+                  }
+                  _controller.savedInfoAccess(context);
+                },
               ),
               SizedBox(height: Sizes.height(context) * 0.025),
               CustomButtonOutline(
                 text: 'Voltar',
                 isInvertAnimation: true,
-                onTap: () => _controller.backForInfUser(),
+                onTap: () {
+                  if (FocusScope.of(context).focusedChild != null) {
+                    FocusScope.of(context).focusedChild?.unfocus();
+                  }
+                  _controller.backForInfUser();
+                },
               ),
             ],
           ),

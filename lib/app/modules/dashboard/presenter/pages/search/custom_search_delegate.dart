@@ -24,7 +24,8 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        color: ColorPalettes.grey,
+        // color: Colors.grey,
+        // // color: ColorPalettes.grey,
         onPressed: () => query = "",
         icon: const Icon(Icons.clear),
       )
@@ -41,13 +42,15 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
 
   @override
   Widget buildResults(BuildContext context) {
+    final list = reactiveList.searchNote(query);
     return SizedBox(
       width: Sizes.width(context),
       height: Sizes.height(context),
       child: SingleChildScrollView(
         child: Wrap(
-          alignment: WrapAlignment.start,
-          children: reactiveList.searchNote(query).map((note) {
+          alignment:
+              list.length > 2 ? WrapAlignment.spaceAround : WrapAlignment.start,
+          children: list.map((note) {
             return CardNote(
               title: note.title,
               body: note.body,
@@ -82,13 +85,16 @@ class CustomSearchDelegate extends SearchDelegate<String?> {
         ),
       );
     }
-    return SizedBox(
+    return Container(
       width: Sizes.width(context),
       height: Sizes.height(context),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: SingleChildScrollView(
         child: Wrap(
-          alignment: WrapAlignment.start,
-          children: reactiveList.searchNote(query).map((note) {
+          alignment: listNotes.length > 2
+              ? WrapAlignment.spaceAround
+              : WrapAlignment.start,
+          children: listNotes.map((note) {
             return CardNote(
               title: note.title,
               body: note.body,

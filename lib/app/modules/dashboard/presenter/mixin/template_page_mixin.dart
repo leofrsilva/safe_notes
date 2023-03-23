@@ -147,7 +147,7 @@ mixin TemplatePageMixin<T extends StatefulWidget> on State<T> {
                         child: Material(
                           elevation: 6.0,
                           borderRadius: BorderRadius.circular(100),
-                          color: Theme.of(context).scaffoldBackgroundColor,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           child: GestureDetector(
                             onTap: () {
                               scrollController.animateTo(
@@ -161,8 +161,9 @@ mixin TemplatePageMixin<T extends StatefulWidget> on State<T> {
                               height: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
                               ),
                               child: Stack(
                                 alignment: Alignment.center,
@@ -170,14 +171,17 @@ mixin TemplatePageMixin<T extends StatefulWidget> on State<T> {
                                   Container(
                                     width: 18,
                                     height: 2.0,
-                                    color: Colors.blueGrey,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                     margin: const EdgeInsets.only(bottom: 5.0),
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(top: 5.0),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
                                     child: Icon(
                                       Icons.keyboard_arrow_up_rounded,
-                                      color: Colors.blueGrey,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                       size: 30,
                                     ),
                                   ),

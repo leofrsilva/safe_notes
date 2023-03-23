@@ -20,10 +20,10 @@ class CustomButtonInline extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 14,
-          fontFamily: 'JosefinSans',
-          color: Theme.of(context).primaryColor,
           decoration: underline ? TextDecoration.underline : null,
+          decorationStyle: TextDecorationStyle.solid,
+          decorationColor: Theme.of(context).colorScheme.primary,
+          decorationThickness: 2,
         ),
       ),
     );

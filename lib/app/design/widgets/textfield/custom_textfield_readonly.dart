@@ -17,28 +17,15 @@ class CustomTextFieldReadOnly extends StatelessWidget {
     return IgnorePointer(
       child: Container(
         decoration: BoxDecoration(
-          color: ColorPalettes.whiteSemiTransparent,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: ColorPalettes.black.withOpacity(0.035),
-              blurRadius: 10.0,
-              spreadRadius: 0.0,
-            ),
-          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsetsDirectional.only(
-                top: 14.0,
-                start: 8.0,
-              ),
-              child: Text(
-                title,
-                style: TextStyles.titleFieldStyle(context),
-              ),
+              padding: const EdgeInsetsDirectional.only(top: 14.0, start: 8.0),
+              child: Text(title, style: TextStyles.titleFieldStyle(context)),
             ),
             Align(
               alignment: AlignmentDirectional.bottomCenter,
@@ -50,9 +37,7 @@ class CustomTextFieldReadOnly extends StatelessWidget {
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
                   initialField,
-                  style: TextStyles.fieldStyle.copyWith(
-                    color: ColorPalettes.blueGrey,
-                  ),
+                  style: TextStyles.fieldStyle(context),
                 ),
               ),
             ),

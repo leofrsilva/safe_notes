@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_notes/app/design/common/style/styles.dart';
 import 'package:safe_notes/app/design/widgets/widgets.dart';
 import 'package:safe_notes/app/shared/database/models/note_model.dart';
 
@@ -51,7 +50,10 @@ class CardNoteEditable extends StatelessWidget {
                 ),
                 child: CircleAvatar(
                   radius: 8.5,
-                  backgroundColor: ColorPalettes.white70,
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.white60
+                          : Colors.black38,
                 ),
               ),
             ),
@@ -62,9 +64,9 @@ class CardNoteEditable extends StatelessWidget {
                 child: Checkbox(
                   fillColor: MaterialStateProperty.resolveWith((states) {
                     if (states.contains(MaterialState.selected)) {
-                      return ColorPalettes.secondy;
+                      return Theme.of(context).colorScheme.primary;
                     }
-                    return ColorPalettes.grey;
+                    return Theme.of(context).colorScheme.secondary;
                   }),
                   side: MaterialStateBorderSide.resolveWith(
                       (Set<MaterialState> states) {
@@ -72,7 +74,7 @@ class CardNoteEditable extends StatelessWidget {
                       return null;
                     }
                     return BorderSide(
-                      color: ColorPalettes.grey,
+                      color: Theme.of(context).colorScheme.secondary,
                       width: 1.25,
                     );
                   }),
